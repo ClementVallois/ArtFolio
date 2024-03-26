@@ -1,0 +1,49 @@
+version: '3'
+
+networks:
+    ArtFolioNetwork:
+        driver: bridge
+
+services:
+
+    backend:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend
+        volumes:
+            - ./backend:/app/backend
+        ports:
+            - "${BACKEND_SERVER_PORT}:3000"
+        env_file:
+            - ./.env
+        depends_on:
+            - postgres
+
+    frontend:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend
+        ports:
+            - "${FRONTEND_SERVER_PORT}:5174"
+        volumes:
+            - ./frontend:/app/frontend
+        env_file:
+            - ./.env
+
+    postgres:
+        image: postgres:latest
+        ports:
+            - "${DB_PORT}:5432"
+        volumes:
+            - postgresql-data:/var/lib/postgresql/data
+        env_file:
+            - ./.env
+        restart: on-failure
+        environment:
+            - POSTGRES_PORT:${DB_PORT}
+            - POSTGRES_USER=${DB_USER}
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_NAME}
+
+volumes:
+    postgresql-data:
