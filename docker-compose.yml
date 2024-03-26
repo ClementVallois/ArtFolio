@@ -1,17 +1,17 @@
-version: '3'
+version: "3"
 
 networks:
     ArtFolioNetwork:
         driver: bridge
 
 services:
-
     backend-api:
         build:
             context: ./
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-api
         volumes:
             - ./backend-api:/app/backend-api
+            - node_modules_backend_api:/app/backend-api/node_modules
         ports:
             - "${BACKEND_API_SERVER_PORT}:3000"
         env_file:
@@ -23,10 +23,11 @@ services:
         build:
             context: ./
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend
-        ports:
-            - "${FRONTEND_SERVER_PORT}:5174"
         volumes:
             - ./frontend:/app/frontend
+            - node_modules_frontend:/app/frontend/node_modules
+        ports:
+            - "${FRONTEND_SERVER_PORT}:5174"
         env_file:
             - ./.env
 
@@ -45,13 +46,13 @@ services:
             - POSTGRES_PASSWORD=${DB_API_PASSWORD}
             - POSTGRES_DB=${DB_API_NAME}
 
-
     backend-chat:
         build:
             context: ./
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-chat
         volumes:
             - ./backend-chat:/app/backend-chat
+            - node_modules_backend_chat:/app/backend-chat/node_modules
         ports:
             - "${BACKEND_CHAT_SERVER_PORT}:3010"
         env_file:
@@ -77,5 +78,7 @@ services:
 volumes:
     postgresql-data-api:
     postgresql-data-chat:
-
-
+    node_modules:
+    node_modules_backend_api:
+    node_modules_backend_chat:
+    node_modules_frontend:
