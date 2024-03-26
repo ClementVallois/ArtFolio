@@ -6,18 +6,18 @@ networks:
 
 services:
 
-    backend:
+    backend-api:
         build:
             context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-api
         volumes:
-            - ./backend:/app/backend
+            - ./backend-api:/app/backend-api
         ports:
-            - "${BACKEND_SERVER_PORT}:3000"
+            - "${BACKEND_API_SERVER_PORT}:3000"
         env_file:
             - ./.env
         depends_on:
-            - postgres
+            - postgres-api
 
     frontend:
         build:
@@ -30,20 +30,52 @@ services:
         env_file:
             - ./.env
 
-    postgres:
+    postgres-api:
         image: postgres:latest
         ports:
-            - "${DB_PORT}:5432"
+            - "${DB_API_PORT}:5432"
         volumes:
-            - postgresql-data:/var/lib/postgresql/data
+            - postgresql-data-api:/var/lib/postgresql/data
         env_file:
             - ./.env
         restart: on-failure
         environment:
-            - POSTGRES_PORT:${DB_PORT}
-            - POSTGRES_USER=${DB_USER}
-            - POSTGRES_PASSWORD=${DB_PASSWORD}
-            - POSTGRES_DB=${DB_NAME}
+            - POSTGRES_PORT=${DB_API_PORT}
+            - POSTGRES_USER=${DB_API_USER}
+            - POSTGRES_PASSWORD=${DB_API_PASSWORD}
+            - POSTGRES_DB=${DB_API_NAME}
+
+
+    backend-chat:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-chat
+        volumes:
+            - ./backend-chat:/app/backend-chat
+        ports:
+            - "${BACKEND_CHAT_SERVER_PORT}:3010"
+        env_file:
+            - ./.env
+        depends_on:
+            - postgres-chat
+
+    postgres-chat:
+        image: postgres:latest
+        ports:
+            - "${DB_CHAT_PORT}:5440"
+        volumes:
+            - postgresql-data-chat:/var/lib/postgresql/data
+        env_file:
+            - ./.env
+        restart: on-failure
+        environment:
+            - POSTGRES_PORT:${DB_CHAT_PORT}
+            - POSTGRES_USER=${DB_CHAT_USER}
+            - POSTGRES_PASSWORD=${DB_CHAT_PASSWORD}
+            - POSTGRES_DB=${DB_CHAT_NAME}
 
 volumes:
-    postgresql-data:
+    postgresql-data-api:
+    postgresql-data-chat:
+
+
