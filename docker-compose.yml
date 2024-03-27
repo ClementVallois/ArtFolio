@@ -5,6 +5,34 @@ networks:
         driver: bridge
 
 services:
+
+    # Main Front for ArtFolio
+    frontend-main:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-main
+        volumes:
+            - ./frontend-main:/app/frontend-main
+            - node_modules_frontend_main:/app/frontend-main/node_modules
+        ports:
+            - "${FRONTEND_MAIN_SERVER_PORT}:5174"
+        env_file:
+            - ./.env
+
+    # Front for the Back Office
+    frontend-backoffice:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-backoffice
+        volumes:
+            - ./frontend-backoffice:/app/frontend-backoffice
+            - node_modules_frontend_backoffice:/app/frontend-backoffice/node_modules
+        ports:
+            - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
+        env_file:
+            - ./.env
+
+    # Main backend
     backend-api:
         build:
             context: ./
@@ -19,18 +47,7 @@ services:
         depends_on:
             - postgres-api
 
-    frontend:
-        build:
-            context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend
-        volumes:
-            - ./frontend:/app/frontend
-            - node_modules_frontend:/app/frontend/node_modules
-        ports:
-            - "${FRONTEND_SERVER_PORT}:5174"
-        env_file:
-            - ./.env
-
+    # Main Database 
     postgres-api:
         image: postgres:latest
         ports:
@@ -46,6 +63,7 @@ services:
             - POSTGRES_PASSWORD=${DB_API_PASSWORD}
             - POSTGRES_DB=${DB_API_NAME}
 
+    # Backend used for the chat feature
     backend-chat:
         build:
             context: ./
@@ -60,6 +78,7 @@ services:
         depends_on:
             - postgres-chat
 
+    # Database used for the chat feature
     postgres-chat:
         image: postgres:latest
         ports:
@@ -78,7 +97,7 @@ services:
 volumes:
     postgresql-data-api:
     postgresql-data-chat:
-    node_modules:
     node_modules_backend_api:
     node_modules_backend_chat:
-    node_modules_frontend:
+    node_modules_frontend_main:
+    node_modules_frontend_backoffice:
