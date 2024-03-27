@@ -1,0 +1,84 @@
+version: "3"
+
+networks:
+    ArtFolioNetwork:
+        driver: bridge
+
+services:
+    backend-api:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-api
+        volumes:
+            - ./backend-api:/app/backend-api
+            - node_modules_backend_api:/app/backend-api/node_modules
+        ports:
+            - "${BACKEND_API_SERVER_PORT}:3000"
+        env_file:
+            - ./.env
+        depends_on:
+            - postgres-api
+
+    frontend:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend
+        volumes:
+            - ./frontend:/app/frontend
+            - node_modules_frontend:/app/frontend/node_modules
+        ports:
+            - "${FRONTEND_SERVER_PORT}:5174"
+        env_file:
+            - ./.env
+
+    postgres-api:
+        image: postgres:latest
+        ports:
+            - "${DB_API_PORT}:5432"
+        volumes:
+            - postgresql-data-api:/var/lib/postgresql/data
+        env_file:
+            - ./.env
+        restart: on-failure
+        environment:
+            - POSTGRES_PORT=${DB_API_PORT}
+            - POSTGRES_USER=${DB_API_USER}
+            - POSTGRES_PASSWORD=${DB_API_PASSWORD}
+            - POSTGRES_DB=${DB_API_NAME}
+
+    backend-chat:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-chat
+        volumes:
+            - ./backend-chat:/app/backend-chat
+            - node_modules_backend_chat:/app/backend-chat/node_modules
+        ports:
+            - "${BACKEND_CHAT_SERVER_PORT}:3010"
+        env_file:
+            - ./.env
+        depends_on:
+            - postgres-chat
+
+    postgres-chat:
+        image: postgres:latest
+        ports:
+            - "${DB_CHAT_PORT}:5432"
+        volumes:
+            - postgresql-data-chat:/var/lib/postgresql/data
+        env_file:
+            - ./.env
+        restart: on-failure
+        environment:
+            - POSTGRES_PORT:${DB_CHAT_PORT}
+            - POSTGRES_USER=${DB_CHAT_USER}
+            - POSTGRES_PASSWORD=${DB_CHAT_PASSWORD}
+            - POSTGRES_DB=${DB_CHAT_NAME}
+
+volumes:
+    postgresql-data-api:
+    postgresql-data-chat:
+    node_modules:
+    node_modules_backend_api:
+    node_modules_backend_chat:
+    node_modules_frontend:
