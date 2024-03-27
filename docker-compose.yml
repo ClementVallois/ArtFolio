@@ -63,7 +63,7 @@ services:
     postgres-chat:
         image: postgres:latest
         ports:
-            - "${DB_CHAT_PORT}:5440"
+            - "${DB_CHAT_PORT}:5432"
         volumes:
             - postgresql-data-chat:/var/lib/postgresql/data
         env_file:
