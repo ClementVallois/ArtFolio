@@ -39,3 +39,9 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+
+
+
+## Configuration de Tailwindssur le container docker 
+docker exec artfolio-frontend-main-1 npm install -D tailwindcss postcss autoprefixer
+docker exec artfolio-frontend-main-1 npx tailwindcss init -p
