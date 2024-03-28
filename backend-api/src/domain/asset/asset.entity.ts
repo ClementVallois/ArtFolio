@@ -1,0 +1,26 @@
+import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../user/user.entity';
+import { Post } from '../post/post.entity';
+
+@Entity()
+export class Asset {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ type: 'varchar', length: 200, nullable: true })
+  url: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['profile_picture', 'post_picture'],
+    length: 20,
+    nullable: true,
+  })
+  type: string;
+
+  @ManyToOne(() => User, (user) => user.id)
+  userId: User;
+
+  @ManyToOne(() => Post, (post) => post.id)
+  postId: Post;
+}
