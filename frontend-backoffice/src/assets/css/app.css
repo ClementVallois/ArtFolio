@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import '~@fortawesome/fontawesome-free/css/all.min.css';
+
+:root {
+    --blue-msm:#1F497D;
+}
