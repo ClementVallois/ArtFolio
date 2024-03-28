@@ -1,6 +1,12 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
-import ArtistView from '@/views/ArtistView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '@/views/HomeView.vue';
+import ArtistView from '@/views/ArtistView.vue';
+import ArtistRegistrationView from '@/views/ArtistRegistrationView.vue';
+import UserRegistrationView from '@/views/UserRegistrationView.vue';
+import SearchView from '@/views/SearchView.vue';
+import ChatView from '@/views/ChatView.vue';
+import AboutView from '@/views/AboutView.vue';
+import LoginView from '@/views/LoginView.vue';
 
 const routes = [
     {
@@ -38,6 +44,16 @@ const routes = [
         path: '/about',
         name: 'about',
         component: AboutView
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: LoginView
+    },
+    {
+        path: '/registration',
+        name: 'registration',
+        component: LoginView
     },
 ]
 
