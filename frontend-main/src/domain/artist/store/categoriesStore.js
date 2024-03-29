@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { allCategories } from '@/domain/artist/api/categoriesDataSource';
+import { dataSourceCategories } from '@/domain/artist/api/categoriesDataSource';
 import { Optional } from '@/optionnal';
 import { ref, computed } from 'vue';
 
@@ -8,7 +8,7 @@ import { ref, computed } from 'vue';
 ///// Categories Store
 /////////
 export const categoriesStore = defineStore('categoriesStore', () => {
-    const allCategoriesData = ref(Optional.of(allCategories));
+    const allCategoriesData = ref(Optional.of(dataSourceCategories));
 
     const getAllCategoriesName = computed(() => {
         return !allCategoriesData.value.isEmpty()

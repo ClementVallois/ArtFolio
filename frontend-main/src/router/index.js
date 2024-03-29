@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/pages/HomeView.vue';
-import ArtistView from '@/domain/artist/pages/ArtistView.vue'
-import SearchView from '@/pages/SearchView.vue';
-import ChatView from '@/domain/chat/pages/ChatView.vue';
-import AboutView from '@/pages/AboutView.vue';
-import LoginView from '@/domain/authentification/pages/LoginView.vue';
-import RegistrationView from '@/pages/RegistrationView.vue';
-import ArtistRegistrationView from '@/domain/artist/pages/ArtistRegistrationView.vue';
-import UserRegistrationView from '@/domain/user/pages/UserRegistrationView.vue';
+import HomeView from '@/pages/HomePage.vue';
+import ArtistView from '@/domain/artist/pages/ArtistPage.vue'
+import SearchView from '@/pages/SearchPage.vue';
+import ChatView from '@/domain/chat/pages/ChatPage.vue';
+import AboutView from '@/pages/AboutPage.vue';
+import LoginView from '@/domain/authentification/pages/LoginPage.vue';
+import RegistrationView from '@/pages/RegistrationPage.vue';
+import ArtistRegistrationView from '@/domain/artist/pages/ArtistRegistrationPage.vue';
+import UserRegistrationView from '@/domain/user/pages/UserRegistrationPage.vue';
 
 const routes = [
     {
