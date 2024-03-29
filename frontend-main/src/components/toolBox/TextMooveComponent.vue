@@ -13,25 +13,25 @@
 
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { categoriesStore } from '@/domain/artist/store/categoriesStore';
-const { getAllCategoriesName } = categoriesStore();
-const allCategoriesNamesData = getAllCategoriesName();
-
-
+const categoryStore = categoriesStore();
 
 const speed = 3500;
-const words = allCategoriesNamesData;
-console.log(words);
 const n = ref(0);
 const currentWordIndex = ref(0);
-const currentWord = computed(() => words[n.value % words.length]);
+const currentWord = computed(() => {
+    const words = categoryStore.getAllCategoriesName;
+    return words.length > 0 ? words[n.value % words.length] : "";
+});
 
 const cycleWords = () => {
-    setInterval(() => {
-        n.value = (n.value + 1) % words.length;
-        currentWordIndex.value++;
-    }, speed);
+    if (categoryStore.getAllCategoriesName.length > 0) {
+        setInterval(() => {
+            n.value = (n.value + 1) % categoryStore.getAllCategoriesName.length;
+            currentWordIndex.value++;
+        }, speed);
+    }
 };
 
 const getLetterStyle = (index) => {

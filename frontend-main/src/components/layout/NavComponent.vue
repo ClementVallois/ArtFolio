@@ -22,11 +22,11 @@
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
                     <!-- menu desktop + mobile-->
                     <router-link :to="{ name: 'login' }" class="text-gray-800 text-sm  md:mx-4"
-                        v-if="actifRole === 'artist' || actifRole === 'user'">
+                        v-if="activeRole === 'artist' || activeRole === 'user'">
                         <SearchComponent></SearchComponent>
                     </router-link>
                     <router-link :to="{ name: 'chat' }" class="text-sm  md:mx-4 md:flex md:justify-center
-                    md:items-center " v-if="actifRole === 'artist' || actifRole === 'user'">
+                    md:items-center " v-if="activeRole === 'artist' || activeRole === 'user'">
                         <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                             class="bi bi-chat-fill hidden md:flex" viewBox="0 0 16 16">
                             <path
@@ -34,25 +34,25 @@
                         </svg>
                         <p class="md:hidden pt-4 ">Messagerie</p>
                     </router-link>
-                    <CustomLinkComponent :to="{ name: 'login' }" text="Se connecter" v-if="actifRole === 'none'"
+                    <CustomLinkComponent :to="{ name: 'login' }" text="Se connecter" v-if="activeRole === 'none'"
                         class="md:mx-4" />
-                    <CustomLinkComponent :to="{ name: 'registration' }" text="S'inscrire" v-if="actifRole === 'none'"
+                    <CustomLinkComponent :to="{ name: 'registration' }" text="S'inscrire" v-if="activeRole === 'none'"
                         class="md:mx-4" />
                     <!--  Profil section -  mobile mode -->
                     <hr class="md:hidden border-t border-gray-200 my-4 w-full"
-                        v-if="actifRole === 'artist' || actifRole === 'user'">
+                        v-if="activeRole === 'artist' || activeRole === 'user'">
                     <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
-                        class="md:hidden md:mx-4  pb-4" v-if="actifRole === 'artist' || actifRole === 'user'" />
+                        class="md:hidden md:mx-4  pb-4" v-if="activeRole === 'artist' || activeRole === 'user'" />
                     <CustomLinkComponent :to="{ name: 'artist' }" text="Accéder à mon profil"
-                        v-if="actifRole === 'artist'" class="md:hidden md:mx-4 pb-4" />
+                        v-if="activeRole === 'artist'" class="md:hidden md:mx-4 pb-4" />
                     <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
                     <CustomLinkComponent :to="{ name: 'artist' }" text="Ajouter une publication"
-                        v-if="actifRole === 'artist'" class="md:hidden md:mx-4 pb-4" />
+                        v-if="activeRole === 'artist'" class="md:hidden md:mx-4 pb-4" />
                     <!-- TODO: faire la méthode pour se déconnecter -->
                     <CustomLinkComponent :to="{ name: 'artist' }" text="Se deconnecter" class="md:hidden md:mx-4 pb-3"
-                        v-if="actifRole === 'artist' || actifRole === 'user'" />
+                        v-if="activeRole === 'artist' || activeRole === 'user'" />
                     <!-- Profile section - desktop mode -->
-                    <div v-if="actifRole === 'artist' || actifRole === 'user'" class=" relative flex justify-center
+                    <div v-if="activeRole === 'artist' || activeRole === 'user'" class=" relative flex justify-center
                         align-center hidden sm:flex" @click="toggleProfileMenu">
                         <button type="button ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -68,18 +68,18 @@
                             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                                 <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    v-if="actifRole === 'artist' || actifRole === 'user'" />
+                                    v-if="activeRole === 'artist' || activeRole === 'user'" />
                                 <CustomLinkComponent :to="{ name: 'artist' }" text="Accéder à mon profil"
-                                    v-if="actifRole === 'artist'"
+                                    v-if="activeRole === 'artist'"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
                                 <CustomLinkComponent :to="{ name: 'artist' }" text="Ajouter une publication"
-                                    v-if="actifRole === 'artist'"
+                                    v-if="activeRole === 'artist'"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
                                 <CustomLinkComponent :to="{ name: 'artist' }" text="Se deconnecter"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-                                    v-if="actifRole === 'artist' || actifRole === 'user'" />
+                                    v-if="activeRole === 'artist' || activeRole === 'user'" />
                             </div>
                         </div>
                     </div>
@@ -97,7 +97,7 @@ import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
 
 // user, artist, none
-let actifRole = "artist";
+const activeRole = "artist";
 
 
 // opens the menu in mobile mode
