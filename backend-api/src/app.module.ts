@@ -7,7 +7,7 @@ import { SearchModule } from './application/search/search.module';
 import { UserModule } from './application/user/user.module';
 import { PostModule } from './application/post/post.module';
 import { PortfolioModule } from './application/portfolio/portfolio.module';
-import { DatabaseModule } from './infrastructure/database/database.module';
+import { DatabaseModule } from './infrastructure/database/datasource.module';
 
 @Module({
   imports: [
