@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { UserEntity } from 'src/domain/user/user.entity';
 import { PostEntity } from 'src/domain/post/post.entity';
 import { AssetEntity } from 'src/domain/asset/asset.entity';
+import { CategoryEntity } from 'src/domain/category/category.entity';
 
 @Injectable()
 export class DatasourceProvider implements TypeOrmOptionsFactory {
@@ -17,7 +18,7 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DB_API_USER'),
       password: this.configService.get<string>('DB_API_PASSWORD'),
       database: this.configService.get<string>('DB_API_NAME'),
-      entities: [UserEntity, PostEntity, AssetEntity],
+      entities: [UserEntity, PostEntity, AssetEntity, CategoryEntity],
       synchronize: true,
       logging: true,
       migrationsRun: true,
