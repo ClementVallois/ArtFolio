@@ -21,17 +21,6 @@ import { DatabaseModule } from './infrastructure/database/datasource.module';
     PortfolioModule,
     DatabaseModule,
   ],
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    AuthModule,
-    SearchModule,
-    UserModule,
-    PostModule,
-    PortfolioModule,
-    DatabaseModule,
-  ],
   controllers: [AppController],
   providers: [AppService],
 })
