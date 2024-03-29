@@ -5,7 +5,7 @@ class Optional {
 
     static of(value) {
         if (value === null || value === undefined) {
-            throw new Error('Value cannot be null or undefined');
+            return new Error("Value is null")
         }
         return new Optional(value);
     }
@@ -39,20 +39,7 @@ class Optional {
     }
 }
 
-// const loginAPI = null;
-
-// const getAll = { header: { bearer: loginAPI, data: null } } 
-
-// getAll?.header?.bearer? 
-
-
-const loginAPI = Optional.of({ bearer: {} });
-
-const getAll = Optional.of({ header: { loginAPI.get().bearer }, data: {} })
-
-getAll
-    .getOrThrow(() => console.log("c'est ton getAll le soucis")).
-    header
+export { Optional };/* 
     .getOrThrow(() => console.log("c'est ton header²")).
     bearer
-    .getOrThrow(() => console.log("c'est ton bearer")); 
+    .getOrThrow(() => console.log("c'est ton bearer")); */

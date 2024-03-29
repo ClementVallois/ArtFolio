@@ -1,9 +1,7 @@
 <template>
-    <TitleComponent title="Page d'accueil"> </TitleComponent>
-    <TextMooveComponent></TextMooveComponent>
+    <HeroBannerComponent></HeroBannerComponent>
 </template>
 
 <script setup>
-import TitleComponent from '@/components/toolBox/TitleComponent.vue';
-import TextMooveComponent from '@/components/toolBox/TextMooveComponent.vue';
+import HeroBannerComponent from '@/components/toolBox/HeroBannerComponent.vue';
 </script>

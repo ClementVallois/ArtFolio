@@ -14,9 +14,15 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { categoriesStore } from '@/domain/artist/store/categoriesStore';
+const { getAllCategoriesName } = categoriesStore();
+const allCategoriesNamesData = getAllCategoriesName();
 
-const speed = 1500;
-const words = ["STEP", "FROM", "CODE"];
+
+
+const speed = 3500;
+const words = allCategoriesNamesData;
+console.log(words);
 const n = ref(0);
 const currentWordIndex = ref(0);
 const currentWord = computed(() => words[n.value % words.length]);

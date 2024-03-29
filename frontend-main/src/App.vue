@@ -1,6 +1,6 @@
 <template>
     <NavComponent />
-    <div class="w-screen flex">
+    <div class="w-screen flex flex-col">
         <router-view />
     </div>
     <FooterComponent />

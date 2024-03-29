@@ -1,4 +1,5 @@
-[
+// TODO: A remplacer par un appel api ensuite
+const allCategories = [
     {
         "id": "1",
         "uuid": "1f590c10-8e22-4a54-a5f7-23af15a0a75a",
@@ -80,3 +81,5 @@
         "deleted_at": null
     }
 ]
+
+export { allCategories };
