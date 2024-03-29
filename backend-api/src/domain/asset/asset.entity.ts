@@ -17,9 +17,9 @@ export class Asset {
   })
   type: string;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.assets)
   user: User;
 
-  @ManyToOne(() => Post, (post) => post.id)
+  @ManyToOne(() => Post, (post) => post.assets)
   post: Post;
 }

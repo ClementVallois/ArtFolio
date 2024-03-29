@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { Asset } from '../asset/asset.entity';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Post {
@@ -21,6 +22,6 @@ export class Post {
   @OneToMany(() => Asset, (asset) => asset.post)
   assets: Asset[];
 
-  @ManyToOne(() => Asset, (asset) => asset.user)
-  user: Asset;
+  @ManyToOne(() => User, (user) => user.posts)
+  user: User;
 }

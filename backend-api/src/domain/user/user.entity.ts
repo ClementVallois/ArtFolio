@@ -1,5 +1,6 @@
 import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Asset } from '../asset/asset.entity';
+import { Post } from '../post/post.entity';
 
 @Entity()
 export class User {
@@ -20,6 +21,9 @@ export class User {
 
   @OneToMany(() => Asset, (asset) => asset.user)
   assets: Asset[];
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 
   @Column({ type: 'varchar', length: 750, nullable: true })
   description: string;
