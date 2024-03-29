@@ -5,11 +5,11 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { Asset } from '../asset/asset.entity';
-import { User } from '../user/user.entity';
+import { AssetEntity } from '../asset/asset.entity';
+import { UserEntity } from '../user/user.entity';
 
-@Entity()
-export class Post {
+@Entity('posts')
+export class PostEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
@@ -19,9 +19,9 @@ export class Post {
   @Column({ type: 'varchar', length: 500, nullable: true })
   description: string;
 
-  @OneToMany(() => Asset, (asset) => asset.post)
-  assets: Asset[];
+  @OneToMany(() => AssetEntity, (asset) => asset.post)
+  assets: AssetEntity[];
 
-  @ManyToOne(() => User, (user) => user.posts)
-  user: User;
+  @ManyToOne(() => UserEntity, (user) => user.posts)
+  user: UserEntity;
 }

@@ -1,9 +1,9 @@
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { User } from 'src/domain/user/user.entity';
-import { Post } from 'src/domain/post/post.entity';
-import { Asset } from 'src/domain/asset/asset.entity';
+import { UserEntity } from 'src/domain/user/user.entity';
+import { PostEntity } from 'src/domain/post/post.entity';
+import { AssetEntity } from 'src/domain/asset/asset.entity';
 
 @Injectable()
 export class DatasourceProvider implements TypeOrmOptionsFactory {
@@ -17,7 +17,7 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DB_API_USER'),
       password: this.configService.get<string>('DB_API_PASSWORD'),
       database: this.configService.get<string>('DB_API_NAME'),
-      entities: [User, Post, Asset],
+      entities: [UserEntity, PostEntity, AssetEntity],
       synchronize: true,
       logging: true,
       migrationsRun: true,

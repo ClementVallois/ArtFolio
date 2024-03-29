@@ -1,9 +1,9 @@
 import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Asset } from '../asset/asset.entity';
-import { Post } from '../post/post.entity';
+import { AssetEntity } from '../asset/asset.entity';
+import { PostEntity } from '../post/post.entity';
 
-@Entity()
-export class User {
+@Entity('users')
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,11 +19,11 @@ export class User {
   @Column({ unique: true, length: 100, nullable: true })
   username: string;
 
-  @OneToMany(() => Asset, (asset) => asset.user)
-  assets: Asset[];
+  @OneToMany(() => AssetEntity, (asset) => asset.user)
+  assets: AssetEntity[];
 
-  @OneToMany(() => Post, (post) => post.user)
-  posts: Post[];
+  @OneToMany(() => PostEntity, (post) => post.user)
+  posts: PostEntity[];
 
   @Column({ type: 'varchar', length: 750, nullable: true })
   description: string;
