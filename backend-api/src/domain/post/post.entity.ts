@@ -11,7 +11,7 @@ import { UserEntity } from '../user/user.entity';
 @Entity('posts')
 export class PostEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @Column({ type: 'boolean', default: false, nullable: false })
   isPinned: boolean;
