@@ -15,28 +15,57 @@ import { UpdatePostDto } from './dto/update-post.dto';
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
-  }
-
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  /**
+   * Retrieves all posts from the post service.
+   *
+   * @return {Promise<Post[]>} A promise that resolves to an array of Post objects.
+   */
+  getAllPosts() {
+    return this.postService.getAllPosts();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.postService.findOne(+id);
+  /**
+   *
+   * @param {string} id - description of parameter
+   * @return {type} description of return value
+   */
+  getPostById(@Param('id') id: string) {
+    return this.postService.getPostById(+id);
+  }
+
+  @Post()
+  /**
+   * A description of the entire function.
+   *
+   * @param {type} createPostDto - description of parameter
+   * @return {type} description of return value
+   */
+  async createPost(@Body() createPostDto: CreatePostDto) {
+    return this.postService.createPost(createPostDto);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postService.update(+id, updatePostDto);
+  /**
+   * Updates a post with the given ID using the provided data.
+   *
+   * @param {string} id - The ID of the post to update.
+   * @param {UpdatePostDto} updatePostDto - The data to update the post with.
+   * @return {Promise<Post>} - A promise that resolves to the updated post.
+   */
+  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+    return this.postService.updatePost(+id, updatePostDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.postService.remove(+id);
+  /**
+   * Delete a post.
+   *
+   * @param {string} id - the ID of the post to be deleted
+   * @return {Promise<void>} a Promise that resolves when the post is deleted
+   */
+  async deletePost(@Param('id') id: string) {
+    return this.postService.deletePost(+id);
   }
 }
