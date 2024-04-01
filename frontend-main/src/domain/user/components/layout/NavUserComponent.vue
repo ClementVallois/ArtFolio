@@ -78,9 +78,6 @@ import { ref, watchEffect, onUnmounted } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
 
-// user, artist, none
-const activeRole = "artist";
-
 
 // opens the menu in mobile mode
 const isOpen = ref(false);

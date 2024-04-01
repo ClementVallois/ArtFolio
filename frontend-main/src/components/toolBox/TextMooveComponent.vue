@@ -14,8 +14,12 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+
 import { categoriesStore } from '@/domain/artist/store/categoriesStore';
 const categoryStore = categoriesStore();
+const wordss = categoryStore.getAllCategoriesName;
+console.log(wordss);
+
 
 const speed = 3500;
 const n = ref(0);
