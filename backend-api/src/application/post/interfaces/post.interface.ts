@@ -1,7 +1,8 @@
 export interface Post {
-  id: number;
+  id: string;
   isPinned: boolean;
   description: string;
-  //   assets: Asset[];
-  //   user: User;
+  // TODO : Add assets and user
+  // assets: Asset[];
+  // user: User;
 }

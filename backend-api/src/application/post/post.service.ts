@@ -1,26 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
+import { Post } from './interfaces/post.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class PostService {
-  createPost(createPostDto: CreatePostDto) {
-    return 'This action adds a new post';
-  }
+  private posts: Post[] = [];
 
   getAllPosts() {
-    return `This action returns all post`;
+    return this.posts;
   }
 
-  getPostById(id: number) {
-    return `This action returns a #${id} post`;
+  getPostById(id: string) {
+    const post = this.posts.find((post) => post.id === id);
+    if (!post) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+    return post;
   }
 
-  updatePost(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  createPost(post: CreatePostDto): Post {
+    const newPostId = uuidv4();
+    const postToCreate = { id: newPostId, ...post };
+    this.posts.push(postToCreate);
+    return postToCreate;
   }
 
-  deletePost(id: number) {
-    return `This action removes a #${id} post`;
+  updatePost(id: string, post: UpdatePostDto): Post {
+    const postToUpdate = this.posts.find((post) => post.id === id);
+    if (!postToUpdate) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+    if (post.isPinned !== undefined) {
+      postToUpdate.isPinned = post.isPinned;
+    }
+    if (post.description !== undefined) {
+      postToUpdate.description = post.description;
+    }
+    return postToUpdate;
+  }
+
+  deletePost(id: string): Post {
+    const postToDelete = this.posts.find((post) => post.id === id);
+    if (!postToDelete) {
+      throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
+    }
+    this.posts = this.posts.filter((post) => post.id !== id);
+    return postToDelete;
   }
 }
