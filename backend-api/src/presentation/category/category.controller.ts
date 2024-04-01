@@ -7,9 +7,9 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
-import { CategoryService } from '../../../application/category/category.service';
-import { CreateCategoryDto } from '../../../application/category/dto/create-category.dto';
-import { UpdateCategoryDto } from '../../../application/category/dto/update-category.dto';
+import { CategoryService } from '../../application/category/category.service';
+import { CreateCategoryDto } from '../../application/category/dto/create-category.dto';
+import { UpdateCategoryDto } from '../../application/category/dto/update-category.dto';
 
 @Controller('category')
 export class CategoryController {

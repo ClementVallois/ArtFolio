@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AssetController } from './asset.controller';
-import { AssetService } from '../../../application/asset/asset.service';
+import { AssetService } from '../../application/asset/asset.service';
 
 describe('AssetController', () => {
   let controller: AssetController;
