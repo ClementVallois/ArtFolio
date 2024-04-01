@@ -1,7 +1,6 @@
 // TODO: A remplacer par un appel api ensuite
 const dataSourceUser = [
     {
-        "id": "1",
         "uuid": "5d043819-fa2a-4cb8-a8a2-d12b6094761a",
         "first_name": "John",
         "last_name": "Doe",
@@ -17,7 +16,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "2",
         "uuid": "93b20059-bc04-47a2-9e6f-74b11d9beeb9",
         "first_name": "Jane",
         "last_name": "Smith",
@@ -33,7 +31,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "3",
         "uuid": "8938f1c5-91f3-41bc-b333-45f94e2183f2",
         "first_name": "Emily",
         "last_name": "Johnson",
@@ -49,7 +46,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "4",
         "uuid": "4a5db1a6-6eac-4ed9-86c5-45cf962456c3",
         "first_name": "Michael",
         "last_name": "Brown",
@@ -65,7 +61,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "5",
         "uuid": "df9063f1-1e68-48e4-a4b1-9b0bbd8994ab",
         "first_name": "Sarah",
         "last_name": "Wilson",
@@ -81,7 +76,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "6",
         "uuid": "7a3e2b52-1056-40d5-b1a2-e54de9ab87c3",
         "first_name": "Daniel",
         "last_name": "Miller",
@@ -97,7 +91,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "7",
         "uuid": "2fd26990-25bb-437e-af67-bb2fe63de3aa",
         "first_name": "Olivia",
         "last_name": "Taylor",
@@ -113,7 +106,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "8",
         "uuid": "e137a13f-c128-4b42-a3b7-e4e2383cfe9e",
         "first_name": "Ethan",
         "last_name": "Anderson",
@@ -129,7 +121,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "9",
         "uuid": "b7911c21-6508-4932-baba-5f77e9973d5d",
         "first_name": "Ava",
         "last_name": "Garcia",
@@ -145,7 +136,6 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "id": "10",
         "uuid": "c45c2528-36ab-4ee4-bd6c-39ef37e0e789",
         "first_name": "Noah",
         "last_name": "Martinez",

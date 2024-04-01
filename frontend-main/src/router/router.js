@@ -17,9 +17,11 @@ const routes = [
     },
     // TODO: ajout d'une route avec un id 
     {
-        path: '/artist',
+        path: '/artist/:id',
         name: 'artist',
-        component: ArtistView
+        component: ArtistView,
+        props: true
+
     },
     {
         path: '/registration-artist',

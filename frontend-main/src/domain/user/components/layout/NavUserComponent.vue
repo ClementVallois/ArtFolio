@@ -38,11 +38,10 @@
                     <hr class="md:hidden border-t border-gray-200 my-4 w-full">
                     <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
                         class="md:hidden md:mx-4  pb-4" />
-                    <CustomLinkComponent :to="{ name: 'artist' }" text="Accéder à mon profil"
+                    <CustomLinkComponent :to="{ name: 'about' }" text="Accéder à mon profil"
                         class="md:hidden md:mx-4 pb-4" />
                     <!-- TODO: faire la méthode pour se déconnecter -->
-                    <CustomLinkComponent :to="{ name: 'artist' }" text="Se deconnecter"
-                        class="md:hidden md:mx-4 pb-3" />
+                    <CustomLinkComponent :to="{ name: 'about' }" text="Se deconnecter" class="md:hidden md:mx-4 pb-3" />
                     <!-- Profile section - desktop mode -->
                     <div class=" relative flex justify-center
                         align-center hidden sm:flex" @click="toggleProfileMenu">
@@ -61,7 +60,7 @@
                                 <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
-                                <CustomLinkComponent :to="{ name: 'artist' }" text="Se deconnecter"
+                                <CustomLinkComponent :to="{ name: 'about' }" text="Se deconnecter"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                             </div>
                         </div>
