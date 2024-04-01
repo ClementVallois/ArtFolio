@@ -13,7 +13,7 @@
 
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { categoriesStore } from '@/domain/artist/store/categoriesStore';
 const categoryStore = categoriesStore();
 
