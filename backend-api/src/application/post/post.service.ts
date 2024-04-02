@@ -1,19 +1,16 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './interfaces/post.interface';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PostEntity } from 'src/domain/post/post.entity';
+import { Post } from 'src/domain/post/post.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectRepository(PostEntity)
-    private postRepository: Repository<PostEntity>,
+    @InjectRepository(Post)
+    private postRepository: Repository<Post>,
   ) {}
-
-  private posts: Post[] = [];
 
   getAllPosts() {
     return this.postRepository.find();

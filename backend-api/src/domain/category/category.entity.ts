@@ -5,11 +5,11 @@ import {
   JoinTable,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { PostEntity } from '../post/post.entity';
+import { User } from '../user/user.entity';
+import { Post } from '../post/post.entity';
 
 @Entity('categories')
-export class CategoryEntity {
+export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -25,11 +25,11 @@ export class CategoryEntity {
   | categoryId  | int(11)      | PRIMARY KEY FOREIGN KEY    |
   +-------------+--------------+----------------------------+
   */
-  @ManyToMany(() => UserEntity)
+  @ManyToMany(() => User)
   @JoinTable({
     name: 'users_categories',
   })
-  user: UserEntity[];
+  user: User[];
 
   /* 
   Relation with Post entity 
@@ -40,9 +40,9 @@ export class CategoryEntity {
   | categoryId  | int(11)      | PRIMARY KEY FOREIGN KEY    |
   +-------------+--------------+----------------------------+
   */
-  @ManyToMany(() => PostEntity)
+  @ManyToMany(() => Post)
   @JoinTable({
     name: 'posts_categories',
   })
-  post: PostEntity[];
+  post: Post[];
 }

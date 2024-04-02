@@ -1,9 +1,9 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { UserEntity } from '../user/user.entity';
-import { PostEntity } from '../post/post.entity';
+import { User } from '../user/user.entity';
+import { Post } from '../post/post.entity';
 
 @Entity('assets')
-export class AssetEntity {
+export class Asset {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -17,9 +17,9 @@ export class AssetEntity {
   })
   type: string;
 
-  @ManyToOne(() => UserEntity, (user) => user.assets)
-  user: UserEntity;
+  @ManyToOne(() => User, (user) => user.assets)
+  user: User;
 
-  @ManyToOne(() => PostEntity, (post) => post.assets)
-  post: PostEntity;
+  @ManyToOne(() => Post, (post) => post.assets)
+  post: Post;
 }
