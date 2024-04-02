@@ -1,10 +1,7 @@
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { User } from 'src/domain/user/user.entity';
-import { Post } from 'src/domain/post/post.entity';
-import { Asset } from 'src/domain/asset/asset.entity';
-import { Category } from 'src/domain/category/category.entity';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 @Injectable()
 export class DatasourceProvider implements TypeOrmOptionsFactory {
@@ -18,11 +15,12 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DB_API_USER'),
       password: this.configService.get<string>('DB_API_PASSWORD'),
       database: this.configService.get<string>('DB_API_NAME'),
-      entities: [User, Post, Asset, Category],
+      entities: [__dirname + '../../../**/domain/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: true,
       migrationsRun: true,
       migrations: [__dirname + '/../**/migrations/*{.ts,.js}'],
+      namingStrategy: new SnakeNamingStrategy(),
     };
   }
 }
