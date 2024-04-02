@@ -1,53 +1,53 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post } from './interfaces/post.interface';
-import { v4 as uuidv4 } from 'uuid';
+import { InjectRepository } from '@nestjs/typeorm';
+import { PostEntity } from 'src/domain/post/post.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PostService {
+  constructor(
+    @InjectRepository(PostEntity)
+    private postRepository: Repository<PostEntity>,
+  ) {}
+
   private posts: Post[] = [];
 
   getAllPosts() {
-    return this.posts;
+    return this.postRepository.find();
   }
 
-  getPostById(id: string) {
-    const post = this.posts.find((post) => post.id === id);
+  async getPostById(id: string) {
+    const post = await this.postRepository.findOneBy({ id });
     if (!post) {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
     return post;
   }
 
-  createPost(post: CreatePostDto): Post {
-    const newPostId = uuidv4();
-    const postToCreate = { id: newPostId, ...post };
-    this.posts.push(postToCreate);
-    return postToCreate;
+  async createPost(post: CreatePostDto): Promise<Post> {
+    const newPost = this.postRepository.create(post);
+    await this.postRepository.save(newPost);
+    return newPost;
   }
 
-  updatePost(id: string, post: UpdatePostDto): Post {
-    const postToUpdate = this.posts.find((post) => post.id === id);
-    if (!postToUpdate) {
+  async updatePost(id: string, post: UpdatePostDto): Promise<Post> {
+    await this.postRepository.update(id, post);
+    const updatedPost = await this.postRepository.findOneBy({ id });
+    if (!updatedPost) {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
-    if (post.isPinned !== undefined) {
-      postToUpdate.isPinned = post.isPinned;
-    }
-    if (post.description !== undefined) {
-      postToUpdate.description = post.description;
-    }
-    return postToUpdate;
+    return updatedPost;
   }
 
-  deletePost(id: string): Post {
-    const postToDelete = this.posts.find((post) => post.id === id);
+  async deletePost(id: string): Promise<Post> {
+    const postToDelete = await this.postRepository.findOneBy({ id });
     if (!postToDelete) {
       throw new HttpException('Post not found', HttpStatus.NOT_FOUND);
     }
-    this.posts = this.posts.filter((post) => post.id !== id);
+    await this.postRepository.remove(postToDelete);
     return postToDelete;
   }
 }
