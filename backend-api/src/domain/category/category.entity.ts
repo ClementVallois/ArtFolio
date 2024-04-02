@@ -4,6 +4,9 @@ import {
   ManyToMany,
   JoinTable,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Post } from '../post/post.entity';
@@ -45,4 +48,13 @@ export class Category {
     name: 'posts_categories',
   })
   post: Post[];
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
 }
