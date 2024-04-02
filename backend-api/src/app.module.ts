@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { SearchModule } from './application/search/search.module';
 import { UserModule } from './application/user/user.module';
@@ -10,12 +10,19 @@ import { PortfolioModule } from './application/portfolio/portfolio.module';
 import { DatabaseModule } from './infrastructure/database/datasource.module';
 import { AssetModule } from './application/asset/asset.module';
 import { CategoryModule } from './application/category/category.module';
+import { configValidationSchema } from './config/env.schema.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      ignoreEnvFile: true,
+      validationSchema: configValidationSchema,
+      validationOptions: {
+        abortEarly: false,
+      },
       isGlobal: true,
     }),
+
     AssetModule,
     AuthModule,
     CategoryModule,
@@ -28,4 +35,25 @@ import { CategoryModule } from './application/category/category.module';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule implements OnModuleInit {
+  constructor(private readonly configService: ConfigService) {}
+
+  onModuleInit() {
+    if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
+      console.log('Env file is configured for development database');
+    } else if (
+      this.configService.get<string>('DB_ENV').toLowerCase() === 'prod'
+    ) {
+      console.log('Env file is configured for production database');
+    }
+    if (
+      this.configService.get<string>('NODE_ENV').toLowerCase() === 'development'
+    ) {
+      console.log('Env file is configured for development environment');
+    } else if (
+      this.configService.get<string>('NODE_ENV').toLowerCase() === 'production'
+    ) {
+      console.log('Env file is configured for production environment');
+    }
+  }
+}
