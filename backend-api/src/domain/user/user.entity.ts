@@ -1,14 +1,11 @@
 import {
   Entity,
   Column,
-  OneToMany,
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
-import { Asset } from '../asset/asset.entity';
-import { Post } from '../post/post.entity';
 
 @Entity('users')
 export class User {
@@ -26,12 +23,6 @@ export class User {
 
   @Column({ unique: true, length: 100, nullable: true })
   username: string;
-
-  @OneToMany(() => Asset, (asset) => asset.user)
-  assets: Asset[];
-
-  @OneToMany(() => Post, (post) => post.user)
-  posts: Post[];
 
   @Column({ type: 'varchar', length: 750, nullable: true })
   description: string;

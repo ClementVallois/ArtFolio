@@ -7,6 +7,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { Asset } from '../asset/asset.entity';
 import { User } from '../user/user.entity';
@@ -25,7 +26,8 @@ export class Post {
   @OneToMany(() => Asset, (asset) => asset.post)
   assets: Asset[];
 
-  @ManyToOne(() => User, (user) => user.posts)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  @ManyToOne(() => User, (user) => user.id)
   user: User;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

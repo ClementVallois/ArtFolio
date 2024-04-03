@@ -6,6 +6,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
+  JoinColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Post } from '../post/post.entity';
@@ -25,9 +26,11 @@ export class Asset {
   })
   type: string;
 
-  @ManyToOne(() => User, (user) => user.assets)
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  @ManyToOne(() => User, (user) => user.id)
   user: User;
 
+  @JoinColumn({ name: 'post_id', referencedColumnName: 'id' })
   @ManyToOne(() => Post, (post) => post.assets)
   post: Post;
 
