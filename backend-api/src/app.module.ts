@@ -11,6 +11,7 @@ import { DatabaseModule } from './infrastructure/database/datasource.module';
 import { AssetModule } from './application/asset/asset.module';
 import { CategoryModule } from './application/category/category.module';
 import { configValidationSchema } from './config/env.schema.config';
+import { DataRequestModule } from './application/data-request/data-request.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { configValidationSchema } from './config/env.schema.config';
     PostModule,
     PortfolioModule,
     DatabaseModule,
+    DataRequestModule,
   ],
   controllers: [AppController],
   providers: [AppService],

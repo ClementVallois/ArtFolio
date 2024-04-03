@@ -1,10 +1,10 @@
 import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreatePostDto {
-  @IsBoolean({ message: 'Must be a boolean' })
-  @IsNotEmpty({ message: 'Must not be empty' })
+  @IsBoolean({ message: 'isPinned must be a boolean' })
+  @IsNotEmpty({ message: 'isPinned must not be empty' })
   isPinned: boolean;
 
-  @IsString({ message: 'Must be a string' })
+  @IsString({ message: 'Description must be a string' })
   description: string;
 }

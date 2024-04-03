@@ -1,6 +1,11 @@
-import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Asset } from '../asset/asset.entity';
-import { Post } from '../post/post.entity';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -18,12 +23,6 @@ export class User {
 
   @Column({ unique: true, length: 100, nullable: true })
   username: string;
-
-  @OneToMany(() => Asset, (asset) => asset.user)
-  assets: Asset[];
-
-  @OneToMany(() => Post, (post) => post.user)
-  posts: Post[];
 
   @Column({ type: 'varchar', length: 750, nullable: true })
   description: string;
@@ -45,4 +44,13 @@ export class User {
 
   @Column({ nullable: false, length: 50 })
   auth0Id: string;
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
 }

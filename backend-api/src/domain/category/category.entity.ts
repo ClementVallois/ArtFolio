@@ -4,6 +4,9 @@ import {
   ManyToMany,
   JoinTable,
   PrimaryGeneratedColumn,
+  DeleteDateColumn,
+  UpdateDateColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Post } from '../post/post.entity';
@@ -13,8 +16,11 @@ export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true, type: 'varchar', length: 50, nullable: false })
+  @Column({ type: 'varchar', length: 50, unique: true, nullable: false })
   name: string;
+
+  @Column({ type: 'varchar', length: 500, nullable: false })
+  description: string;
 
   /* 
   Relation with User entity 
@@ -45,4 +51,13 @@ export class Category {
     name: 'posts_categories',
   })
   post: Post[];
+
+  @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  updatedAt: Date;
+
+  @DeleteDateColumn({ type: 'timestamp' })
+  deletedAt: Date;
 }

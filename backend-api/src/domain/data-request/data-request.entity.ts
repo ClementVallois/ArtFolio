@@ -1,38 +1,23 @@
 import {
   Entity,
-  Column,
-  ManyToOne,
   PrimaryGeneratedColumn,
+  ManyToOne,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
 } from 'typeorm';
 import { User } from '../user/user.entity';
-import { Post } from '../post/post.entity';
 
-@Entity('assets')
-export class Asset {
+@Entity('data_request')
+export class DataRequest {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar', length: 200, nullable: true })
-  url: string;
-
-  @Column({
-    type: 'enum',
-    enum: ['profile_picture', 'post_picture'],
-    nullable: true,
-  })
-  type: string;
-
+  // One User can have many DataRequests
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   @ManyToOne(() => User, (user) => user.id)
   user: User;
-
-  @JoinColumn({ name: 'post_id', referencedColumnName: 'id' })
-  @ManyToOne(() => Post, (post) => post.assets)
-  post: Post;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
