@@ -1,6 +1,4 @@
 import { Module, OnModuleInit } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './infrastructure/auth/auth.module';
 import { SearchModule } from './application/search/search.module';
@@ -34,8 +32,8 @@ import { DataRequestModule } from './application/data-request/data-request.modul
     DatabaseModule,
     DataRequestModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule implements OnModuleInit {
   constructor(private readonly configService: ConfigService) {}
