@@ -1,10 +1,20 @@
-import { IsBoolean, IsNotEmpty, IsString } from 'class-validator';
+import {
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 
 export class CreatePostDto {
-  @IsBoolean({ message: 'isPinned must be a boolean' })
-  @IsNotEmpty({ message: 'isPinned must not be empty' })
+  @IsBoolean({ message: '$property must be a boolean' })
+  @IsNotEmpty({ message: '$property must not be empty' })
   isPinned: boolean;
 
-  @IsString({ message: 'Description must be a string' })
+  @IsOptional()
+  @IsString({ message: '$property must be a string' })
+  @MaxLength(500, {
+    message: '$property must be less than $constraint1 characters',
+  })
   description: string;
 }
