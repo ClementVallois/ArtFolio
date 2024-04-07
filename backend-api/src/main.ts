@@ -16,6 +16,7 @@ async function bootstrap() {
       whitelist: true,
       errorHttpStatusCode: 422,
       forbidNonWhitelisted: true,
+      stopAtFirstError: false,
     }),
   );
   await app.listen(3000, '0.0.0.0');
