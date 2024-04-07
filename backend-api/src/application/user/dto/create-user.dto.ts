@@ -1,7 +1,9 @@
 import {
   IsDate,
   IsEnum,
+  IsISO8601,
   IsNotEmpty,
+  IsOptional,
   IsString,
   MaxLength,
 } from 'class-validator';
@@ -22,7 +24,7 @@ export class CreateUserDto {
   lastName: string;
 
   @IsNotEmpty({ message: '$property is required' })
-  @IsDate({ message: '$property must be a date' })
+  @IsISO8601({ strict: true }, { message: '$property must be a date' })
   birthDate: Date;
 
   @IsNotEmpty({ message: '$property is required' })
@@ -32,7 +34,7 @@ export class CreateUserDto {
   })
   username: string;
 
-  @IsNotEmpty({ message: '$property is required' })
+  @IsOptional()
   @IsString({ message: '$property must be a string' })
   @MaxLength(500, {
     message: '$property must be less than $constraint1 characters',
@@ -40,17 +42,18 @@ export class CreateUserDto {
   description: string;
 
   @IsEnum(['active', 'inactive', 'deleted'], {
-    message: '$property must be ACTIVE, INACTIVE or DELETED',
+    message: '$property must be active, inactive or deleted',
   })
   @IsNotEmpty({ message: '$property is required' })
   status: string;
 
-  @IsEnum(['artist', 'user', 'moderator'], {
-    message: '$property must be ARTIST, USER or MODERATOR',
+  @IsEnum(['artist', 'user'], {
+    message: '$property must be artist or user',
   })
   @IsNotEmpty({ message: '$property is required' })
   role: string;
 
-  // TODO : Add auth0Id validation when auth0 integration is ready
-  auth0Id;
+  @IsNotEmpty({ message: '$property is required' })
+  @IsString({ message: '$property must be a string' })
+  auth0Id: string;
 }
