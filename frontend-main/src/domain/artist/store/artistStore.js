@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { dataSourceUser } from '@/api/userDataSource';
 import { Optional } from '@/optionnal';
-import { ref, computed, toRaw } from 'vue';
+import { ref, computed } from 'vue';
 
 
 /////////
