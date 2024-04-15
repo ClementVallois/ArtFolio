@@ -13,7 +13,7 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-main
         volumes:
             - ./frontend-main:/app/frontend-main
-            - node_modules_frontend_main:/app/frontend-main/node_modules
+            - ./frontend-main/node_modules:/app/frontend-main/node_modules
         ports:
             - "${FRONTEND_MAIN_SERVER_PORT}:5174"
         env_file:
@@ -26,7 +26,7 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-backoffice
         volumes:
             - ./frontend-backoffice:/app/frontend-backoffice
-            - node_modules_frontend_backoffice:/app/frontend-backoffice/node_modules
+            - ./frontend-backoffice/node_modules:/app/frontend-backoffice/node_modules
         ports:
             - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
         env_file:
@@ -39,7 +39,7 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-api
         volumes:
             - ./backend-api:/app/backend-api
-            - node_modules_backend_api:/app/backend-api/node_modules
+            - ./backend-api/node_modules:/app/backend-api/node_modules
         ports:
             - "${BACKEND_API_SERVER_PORT}:3000"
         env_file:
@@ -70,7 +70,7 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-chat
         volumes:
             - ./backend-chat:/app/backend-chat
-            - node_modules_backend_chat:/app/backend-chat/node_modules
+            - ./backend-chat/node_modules:/app/backend-chat/node_modules
         ports:
             - "${BACKEND_CHAT_SERVER_PORT}:3010"
         env_file:
@@ -97,7 +97,3 @@ services:
 volumes:
     postgresql-data-api:
     postgresql-data-chat:
-    node_modules_backend_api:
-    node_modules_backend_chat:
-    node_modules_frontend_main:
-    node_modules_frontend_backoffice:
