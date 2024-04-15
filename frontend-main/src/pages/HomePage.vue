@@ -21,6 +21,6 @@ import { toRaw } from 'vue';
 import { artistStore } from '@/domain/artist/store/artistStore';
 const artistsStore = artistStore();
 const allArtistData = artistsStore.getAllArtist;
-console.log(toRaw(allArtistData));
+
 
 </script>

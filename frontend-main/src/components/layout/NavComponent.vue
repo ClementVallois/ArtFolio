@@ -1,6 +1,6 @@
 <template>
     <nav class="shadow " id="app">
-        <div class="container px-6 py-5 mx-auto r  h-full">
+        <div class="container px-6 py-5 mx-auto ">
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">
                     <router-link :to="{ name: 'home' }" class="text-gray-800 text-sm  md:mx-4">

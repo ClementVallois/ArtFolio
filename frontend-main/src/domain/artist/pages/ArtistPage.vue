@@ -1,8 +1,9 @@
 <template>
-    <div class="w-[100vw] flex flex-col items-center">
+    <div class="w-[100vw] flex flex-col items-center my:[1rem] lg:my-[2rem] lg:flex-row lg:items-start">
         <InformationBlocArtistPageComponent :id="id"></InformationBlocArtistPageComponent>
         <CardPostComponent></CardPostComponent>
     </div>
+
 </template>
 
 <script setup>
