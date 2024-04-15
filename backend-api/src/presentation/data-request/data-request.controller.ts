@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { DataRequestService } from '../../application/data-request/data-request.service';
-import { CreateDataRequestDto } from '../../application/data-request/dto/create-data-request.dto';
-import { UpdateDataRequestDto } from '../../application/data-request/dto/update-data-request.dto';
+import { CreateDataRequestDto } from './dto/create-data-request.dto';
+import { UpdateDataRequestDto } from './dto/update-data-request.dto';
 
 @Controller('data-request')
 export class DataRequestController {

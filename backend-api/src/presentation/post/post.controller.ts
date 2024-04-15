@@ -9,8 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostService } from '../../application/post/post.service';
-import { CreatePostDto } from '../../application/post/dto/create-post.dto';
-import { UpdatePostDto } from '../../application/post/dto/update-post.dto';
+import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))

@@ -1,13 +1,13 @@
 import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AuthModule } from './infrastructure/auth/auth.module';
-import { UserModule } from './application/user/user.module';
-import { PostModule } from './application/post/post.module';
+import { AuthModule } from './infrastructure/services/jwt/jwt.module';
+import { UserModule } from './presentation/user/user.module';
+import { PostModule } from './presentation/post/post.module';
 import { DatabaseModule } from './infrastructure/database/datasource.module';
-import { AssetModule } from './application/asset/asset.module';
-import { CategoryModule } from './application/category/category.module';
+import { AssetModule } from './presentation/asset/asset.module';
+import { CategoryModule } from './presentation/category/category.module';
 import { configValidationSchema } from './infrastructure/config/env-config.validation';
-import { DataRequestModule } from './application/data-request/data-request.module';
+import { DataRequestModule } from './presentation/data-request/data-request.module';
 import { EnvConfigModule } from './infrastructure/config/env-config.module';
 
 @Module({
