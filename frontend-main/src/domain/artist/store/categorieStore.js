@@ -7,7 +7,7 @@ import { ref, computed } from 'vue';
 /////////
 ///// Categories Store
 /////////
-export const categoriesStore = defineStore('categoriesStore', () => {
+export const categorieStore = defineStore('categorieStore', () => {
     const allCategoriesData = ref(Optional.of(dataSourceCategories));
 
     const getAllCategoriesName = computed(() => {

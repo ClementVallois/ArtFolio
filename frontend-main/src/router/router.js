@@ -17,7 +17,7 @@ const routes = [
     },
     // TODO: ajout d'une route avec un id 
     {
-        path: '/artist/:id',
+        path: '/artist/:artistId',
         name: 'artist',
         component: ArtistView,
         props: true

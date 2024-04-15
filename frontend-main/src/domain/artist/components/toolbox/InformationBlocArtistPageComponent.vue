@@ -19,13 +19,14 @@ import { artistStore } from '@/domain/artist/store/artistStore';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 
 const props = defineProps({
-    id: String,
-
+    artistId: String,
 });
+
 
 // Récupérez l'artist demandé
 const storeArtist = artistStore();
 const allArtistData = JSON.parse(JSON.stringify(toRaw(storeArtist.getAllArtist)));
-const artist = allArtistData.find(artist => artist.uuid === props.id);
+
+const artist = allArtistData.find(artist => artist.uuid === props.artistId);
 
 </script>

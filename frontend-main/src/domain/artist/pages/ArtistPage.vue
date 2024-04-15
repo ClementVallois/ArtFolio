@@ -1,17 +1,17 @@
 <template>
     <div class="w-[100vw] flex flex-col items-center my:[1rem] lg:my-[2rem] lg:flex-row lg:items-start">
-        <InformationBlocArtistPageComponent :id="id"></InformationBlocArtistPageComponent>
-        <CardPostComponent></CardPostComponent>
+        <InformationBlocArtistPageComponent :artistId="artistId"></InformationBlocArtistPageComponent>
+        <CardListComponent :artistId="artistId"></CardListComponent>
     </div>
 
 </template>
 
 <script setup>
-import CardPostComponent from '@/domain/artist/components/toolbox/CardPostComponent.vue';
+import CardListComponent from '@/domain/artist/components/toolbox/CardListComponent.vue';
 import InformationBlocArtistPageComponent from '@/domain/artist/components/toolbox/InformationBlocArtistPageComponent.vue';
 import { defineProps } from 'vue';
 
 const props = defineProps({
-    id: String
+    artistId: String
 })
 </script>

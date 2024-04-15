@@ -15,10 +15,10 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-import { categoriesStore } from '@/domain/artist/store/categoriesStore';
-const categoryStore = categoriesStore();
+import { categorieStore } from '@/domain/artist/store/categorieStore';
+const categoryStore = categorieStore();
 const wordss = categoryStore.getAllCategoriesName;
-console.log(wordss);
+
 
 
 const speed = 3500;
@@ -75,4 +75,4 @@ onMounted(() => {
         opacity: 1;
     }
 }
-</style>
+</style>@/domain/artist/store/categorieStore
