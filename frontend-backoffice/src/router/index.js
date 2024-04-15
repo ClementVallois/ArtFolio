@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import GroupView from '@/views/GroupView.vue'
+import HomeView from '@/pages/HomeView.vue'
+import GroupView from '@/pages/GroupView.vue'
 
 const routes = [
   {

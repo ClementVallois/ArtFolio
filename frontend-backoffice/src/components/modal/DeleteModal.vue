@@ -25,9 +25,9 @@
 
 <script setup>
 import { ref, watch } from 'vue';
-import { useStore } from '@/stores/store'
+import { useGlobalStore } from '@/stores/store'
 
-const store = useStore();
+const store = useGlobalStore();
 const params = defineProps(['isDelete', 'user']);
 const emit = defineEmits(['closeModal','stateError', 'stateSuccess']);
 const showModal = ref(false);
