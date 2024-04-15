@@ -1,6 +1,4 @@
-import { defineStore } from 'pinia'
-
-export const useGlobalStore = defineStore('globalStore', () => {
+import api from '@/api/api.js'
 
 async function CRUDapi(verb, tableName, id, data){
     try {
@@ -8,24 +6,24 @@ async function CRUDapi(verb, tableName, id, data){
         const url= `${apiURL}/${tableName}`
         switch (verb) {
             case 'DELETE':
-                response = await axios.delete(`${url}/${id}`)
+                response = await api.delete(`${url}/${id}`)
                 resolve(response)                
                 break;
             case 'PUT':
                 console.log(data)
-                response = await axios.put(`${url}/${id}`, data)
+                response = await api.put(`${url}/${id}`, data)
                 resolve(response)                
                 break;
             case 'POST':
-                response = await axios.post(url, data)
+                response = await api.post(url, data)
                 resolve(response)                
                 break;
             case 'GET':
                 if (id != null) {
-                    response = await axios.get(`${url}/${id}`);
+                    response = await api.get(`${url}/${id}`);
                     resolve(response.data) 
                 } else {
-                    response = await axios.get(url)
+                    response = await api.get(url)
                     resolve(response.data)
                 }
                 break;
@@ -38,9 +36,4 @@ async function CRUDapi(verb, tableName, id, data){
     }
 }
 
-
-return {
-    CRUDapi
-    }
-
-})
+export default CRUDapi;

@@ -1,4 +1,4 @@
-[
+const users = [
     {
         "id": "1",
         "uuid": "5d043819-fa2a-4cb8-a8a2-d12b6094761a",
@@ -160,3 +160,5 @@
         "deleted_at": null
     }
 ]
+
+export default users;
