@@ -5,10 +5,10 @@ import {
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
+import { CreatePostDto } from '../../presentation/post/dto/create-post.dto';
+import { UpdatePostDto } from '../../presentation/post/dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Post } from 'src/domain/post/post.entity';
+import { Post } from 'src/infrastructure/entities/post.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
