@@ -13,9 +13,9 @@
                     <i class="fas fa-home text-white text-l px-[10px] group-hover:text-gray-800"></i>
                     <p>Home</p>
                 </router-link>
-                <router-link to="/group" class="inline-flex relative items-center py-[10px] w-full text-sm font-medium border-gray-200 hover:bg-gray-300 group hover:text-gray-800">
+                <router-link to="/artist" class="inline-flex relative items-center py-[10px] w-full text-sm font-medium border-gray-200 hover:bg-gray-300 group hover:text-gray-800">
                     <i class="fas fa-people-group text-white text-l px-[10px] group-hover:text-gray-800"></i>
-                    <p>Group</p>
+                    <p>Artist</p>
                 </router-link>                
             </div>
         </div>    
