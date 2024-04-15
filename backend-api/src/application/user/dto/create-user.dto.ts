@@ -1,5 +1,4 @@
 import {
-  IsDate,
   IsEnum,
   IsISO8601,
   IsNotEmpty,

@@ -42,7 +42,6 @@ export class PostService {
 
   async createPost(post: CreatePostDto): Promise<Post> {
     const postToCreate = this.postRepository.create(post);
-
     return await this.postRepository.save(postToCreate);
   }
 
