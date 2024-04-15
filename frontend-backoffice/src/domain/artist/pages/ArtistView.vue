@@ -128,7 +128,6 @@ const toggleSuccessAlert = () => {
 }
 
 const displaySuccessDeleteAlert = async () => {
-    console.log('here')
     isOpenDeleteModal.value=false
     successMessage.value = `${itemModal.value.username} a été retiré`
     await successTimeOut()
