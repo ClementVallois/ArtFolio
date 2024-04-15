@@ -31,7 +31,7 @@ export class Asset {
   user: User;
 
   @JoinColumn({ name: 'post_id', referencedColumnName: 'id' })
-  @ManyToOne(() => Post, (post) => post.assets)
+  @ManyToOne(() => Post, (post) => post.id)
   post: Post;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

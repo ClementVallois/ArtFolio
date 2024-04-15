@@ -3,13 +3,11 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToMany,
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
 } from 'typeorm';
-import { Asset } from './asset.entity';
 import { User } from './user.entity';
 
 @Entity('posts')
@@ -22,9 +20,6 @@ export class Post {
 
   @Column({ type: 'varchar', length: 500, nullable: true })
   description: string;
-
-  @OneToMany(() => Asset, (asset) => asset.post)
-  assets: Asset[];
 
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   @ManyToOne(() => User, (user) => user.id)
