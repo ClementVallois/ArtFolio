@@ -5,7 +5,7 @@
 
             <h2>{{ artist.name }}</h2>
 
-            <router-link :to="{ name: 'artist', params: { artistId: artist.uuid } }">Voir l'artiste</router-link>
+            <router-link :to="{ name: 'artist', params: { artistId: artist.id } }">Voir l'artiste</router-link>
         </div>
     </div>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid lg:grid-cols-2 justify-center">
-        <CardPostComponent v-for="(post, index) in allPostForArtist" :key="index" :postDescription="post.description"
-            :postDate="formatDate(post.created_at)" />
+        <CardPostComponent :postId="post.id" v-for="(post, index) in allPostForArtist" :key="index"
+            :postDescription="post.description" :postDate="formatDate(post.created_at)" />
     </div>
 </template>
 
@@ -9,12 +9,14 @@
 import { toRaw, defineProps } from 'vue';
 import { postStore } from '@/domain/artist/store/postStore';
 import CardPostComponent from '@/domain/artist/components/toolbox/CardPostComponent.vue'
+import { assetsStore } from '@/store/assetStore';
 
 const props = defineProps({
     postDescription: String,
     postDate: String,
     postPictureUrl: String,
-    artistId: String
+    artistId: String,
+    postId: String
 });
 
 
@@ -29,5 +31,6 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleString("fr-FR", options).replace(',', ' à');
 }
+
 
 </script>

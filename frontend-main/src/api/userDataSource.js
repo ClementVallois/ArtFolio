@@ -1,7 +1,7 @@
 // TODO: A remplacer par un appel api ensuite
 const dataSourceUser = [
     {
-        "uuid": "5d043819-fa2a-4cb8-a8a2-d12b6094761a",
+        "id": "5d043819-fa2a-4cb8-a8a2-d12b6094761a",
         "first_name": "John",
         "last_name": "Doe",
         "birthdate": "1990-05-15",
@@ -16,7 +16,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "93b20059-bc04-47a2-9e6f-74b11d9beeb9",
+        "id": "93b20059-bc04-47a2-9e6f-74b11d9beeb9",
         "first_name": "Jane",
         "last_name": "Smith",
         "birthdate": "1985-10-20",
@@ -31,7 +31,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "8938f1c5-91f3-41bc-b333-45f94e2183f2",
+        "id": "8938f1c5-91f3-41bc-b333-45f94e2183f2",
         "first_name": "Emily",
         "last_name": "Johnson",
         "birthdate": "1992-08-10",
@@ -46,7 +46,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "4a5db1a6-6eac-4ed9-86c5-45cf962456c3",
+        "id": "4a5db1a6-6eac-4ed9-86c5-45cf962456c3",
         "first_name": "Michael",
         "last_name": "Brown",
         "birthdate": "1988-03-25",
@@ -61,7 +61,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "df9063f1-1e68-48e4-a4b1-9b0bbd8994ab",
+        "id": "df9063f1-1e68-48e4-a4b1-9b0bbd8994ab",
         "first_name": "Sarah",
         "last_name": "Wilson",
         "birthdate": "1995-12-03",
@@ -76,7 +76,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "7a3e2b52-1056-40d5-b1a2-e54de9ab87c3",
+        "id": "7a3e2b52-1056-40d5-b1a2-e54de9ab87c3",
         "first_name": "Daniel",
         "last_name": "Miller",
         "birthdate": "1991-07-18",
@@ -91,7 +91,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "2fd26990-25bb-437e-af67-bb2fe63de3aa",
+        "id": "2fd26990-25bb-437e-af67-bb2fe63de3aa",
         "first_name": "Olivia",
         "last_name": "Taylor",
         "birthdate": "1994-09-28",
@@ -106,7 +106,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "e137a13f-c128-4b42-a3b7-e4e2383cfe9e",
+        "id": "e137a13f-c128-4b42-a3b7-e4e2383cfe9e",
         "first_name": "Ethan",
         "last_name": "Anderson",
         "birthdate": "1993-06-12",
@@ -121,7 +121,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "b7911c21-6508-4932-baba-5f77e9973d5d",
+        "id": "b7911c21-6508-4932-baba-5f77e9973d5d",
         "first_name": "Ava",
         "last_name": "Garcia",
         "birthdate": "1996-11-08",
@@ -136,7 +136,7 @@ const dataSourceUser = [
         "deleted_at": null
     },
     {
-        "uuid": "c45c2528-36ab-4ee4-bd6c-39ef37e0e789",
+        "id": "c45c2528-36ab-4ee4-bd6c-39ef37e0e789",
         "first_name": "Noah",
         "last_name": "Martinez",
         "birthdate": "1997-04-30",
