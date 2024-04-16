@@ -11,7 +11,7 @@
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <SearchArtist @isSearchActive="activateSearch" />
+                        <SearchUser @isSearchActive="activateSearch" />
                     </div>
                     <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -28,8 +28,8 @@
                                 <!-- <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Category</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
                                     <li class="flex items-center">
-                                        <input id="artist" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="artist" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Artists</label>
+                                        <input id="user" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <label for="user" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">users</label>
                                     </li>
                                     <li class="flex items-center">
                                         <input id="fitbit" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
@@ -55,34 +55,34 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-if='!isSearch' v-for="(artist, index) in artists" :key="index" class="border-b dark:border-gray-700">
-                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ artist.first_name }}</td>
-                                <td class="px-4 py-3">{{ artist.last_name }}</td>
-                                <td class="px-4 py-3">{{ artist.username }}</td>
-                                <td class="px-4 py-3">{{ artist.birthdate }}</td>
-                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ artist.description }}</td> -->
-                                <td class="px-4 py-3">{{ artist.role }}</td>
+                            <tr v-if='!isSearch' v-for="(user, index) in users" :key="index" class="border-b dark:border-gray-700">
+                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ user.first_name }}</td>
+                                <td class="px-4 py-3">{{ user.last_name }}</td>
+                                <td class="px-4 py-3">{{ user.username }}</td>
+                                <td class="px-4 py-3">{{ user.birthdate }}</td>
+                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ user.description }}</td> -->
+                                <td class="px-4 py-3">{{ user.role }}</td>
                             <!-- Actions column -->
                             <td class="px-4 py-3 flex items-center justify-end">
                                 <!-- Buttons or actions for each user -->
                                 <!-- <EditButton />
                                 <PreviewButton /> -->
-                                <DeleteButton @clickDelete="OpenDeleteModal(artist)" />
+                                <DeleteButton @clickDelete="OpenDeleteModal(user)" />
                             </td>
                             </tr>
-                            <tr v-else v-for="(artist, indexFiltered) in storeArtist.artistFiltered" :key="indexFiltered" class="border-b dark:border-gray-700">
-                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ artist.first_name }}</td>
-                                <td class="px-4 py-3">{{ artist.last_name }}</td>
-                                <td class="px-4 py-3">{{ artist.username }}</td>
-                                <td class="px-4 py-3">{{ artist.birthdate }}</td>
-                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ artist.description }}</td> -->
-                                <td class="px-4 py-3">{{ artist.role }}</td>
+                            <tr v-else v-for="(user, indexFiltered) in storeuser.userFiltered" :key="indexFiltered" class="border-b dark:border-gray-700">
+                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ user.first_name }}</td>
+                                <td class="px-4 py-3">{{ user.last_name }}</td>
+                                <td class="px-4 py-3">{{ user.username }}</td>
+                                <td class="px-4 py-3">{{ user.birthdate }}</td>
+                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ user.description }}</td> -->
+                                <td class="px-4 py-3">{{ user.role }}</td>
                             <!-- Actions column -->
                             <td class="px-4 py-3 flex items-center justify-end">
                                 <!-- Buttons or actions for each user -->
                                 <!-- <EditButton />
                                 <PreviewButton /> -->
-                                <DeleteButton @clickDelete="OpenDeleteModal(artist)" />
+                                <DeleteButton @clickDelete="OpenDeleteModal(user)" />
                             </td>
                             </tr>                            
 
@@ -105,15 +105,14 @@
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
-import users from '@/assets/data/users.js'
 import EditButton from '@/components/toolbox/EditButtonComponent.vue'
 import PreviewButton from '@/components/toolbox/PreviewButtonComponent.vue'
 import DeleteButton from '@/components/toolbox/DeleteButtonComponent.vue'
 import DeleteModal from '@/components/modal/DeleteModal.vue'
 import SuccessAlert from '@/components/state/success/SuccessAlert.vue'
 import ErrorAlert from '@/components/state/error/ErrorAlert.vue'
-import SearchArtist from '@/domain/artist/components/SearchArtist.vue'
-import { useStoreArtist } from '../store/store-artist'
+import SearchUser from '@/domain/user/components/SearchUser.vue'
+import { useStoreUser } from '../store/store-user'
 
 const isOpenDeleteModal= ref(false)
 const itemModal=ref({})
@@ -122,10 +121,10 @@ const isError = ref(false)
 const isSearch = ref(false)
 const successMessage = ref('Votre opération est un success')
 const errorMessage=ref('Une erreur est survenue')
-const storeArtist = useStoreArtist() 
+const storeUser = useStoreUser() 
 
 onMounted(() => {
-    storeArtist.getAllArtists()
+    storeUser.getAllUsers()
 })
 
 
@@ -163,11 +162,6 @@ const successTimeOut = async () => {
     }, 5000)
 }
 
-const artists = computed(() => {
-    const role = 'artist'; // Your desired role
-    return users.filter(user => user.role === role);
-});
-
 const activateSearch = (isSearchActivated) => {
     if(isSearchActivated){
         isSearch.value = true
@@ -175,9 +169,5 @@ const activateSearch = (isSearchActivated) => {
         isSearch.value = false
     }
 }
-
-
-
-
 
 </script>

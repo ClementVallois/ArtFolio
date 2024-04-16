@@ -12,7 +12,6 @@ const artistFiltered = ref([])
 function getAllArtists() {
     const role = 'artist'; // Your desired role
     artistsAll.value= users.filter(user => user.role === role);
-    console.log(artistsAll)
 }
 
 

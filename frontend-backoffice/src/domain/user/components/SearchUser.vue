@@ -19,20 +19,20 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useStoreArtist } from '../store/store-artist.js'
+import { useStoreUser } from '../store/store-user.js'
 
-const storeArtist = useStoreArtist()
+const storeUser = useStoreUser()
 const searchValue = ref('')
 const emit = defineEmits(['isSearchActive'])
 
 const updateFilterValue = event => {
     searchValue.value = event.target.value;
     if (searchValue.value != '') {
-        storeArtist.filterDataArtist(searchValue)
+        storeUser.filterDataUser(searchValue)
         emit('isSearchActive', true)
     } else {
         emit('isSearchActive', false)
     }
 };
 
-</script>../store/ArtistStore.js
+</script>
