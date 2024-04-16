@@ -11,17 +11,7 @@
             <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
                 <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
                     <div class="w-full md:w-1/2">
-                        <form class="flex items-center">
-                            <label for="simple-search" class="sr-only">Rechercher</label>
-                            <div class="relative w-full">
-                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                    </svg>
-                                </div>
-                                <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required="">
-                            </div>
-                        </form>
+                        <SearchUser @isSearchActive="activateSearch" />
                     </div>
                     <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
                         <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -38,8 +28,8 @@
                                 <!-- <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">Category</h6>
                                 <ul class="space-y-2 text-sm" aria-labelledby="filterDropdownButton">
                                     <li class="flex items-center">
-                                        <input id="artist" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                        <label for="artist" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">Artists</label>
+                                        <input id="user" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                        <label for="user" class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100">users</label>
                                     </li>
                                     <li class="flex items-center">
                                         <input id="fitbit" type="checkbox" value="" class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
@@ -50,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="overflow-x-auto ">
+                <div class="overflow-y-auto">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -65,21 +55,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(artist, index) in artists" :key="index" class="border-b dark:border-gray-700">
-                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ artist.first_name }}</td>
-                                <td class="px-4 py-3">{{ artist.last_name }}</td>
-                                <td class="px-4 py-3">{{ artist.username }}</td>
-                                <td class="px-4 py-3">{{ artist.birthdate }}</td>
-                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ artist.description }}</td> -->
-                                <td class="px-4 py-3">{{ artist.role }}</td>
+                            <tr v-if='!isSearch' v-for="(user, index) in users" :key="index" class="border-b dark:border-gray-700">
+                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ user.first_name }}</td>
+                                <td class="px-4 py-3">{{ user.last_name }}</td>
+                                <td class="px-4 py-3">{{ user.username }}</td>
+                                <td class="px-4 py-3">{{ user.birthdate }}</td>
+                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ user.description }}</td> -->
+                                <td class="px-4 py-3">{{ user.role }}</td>
                             <!-- Actions column -->
                             <td class="px-4 py-3 flex items-center justify-end">
                                 <!-- Buttons or actions for each user -->
-                                <EditButton />
-                                <PreviewButton />
-                                <DeleteButton @clickDelete="OpenDeleteModal(artist)" />
+                                <!-- <EditButton />
+                                <PreviewButton /> -->
+                                <DeleteButton @clickDelete="OpenDeleteModal(user)" />
                             </td>
                             </tr>
+                            <tr v-else v-for="(user, indexFiltered) in storeuser.userFiltered" :key="indexFiltered" class="border-b dark:border-gray-700">
+                                <td scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{{ user.first_name }}</td>
+                                <td class="px-4 py-3">{{ user.last_name }}</td>
+                                <td class="px-4 py-3">{{ user.username }}</td>
+                                <td class="px-4 py-3">{{ user.birthdate }}</td>
+                                <!-- <td class="px-4 py-3 max-w-[12rem] truncate">{{ user.description }}</td> -->
+                                <td class="px-4 py-3">{{ user.role }}</td>
+                            <!-- Actions column -->
+                            <td class="px-4 py-3 flex items-center justify-end">
+                                <!-- Buttons or actions for each user -->
+                                <!-- <EditButton />
+                                <PreviewButton /> -->
+                                <DeleteButton @clickDelete="OpenDeleteModal(user)" />
+                            </td>
+                            </tr>                            
+
                         </tbody>
                     </table>
                 </div>
@@ -98,21 +104,29 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
-import users from '@/assets/data/users.js'
+import { computed, ref, onMounted } from 'vue'
 import EditButton from '@/components/toolbox/EditButtonComponent.vue'
 import PreviewButton from '@/components/toolbox/PreviewButtonComponent.vue'
 import DeleteButton from '@/components/toolbox/DeleteButtonComponent.vue'
 import DeleteModal from '@/components/modal/DeleteModal.vue'
 import SuccessAlert from '@/components/state/success/SuccessAlert.vue'
 import ErrorAlert from '@/components/state/error/ErrorAlert.vue'
+import SearchUser from '@/domain/user/components/SearchUser.vue'
+import { useStoreUser } from '../store/store-user'
 
 const isOpenDeleteModal= ref(false)
 const itemModal=ref({})
 const isSuccess = ref(false)
 const isError = ref(false)
+const isSearch = ref(false)
 const successMessage = ref('Votre opération est un success')
 const errorMessage=ref('Une erreur est survenue')
+const storeUser = useStoreUser() 
+
+onMounted(() => {
+    storeUser.getAllUsers()
+})
+
 
 const OpenDeleteModal = (item) => {
     itemModal.value = item
@@ -148,13 +162,12 @@ const successTimeOut = async () => {
     }, 5000)
 }
 
-const artists = computed(() => {
-    const role = 'artist'; // Your desired role
-    return users.filter(user => user.role === role);
-});
-
-
-
-
+const activateSearch = (isSearchActivated) => {
+    if(isSearchActivated){
+        isSearch.value = true
+    } else {
+        isSearch.value = false
+    }
+}
 
 </script>

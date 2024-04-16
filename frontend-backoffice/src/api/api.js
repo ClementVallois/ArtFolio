@@ -3,7 +3,7 @@ import axios from 'axios';
 // Create an instance of Axios with custom configuration
 const api = axios.create({
     baseURL: 'http', // Your API base URL
-    timeout: 10000,
+    timeout: 10000, // expression en milisecondes, 10s pour envoyer une erreur après un temps de latence 
     headers: {
         'Content-Type': 'application/json',
     }

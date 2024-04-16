@@ -5,7 +5,7 @@
             </div>
             <!-- Search bar -->
             <div class="w-[calc(100%-200px)] flex justify-center">
-                <p>Middle bar</p>
+                <p>Dashboard Admin</p>
             </div>
             <!-- User -->
             <div class="w-[200px] cursor-pointer" @click="toggleMenuUser" >
