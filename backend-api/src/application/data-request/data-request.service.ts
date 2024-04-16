@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDataRequestDto } from './dto/create-data-request.dto';
-import { UpdateDataRequestDto } from './dto/update-data-request.dto';
+import { CreateDataRequestDto } from '../../presentation/data-request/dto/create-data-request.dto';
+import { UpdateDataRequestDto } from '../../presentation/data-request/dto/update-data-request.dto';
 
 @Injectable()
 export class DataRequestService {

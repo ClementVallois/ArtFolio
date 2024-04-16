@@ -1,15 +1,17 @@
 <template>
-    <TitleComponent title="Artiste"> </TitleComponent>
+    <div class="w-[100vw] flex flex-col items-center my:[1rem] lg:my-[2rem] lg:flex-row lg:items-start">
+        <InformationBlocArtistPageComponent :artistId="artistId"></InformationBlocArtistPageComponent>
+        <CardListComponent :artistId="artistId"></CardListComponent>
+    </div>
+
 </template>
 
 <script setup>
+import CardListComponent from '@/domain/artist/components/toolbox/CardListComponent.vue';
+import InformationBlocArtistPageComponent from '@/domain/artist/components/toolbox/InformationBlocArtistPageComponent.vue';
+import { defineProps } from 'vue';
 
-import TitleComponent from '@/components/toolBox/TitleComponent.vue';
-
-/// Test
-import { artistStore } from '@/domain/artist/store/artistStore';
-const artistsStore = artistStore();
-const allArtistData = artistsStore.getAllArtist;
-console.log(allArtistData[1]);
-
+const props = defineProps({
+    artistId: String
+})
 </script>
