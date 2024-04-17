@@ -27,16 +27,13 @@ export class ArtistController {
   }
 
   @Post()
-  createArtist(@Body() createArtistDto: CreateArtistDto) {
-    return this.artistService.createArtist(createArtistDto);
+  createArtist(@Body() artist: CreateArtistDto) {
+    return this.artistService.createArtist(artist);
   }
 
   @Patch(':id')
-  updateArtist(
-    @Param() { id }: FindIdParams,
-    @Body() updateArtistDto: UpdateArtistDto,
-  ) {
-    return this.artistService.updateArtist(id);
+  updateArtist(@Param() { id }: FindIdParams, @Body() artist: UpdateArtistDto) {
+    return this.artistService.updateArtist(id, artist);
   }
 
   @Delete(':id')

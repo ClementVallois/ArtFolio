@@ -1,7 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
+import { UpdateArtistDto } from 'src/presentation/artist/dto/update-artist.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -26,29 +32,50 @@ export class ArtistService {
     if (!id) {
       throw new HttpException('Artist ID is required', HttpStatus.BAD_REQUEST);
     }
-    return this.userRepository.findOneBy({ id: id });
+    const artist = await this.userRepository.findOne({
+      where: { id: id, role: 'artist' },
+    });
+    if (!artist) {
+      throw new NotFoundException(`Artist not found with ID: ${id}`);
+    }
+    return artist;
   }
 
   async createArtist(artistData: CreateArtistDto): Promise<User> {
-    try {
-      const createArtist = this.userRepository.create(artistData);
-      await this.userRepository.save(createArtist);
-      return createArtist;
-    } catch (error) {
-      if (error?.code === '23505') {
-        throw new HttpException(
-          'Artist with this ID already exists',
-          HttpStatus.BAD_REQUEST,
-        );
-      }
+    if (artistData.role !== 'artist') {
+      throw new HttpException('Role must be artist', HttpStatus.BAD_REQUEST);
     }
-    throw new HttpException(
-      'Error creating artist',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+    try {
+      const artistToCreate = this.userRepository.create(artistData);
+      return await this.userRepository.save(artistToCreate);
+    } catch (error) {
+      // TODO: Create a validation service to use instead of manual check
+      if (error.code === '23505') {
+        let errorMessage: string;
+        if (error.detail.includes('username')) {
+          errorMessage = `Artist with username ${artistData.username} already exists`;
+        } else if (error.detail.includes('auth0_id')) {
+          errorMessage = `Artist with Auth0 ID ${artistData.auth0Id} already exists`;
+        } else {
+          errorMessage = 'Error creating artist';
+        }
+        throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+      }
+      throw new HttpException(
+        'Error creating artist',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  async updateArtist(id: string) {}
+  async updateArtist(id: string, artist: UpdateArtistDto): Promise<User> {
+    const existingArtist = await this.getArtistById(id);
+    this.userRepository.merge(existingArtist, artist);
+    return this.userRepository.save(existingArtist);
+  }
 
-  async removeArtist(id: string) {}
+  async removeArtist(id: string): Promise<User> {
+    const existingArtist = await this.getArtistById(id);
+    return this.userRepository.remove(existingArtist);
+  }
 }

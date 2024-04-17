@@ -70,6 +70,7 @@ export class AppModule implements OnModuleInit {
       console.log('Env file is configured for production environment');
     }
 
+    // Uncomment to generate fake data
     // await this.userSeederService.seed();
     // await this.postSeederService.seed();
     // await this.assetSeederService.seed();
