@@ -4,7 +4,9 @@
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">
                     <router-link :to="{ name: 'home' }" class="text-gray-800 text-sm  md:mx-4">
-                        <p class="text-gray-800 text-xl font-bold hover:text-gray-700 md:text-2xl">ArtFolio</p>
+                        <p class="font-title text-[3rem]">
+                            ArtFolio
+                        </p>
                     </router-link>
                     <div class="md:hidden">
                         <button type="button"

@@ -6,7 +6,7 @@
                 <p>
                     {{ props.postDescription }}
                 </p>
-                <p class="text-end text-xs pt-[1rem]">{{ props.postDate }}</p>
+                <p class="text-end text-xs pt-[1rem] font-lightText">{{ props.postDate }}</p>
             </div>
         </div>
     </div>

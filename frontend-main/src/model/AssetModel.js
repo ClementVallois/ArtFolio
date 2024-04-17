@@ -8,4 +8,4 @@ class Asset {
     }
 }
 
-module.exports = Asset;
+export { Asset };

@@ -39,7 +39,4 @@ class Optional {
     }
 }
 
-export { Optional };/* 
-    .getOrThrow(() => console.log("c'est ton header²")).
-    bearer
-    .getOrThrow(() => console.log("c'est ton bearer")); */
+export { Optional };
