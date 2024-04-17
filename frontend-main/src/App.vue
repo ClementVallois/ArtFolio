@@ -3,7 +3,9 @@
     <NavArtistComponent v-if="activeRole === 'artist'" />
     <NavUserComponent v-if="activeRole === 'user'" />
     <div class="w-screen flex flex-col">
+
         <router-view />
+
     </div>
     <FooterComponent />
 </template>

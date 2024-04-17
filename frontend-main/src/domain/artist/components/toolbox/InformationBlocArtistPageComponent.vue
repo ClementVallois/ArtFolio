@@ -26,6 +26,7 @@ const props = defineProps({
 
 // Récupérez l'artist demandé
 const storeArtist = artistStore();
+console.log(storeArtist.getAllArtist)
 const allArtistData = JSON.parse(JSON.stringify(toRaw(storeArtist.getAllArtist)));
 
 const artist = allArtistData.find(artist => artist.id === props.artistId);
