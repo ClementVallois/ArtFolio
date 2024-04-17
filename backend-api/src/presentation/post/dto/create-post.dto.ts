@@ -1,8 +1,8 @@
 import {
   IsBoolean,
   IsNotEmpty,
-  IsOptional,
   IsString,
+  IsUUID,
   MaxLength,
 } from 'class-validator';
 
@@ -11,10 +11,13 @@ export class CreatePostDto {
   @IsNotEmpty({ message: '$property must not be empty' })
   isPinned: boolean;
 
-  @IsOptional()
   @IsString({ message: '$property must be a string' })
   @MaxLength(500, {
     message: '$property must be less than $constraint1 characters',
   })
-  description: string;
+  description?: string;
+
+  @IsNotEmpty({ message: '$property must not be empty' })
+  @IsUUID('4', { message: '$property must be a valid UUID' })
+  userId: string;
 }
