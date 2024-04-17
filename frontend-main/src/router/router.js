@@ -1,62 +1,68 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '@/pages/HomePage.vue';
-import ArtistView from '@/domain/artist/pages/ArtistPage.vue'
-import SearchView from '@/pages/SearchPage.vue';
-import ChatView from '@/domain/chat/pages/ChatPage.vue';
-import AboutView from '@/pages/AboutPage.vue';
-import LoginView from '@/domain/authentification/pages/LoginPage.vue';
-import RegistrationView from '@/pages/RegistrationPage.vue';
-import ArtistRegistrationView from '@/domain/artist/pages/ArtistRegistrationPage.vue';
-import UserRegistrationView from '@/domain/user/pages/UserRegistrationPage.vue';
+import HomePage from '@/pages/HomePage.vue';
+import ArtistPage from '@/domain/artist/pages/ArtistPage.vue'
+import SearchPage from '@/pages/SearchPage.vue';
+import ChatPage from '@/domain/chat/pages/ChatPage.vue';
+import AboutPage from '@/pages/AboutPage.vue';
+import LoginPage from '@/domain/authentification/pages/LoginPage.vue';
+import RegistrationPage from '@/pages/RegistrationPage.vue';
+import ArtistRegistrationPage from '@/domain/artist/pages/ArtistRegistrationPage.vue';
+import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
+import LegalNotionPage from '@/pages/LegalNotionPage.vue';
 
 const routes = [
     {
         path: '/',
         name: 'home',
-        component: HomeView
+        component: HomePage
     },
     // TODO: ajout d'une route avec un id 
     {
         path: '/artist/:artistId',
         name: 'artist',
-        component: ArtistView,
+        component: ArtistPage,
         props: true
 
     },
     {
         path: '/registration-artist',
         name: 'registration-artist',
-        component: ArtistRegistrationView
+        component: ArtistRegistrationPage
     },
     {
         path: '/registration-user',
         name: 'registration-user',
-        component: UserRegistrationView
+        component: UserRegistrationPage
     },
     {
         path: '/search',
         name: 'search',
-        component: SearchView
+        component: SearchPage
     },
     {
         path: '/chat',
         name: 'chat',
-        component: ChatView
+        component: ChatPage
     },
     {
         path: '/about',
         name: 'about',
-        component: AboutView
+        component: AboutPage
     },
     {
         path: '/login',
         name: 'login',
-        component: LoginView
+        component: LoginPage
     },
     {
         path: '/registration',
         name: 'registration',
-        component: RegistrationView
+        component: RegistrationPage
+    },
+    {
+        path: '/legal-notion',
+        name: 'legalNotion',
+        component: LegalNotionPage
     },
 ]
 

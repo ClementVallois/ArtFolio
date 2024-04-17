@@ -2,3 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+
+@layer base {
+    @font-face {
+        font-family: 'Bebas Neue';
+        src: url('@/assets/font/BebasNeue-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat Light';
+    src: url('@/assets/font/Montserrat-Light.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat Regular';
+    src: url('@/assets/font/Montserrat-Regular.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat Medium';
+    src: url('@/assets/font/Montserrat-Medium.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'Montserrat Bold';
+    src: url('@/assets/font/Montserrat-Bold.ttf') format('truetype');
+}
+
+}

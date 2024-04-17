@@ -1,5 +1,5 @@
 <template>
-    <router-link :to="props.nameRouter" class="text-gray-800 text-sm  ">
+    <router-link :to="props.nameRouter" class="text-sm">
         <p>{{ props.text }}</p>
     </router-link>
 </template>
