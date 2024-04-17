@@ -22,7 +22,7 @@ export class PostSeederService {
   }
 
   async seed(): Promise<void> {
-    const users = await this.userRepository.find();
+    const users = await this.userRepository.find({ where: { role: 'artist' } });
 
     const fakeData = Array.from({ length: 10 }, () => {
       const user = faker.helpers.arrayElement(users);
