@@ -2,7 +2,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreatePostDto } from '../../presentation/post/dto/create-post.dto';
@@ -40,8 +39,11 @@ export class PostService {
     return post;
   }
 
-  async createPost(post: CreatePostDto): Promise<Post> {
-    const postToCreate = this.postRepository.create(post);
+  async createPost(postData: CreatePostDto): Promise<Post> {
+    const postToCreate = this.postRepository.create({
+      ...postData,
+      user: { id: postData.userId },
+    });
     return await this.postRepository.save(postToCreate);
   }
 
@@ -52,7 +54,7 @@ export class PostService {
   }
 
   async deletePost(id: string): Promise<Post> {
-    const post = await this.getPostById(id);
-    return this.postRepository.remove(post);
+    const existingPost = await this.getPostById(id);
+    return this.postRepository.remove(existingPost);
   }
 }
