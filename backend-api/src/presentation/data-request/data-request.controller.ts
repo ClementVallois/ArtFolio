@@ -11,7 +11,7 @@ import { DataRequestService } from '../../application/data-request/data-request.
 import { CreateDataRequestDto } from './dto/create-data-request.dto';
 import { UpdateDataRequestDto } from './dto/update-data-request.dto';
 
-@Controller('data-request')
+@Controller('data-requests')
 export class DataRequestController {
   constructor(private readonly dataRequestService: DataRequestService) {}
 
