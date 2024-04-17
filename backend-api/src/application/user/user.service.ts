@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from '../../presentation/user/dto/create-user.dto';
 import { UpdateUserDto } from '../../presentation/user/dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,24 +18,42 @@ export class UserService {
     private readonly userRepository: Repository<User>,
   ) {}
 
-  async getUserById(id: string) {
-    const user = await this.userRepository.findOneBy({ id });
+  async getAllUsers(): Promise<User[]> {
+    try {
+      return await this.userRepository.find();
+    } catch (error) {
+      throw new HttpException(
+        'Error getting users',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+  async getUserById(id: string): Promise<User> {
+    if (!id) {
+      throw new HttpException('User ID is required', HttpStatus.BAD_REQUEST);
+    }
+    const user = await this.userRepository.findOneBy({ id: id });
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new NotFoundException(`User not found with ID: ${id}`);
     }
     return user;
   }
-  async createUser(userData: CreateUserDto) {
+
+  async createUser(userData: CreateUserDto): Promise<User> {
     try {
-      const createUser = this.userRepository.create(userData);
-      await this.userRepository.save(createUser);
-      return createUser;
+      const userToCreate = this.userRepository.create(userData);
+      return await this.userRepository.save(userToCreate);
     } catch (error) {
-      if (error?.code === '23505') {
-        throw new HttpException(
-          'User with this ID already exists',
-          HttpStatus.BAD_REQUEST,
-        );
+      if (error.code === '23505') {
+        let errorMessage: string;
+        if (error.detail.includes('username')) {
+          errorMessage = `Artist with username ${userData.username} already exists`;
+        } else if (error.detail.includes('auth0_id')) {
+          errorMessage = `Artist with Auth0 ID ${userData.auth0Id} already exists`;
+        } else {
+          errorMessage = 'Error creating artist';
+        }
+        throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
       }
     }
     throw new HttpException(
@@ -38,20 +62,14 @@ export class UserService {
     );
   }
 
-  //TODO : Add the rest of the methods
-  findAll() {
-    return `This action returns all user`;
+  async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+    const existingUser = await this.getUserById(id);
+    this.userRepository.merge(existingUser, user);
+    return this.userRepository.save(existingUser);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
-
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async deleteUser(id: string): Promise<User> {
+    const user = await this.getUserById(id);
+    return this.userRepository.remove(user);
   }
 }

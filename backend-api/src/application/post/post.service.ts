@@ -2,7 +2,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreatePostDto } from '../../presentation/post/dto/create-post.dto';
@@ -31,17 +30,20 @@ export class PostService {
 
   async getPostById(id: string): Promise<Post> {
     if (!id) {
-      throw new NotAcceptableException('Post ID is required');
+      throw new HttpException('Post ID is required', HttpStatus.BAD_REQUEST);
     }
     const post = await this.postRepository.findOneBy({ id: id });
     if (!post) {
-      throw new NotFoundException('Post not found');
+      throw new NotFoundException(`Post not found with ID: ${id}`);
     }
     return post;
   }
 
-  async createPost(post: CreatePostDto): Promise<Post> {
-    const postToCreate = this.postRepository.create(post);
+  async createPost(postData: CreatePostDto): Promise<Post> {
+    const postToCreate = this.postRepository.create({
+      ...postData,
+      user: { id: postData.userId },
+    });
     return await this.postRepository.save(postToCreate);
   }
 
@@ -52,7 +54,7 @@ export class PostService {
   }
 
   async deletePost(id: string): Promise<Post> {
-    const post = await this.getPostById(id);
-    return this.postRepository.remove(post);
+    const existingPost = await this.getPostById(id);
+    return this.postRepository.remove(existingPost);
   }
 }
