@@ -6,13 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistService } from 'src/application/artist/artist.service';
-import { FindIdParams } from '../utils/findOneParams';
+import { FindIdParams, FindUserPostParams } from '../utils/findParams';
 
-@Controller('artists')
+@Controller(['artists'])
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
@@ -29,6 +31,11 @@ export class ArtistController {
   @Get(':id/posts')
   getArtistPosts(@Param() { id }: FindIdParams) {
     return this.artistService.getArtistPosts(id);
+  }
+
+  @Get(':userId/posts/:postId')
+  getOneArtistPost(@Param() params: FindUserPostParams) {
+    return this.artistService.getOneArtistPost(params.userId, params.postId);
   }
 
   @Post()

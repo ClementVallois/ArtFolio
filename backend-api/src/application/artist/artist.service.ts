@@ -54,6 +54,18 @@ export class ArtistService {
     return artistPosts;
   }
 
+  async getOneArtistPost(userId: string, postId: string): Promise<Post> {
+    const artistPost = await this.postRepository.findOne({
+      where: { user: { id: userId }, id: postId },
+    });
+    if (!artistPost) {
+      throw new NotFoundException(
+        `Post not found for Artist with ID: ${userId} and Post ID: ${postId}`,
+      );
+    }
+    return artistPost;
+  }
+
   async createArtist(artistData: CreateArtistDto): Promise<User> {
     if (artistData.role !== 'artist') {
       throw new HttpException('Role must be artist', HttpStatus.BAD_REQUEST);
