@@ -41,15 +41,19 @@ export class UserService {
 
   async createUser(userData: CreateUserDto): Promise<User> {
     try {
-      const createUser = this.userRepository.create(userData);
-      await this.userRepository.save(createUser);
-      return createUser;
+      const userToCreate = this.userRepository.create(userData);
+      return await this.userRepository.save(userToCreate);
     } catch (error) {
-      if (error?.code === '23505') {
-        throw new HttpException(
-          'User with this ID already exists',
-          HttpStatus.BAD_REQUEST,
-        );
+      if (error.code === '23505') {
+        let errorMessage: string;
+        if (error.detail.includes('username')) {
+          errorMessage = `Artist with username ${userData.username} already exists`;
+        } else if (error.detail.includes('auth0_id')) {
+          errorMessage = `Artist with Auth0 ID ${userData.auth0Id} already exists`;
+        } else {
+          errorMessage = 'Error creating artist';
+        }
+        throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
       }
     }
     throw new HttpException(
