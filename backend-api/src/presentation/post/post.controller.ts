@@ -12,6 +12,7 @@ import { PostService } from '../../application/post/post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { FindIdParams } from '../utils/findOneParams';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
@@ -24,7 +25,7 @@ export class PostController {
   }
 
   @Get(':id')
-  getPostById(@Param('id') id: string) {
+  getPostById(@Param() { id }: FindIdParams) {
     return this.postService.getPostById(id);
   }
 
@@ -34,12 +35,12 @@ export class PostController {
   }
 
   @Patch(':id')
-  async updatePost(@Param('id') id: string, @Body() post: UpdatePostDto) {
+  async updatePost(@Param() { id }: FindIdParams, @Body() post: UpdatePostDto) {
     return this.postService.updatePost(id, post);
   }
 
   @Delete(':id')
-  async deletePost(@Param('id') id: string) {
+  async deletePost(@Param() { id }: FindIdParams) {
     return this.postService.deletePost(id);
   }
 }
