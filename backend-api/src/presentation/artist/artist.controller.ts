@@ -26,6 +26,11 @@ export class ArtistController {
     return this.artistService.getArtistById(id);
   }
 
+  @Get(':id/posts')
+  getArtistPosts(@Param() { id }: FindIdParams) {
+    return this.artistService.getArtistPosts(id);
+  }
+
   @Post()
   createArtist(@Body() artist: CreateArtistDto) {
     return this.artistService.createArtist(artist);
