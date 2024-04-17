@@ -15,6 +15,7 @@ import { UserSeederService } from './infrastructure/services/faker/seeder/user.s
 import { AssetSeederService } from './infrastructure/services/faker/seeder/asset.seeder.service';
 import { DataRequestSeederService } from './infrastructure/services/faker/seeder/data-request.seeder.service';
 import { CategorySeederService } from './infrastructure/services/faker/seeder/category.seeder.service';
+import { ArtistModule } from './presentation/artist/artist.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CategorySeederService } from './infrastructure/services/faker/seeder/ca
     AuthModule,
     CategoryModule,
     UserModule,
+    ArtistModule,
     PostModule,
     DatabaseModule,
     DataRequestModule,
@@ -68,10 +70,10 @@ export class AppModule implements OnModuleInit {
       console.log('Env file is configured for production environment');
     }
 
-    await this.userSeederService.seed();
-    await this.postSeederService.seed();
-    await this.assetSeederService.seed();
-    await this.dataRequestSeederService.seed();
-    await this.categorySeederService.seed();
+    // await this.userSeederService.seed();
+    // await this.postSeederService.seed();
+    // await this.assetSeederService.seed();
+    // await this.dataRequestSeederService.seed();
+    // await this.categorySeederService.seed();
   }
 }
