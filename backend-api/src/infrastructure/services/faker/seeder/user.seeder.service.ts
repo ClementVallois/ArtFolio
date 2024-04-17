@@ -10,6 +10,10 @@ export class UserSeederService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
   ) {}
 
+  async clear(): Promise<void> {
+    await this.userRepository.query('TRUNCATE TABLE users CASCADE');
+  }
+
   async seed(): Promise<void> {
     const fakeData = Array.from({ length: 10 }, () => {
       const fakeEntity = new User();

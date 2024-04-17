@@ -17,6 +17,10 @@ export class PostSeederService {
     private readonly categoryRepository: Repository<Category>,
   ) {}
 
+  async clear(): Promise<void> {
+    await this.postRepository.query('TRUNCATE TABLE posts CASCADE');
+  }
+
   async seed(): Promise<void> {
     const users = await this.userRepository.find();
 

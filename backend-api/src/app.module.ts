@@ -76,5 +76,12 @@ export class AppModule implements OnModuleInit {
     // await this.assetSeederService.seed();
     // await this.dataRequestSeederService.seed();
     // await this.categorySeederService.seed();
+
+    //Uncomment to clear fake data
+    // await this.userSeederService.clear();
+    // await this.postSeederService.clear();
+    // await this.assetSeederService.clear();
+    // await this.dataRequestSeederService.clear();
+    // await this.categorySeederService.clear();
   }
 }

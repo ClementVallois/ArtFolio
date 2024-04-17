@@ -13,6 +13,11 @@ export class DataRequestSeederService {
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
+  async clear(): Promise<void> {
+    await this.dataRequestRepository.query(
+      'TRUNCATE TABLE data_requests CASCADE',
+    );
+  }
 
   async seed(): Promise<void> {
     const users = await this.userRepository.find();
