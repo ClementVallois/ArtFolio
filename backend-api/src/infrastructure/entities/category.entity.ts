@@ -31,7 +31,7 @@ export class Category {
   | categoryId  | int(11)      | PRIMARY KEY FOREIGN KEY    |
   +-------------+--------------+----------------------------+
   */
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { cascade: true })
   @JoinTable({
     name: 'users_categories',
   })
@@ -46,7 +46,7 @@ export class Category {
   | categoryId  | int(11)      | PRIMARY KEY FOREIGN KEY    |
   +-------------+--------------+----------------------------+
   */
-  @ManyToMany(() => Post)
+  @ManyToMany(() => Post, { cascade: true })
   @JoinTable({
     name: 'posts_categories',
   })

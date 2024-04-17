@@ -22,7 +22,9 @@ export class Post {
   description: string;
 
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
