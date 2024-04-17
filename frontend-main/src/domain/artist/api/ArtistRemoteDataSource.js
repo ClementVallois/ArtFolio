@@ -57,7 +57,7 @@ function artistApi() {
     }
     // TODO: à enlever
     async function getAllPost() {
-        return await CRUDapi('GET', "post")
+        return await CRUDapi('GET', "posts")
     }
 
     return {
@@ -74,3 +74,7 @@ function artistApi() {
 }
 
 export { artistApi };
+
+
+
+

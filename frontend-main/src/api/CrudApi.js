@@ -1,18 +1,19 @@
 import api from '@/api/Api.js'
 const apiURL = "http://127.0.0.1:3000";
 
-function CRUDapi(verb, endpoint, id, data) {
+function CRUDapi(verb, endpoint, data) {
     return new Promise(async (resolve, reject) => {
+        const url = `${apiURL}/${endpoint}`
+        console.log("url: ", url);
         try {
             let response;
-            const url = `${apiURL}/${endpoint}`;
             switch (verb) {
                 case 'DELETE':
-                    response = await api.delete(`${url}/${id}`);
+                    response = await api.delete(url);
                     resolve(response);
                     break;
                 case 'PATCH':
-                    response = await api.put(`${url}/${id}`, data);
+                    response = await api.put(url, data);
                     resolve(response);
                     break;
                 case 'POST':
@@ -20,18 +21,14 @@ function CRUDapi(verb, endpoint, id, data) {
                     resolve(response);
                     break;
                 case 'GET':
-                    if (id != null) {
-                        response = await api.get(`${url}/${id}`);
-                        resolve(response.data);
-                    } else {
-                        response = await api.get(url);
-                        resolve(response.data);
-                    }
+                    response = await api.get(url);
+                    resolve(response.data);
                     break;
                 default:
                     throw new Error('Wrong operation');
             }
         } catch (error) {
+            console.log(error);
             reject(new Error('Error CRUD operation:', error.message));
         }
     });
