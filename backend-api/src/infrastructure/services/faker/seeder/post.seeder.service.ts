@@ -27,7 +27,6 @@ export class PostSeederService {
       fakeEntity.id = faker.string.uuid();
       fakeEntity.isPinned = faker.datatype.boolean();
       fakeEntity.user = user;
-
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
       fakeEntity.createdAt = faker.date.recent();
       fakeEntity.updatedAt = faker.date.recent();
