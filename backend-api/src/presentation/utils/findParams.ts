@@ -1,5 +1,4 @@
-import { Transform } from 'class-transformer';
-import { IsInt, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsDecimal, IsNotEmpty, IsUUID } from 'class-validator';
 
 export class FindIdParams {
   @IsUUID('4', { message: '$property must be an UUID' })
@@ -17,8 +16,7 @@ export class FindUserPostParams {
 }
 
 export class FindNumberParams {
-  @Transform(({ value }) => parseInt(value, 10))
-  @IsInt({ message: '$property must be a number' })
   @IsNotEmpty({ message: '$property must not be empty' })
+  @IsDecimal({}, { message: '$property must be a number' })
   nb: number;
 }

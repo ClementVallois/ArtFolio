@@ -45,6 +45,11 @@ export class ArtistController {
     return this.artistService.getLastRegisteredArtistsPosts(params.nb);
   }
 
+  @Get('random/:nb')
+  async getRandomArtistsPost(@Param() params: FindNumberParams) {
+    return this.artistService.getRandomArtistsPost(params.nb);
+  }
+
   @Post()
   async createArtist(@Body() artist: CreateArtistDto) {
     return this.artistService.createArtist(artist);

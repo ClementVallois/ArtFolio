@@ -106,6 +106,25 @@ export class ArtistService {
     return artistPosts;
   }
 
+  async getRandomArtistsPost(numberOfArtists: number): Promise<Post[]> {
+    const randomArtists = await this.userRepository.find({
+      where: { role: 'artist' },
+    });
+    const artistsInDB = randomArtists.length;
+    const randomArtistsPost = [];
+
+    for (let i = 0; i < numberOfArtists; i++) {
+      const randomIndex = Math.floor(Math.random() * artistsInDB);
+      const randomArtist = randomArtists[randomIndex];
+      const firstPost = await this.postRepository.findOne({
+        where: { userId: randomArtist },
+        order: { createdAt: 'ASC' },
+      });
+      randomArtistsPost.push(firstPost);
+    }
+    return randomArtistsPost;
+  }
+
   async createArtist(artistData: CreateArtistDto): Promise<User> {
     if (artistData.role !== 'artist') {
       throw new HttpException('Role must be artist', HttpStatus.BAD_REQUEST);
