@@ -7,7 +7,6 @@
             <p class="text-[0.7rem] font-lightText lg:text-center"> {{ artist.username }}</p>
         </div>
         <div class="flex flex-col px-[1rem]  lg:h-[100%]">
-
             <p class="text-xs font-boldText pt-[1rem] lg:text-base "> {{ artist.firstName }} {{ artist.lastName }}</p>
             <p class="text-xs font-lightText lg:pt-[1rem] lg:text-base"> {{ artist.description }}</p>
             <div class="pt-[1rem] lg:h-[100%] lg:flex lg:justify-center">
