@@ -55,10 +55,7 @@ function artistApi() {
     async function getArtistPosts(id) {
         return await CRUDapi('GET', `artists/${id}/posts`)
     }
-    // TODO: à enlever
-    async function getAllPost() {
-        return await CRUDapi('GET', "posts")
-    }
+
 
     return {
         getAllArtists,
@@ -69,7 +66,6 @@ function artistApi() {
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,
-        getAllPost
     };
 }
 
