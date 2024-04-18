@@ -1,20 +1,19 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { AssetService } from '../../application/asset/asset.service';
-import { FindIdParams } from '../utils/findParams';
 
 @Controller('assets')
 export class AssetController {
   constructor(private readonly assetService: AssetService) {}
 
-  @Get('post/:id')
-  getPostAssets(@Param() { id }: FindIdParams) {
-    return this.assetService.getPostAssets(id);
-  }
+  // @Get('post/:id')
+  // getPostAssets(@Param() { id }: FindIdParams) {
+  //   return this.assetService.getPostAssets(id);
+  // }
 
-  @Get('user/:id')
-  getUserAssets(@Param() { id }: FindIdParams) {
-    return this.assetService.getUserAssets(id);
-  }
+  // @Get('user/:id')
+  // getUserAssets(@Param() { id }: FindIdParams) {
+  //   return this.assetService.getUserAssets(id);
+  // }
 
   // @Post()
   // create(@Body() createAssetDto: CreateAssetDto) {

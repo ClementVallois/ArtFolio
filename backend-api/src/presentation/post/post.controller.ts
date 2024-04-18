@@ -29,6 +29,11 @@ export class PostController {
     return this.postService.getPostById(id);
   }
 
+  @Get(':id/assets')
+  getPostAssets(@Param() { id }: FindIdParams) {
+    return this.postService.getPostAssets(id);
+  }
+
   @Post()
   async createPost(@Body() post: CreatePostDto) {
     return this.postService.createPost(post);

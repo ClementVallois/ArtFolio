@@ -25,6 +25,10 @@ export class UserController {
   getUserById(@Param() { id }: FindIdParams) {
     return this.userService.getUserById(id);
   }
+  @Get(':id/assets')
+  getUserAssets(@Param() { id }: FindIdParams) {
+    return this.userService.getUserAssets(id);
+  }
 
   @Post()
   createUser(@Body() user: CreateUserDto) {

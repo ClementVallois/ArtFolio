@@ -9,12 +9,15 @@ import { UpdatePostDto } from '../../presentation/post/dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/infrastructure/entities/post.entity';
 import { Repository } from 'typeorm';
+import { Asset } from 'src/infrastructure/entities/asset.entity';
 
 @Injectable()
 export class PostService {
   constructor(
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(Asset)
+    private readonly assetRepository: Repository<Asset>,
   ) {}
 
   async getAllPosts(): Promise<Post[]> {
@@ -37,6 +40,19 @@ export class PostService {
       throw new NotFoundException(`Post not found with ID: ${id}`);
     }
     return post;
+  }
+
+  async getPostAssets(postId: string): Promise<Asset[]> {
+    const postAssets = await this.assetRepository.find({
+      where: { post: { id: postId } },
+    });
+
+    if (!postAssets || postAssets.length === 0) {
+      throw new NotFoundException(
+        `Assets not found for Post with ID: ${postId}`,
+      );
+    }
+    return postAssets;
   }
 
   async createPost(postData: CreatePostDto): Promise<Post> {

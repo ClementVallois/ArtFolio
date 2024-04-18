@@ -1,9 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { Repository } from 'typeorm';
@@ -19,21 +14,23 @@ export class AssetService {
       where: { post: { id: postId } },
     });
 
-    if (!postAssets) {
+    if (!postAssets || postAssets.length === 0) {
       throw new NotFoundException(
-        `Assets not found for Postwith ID: ${postId}`,
+        `Assets not found for Post with ID: ${postId}`,
       );
     }
     return postAssets;
   }
 
   async getUserAssets(userId: string): Promise<Asset[]> {
-    if (!userId) {
-      throw new HttpException('userId is required', HttpStatus.BAD_REQUEST);
-    }
     const userAssets = await this.assetRepository.find({
       where: { user: { id: userId } },
     });
+    if (!userAssets || userAssets.length === 0) {
+      throw new NotFoundException(
+        `Assets not found for User with ID: ${userId}`,
+      );
+    }
     return userAssets;
   }
 
