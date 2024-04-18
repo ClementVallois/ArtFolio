@@ -13,8 +13,8 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
-
+import { defineProps, ref, onMounted } from 'vue';
+import { postStore } from '@/domain/artist/store/postStore';
 
 const props = defineProps({
     postDescription: String,
@@ -23,6 +23,13 @@ const props = defineProps({
     postId: String
 });
 
+// Récupérez les assets pour les posts
+// const postsStore = postStore();
+// const assetsForPost = ref([])
+// onMounted(async () => {
+//     console.log(props.postId);
+//     assetsForPost.value = await postsStore.getAssetForPost(props.postId);
+// });
 
 
 </script>

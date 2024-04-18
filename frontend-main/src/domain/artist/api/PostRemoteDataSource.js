@@ -18,6 +18,8 @@ function postApi() {
     async function deletePost(id) {
         return await CRUDapi('DELETE', `posts/${id}`);
     }
+
+
     return {
         getAssetForPost,
         createPost

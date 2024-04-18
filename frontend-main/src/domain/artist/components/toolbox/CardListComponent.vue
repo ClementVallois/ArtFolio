@@ -10,6 +10,7 @@ import {  defineProps, ref, onMounted } from 'vue';
 import CardPostComponent from '@/domain/artist/components/toolbox/CardPostComponent.vue'
 import { artistStore } from '@/domain/artist/store/artistStore';
 
+
 const props = defineProps({
     postDescription: String,
     postDate: String,
@@ -17,6 +18,7 @@ const props = defineProps({
     artistId: String,
     postId: String
 });
+
 
 
 // Récupérez les posts demandés 
@@ -35,6 +37,10 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleString("fr-FR", options).replace(',', ' à');
 }
+
+
+
+
 
 
 </script>
