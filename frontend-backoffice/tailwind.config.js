@@ -5,6 +5,7 @@ export default {
     "./src/**/*.{vue,js,ts,jsx,tsx}"
   ],
   plugins: [],
+  mode: 'jit',
   theme: {
     // colors: {
     //   black: '#000',
@@ -20,5 +21,5 @@ export default {
       // mediumText: ['Montserrat Medium', 'sans-serif'],
       // boldText: ['Montserrat Bold', 'sans-serif'],
     },
-  }
+  },
 }

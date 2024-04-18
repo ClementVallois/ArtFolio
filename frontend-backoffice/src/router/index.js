@@ -6,6 +6,8 @@ import ArtistPage from '@/domain/artist/pages/ArtistPage.vue'
 import UserPage from '@/domain/user/pages/UserPage.vue'
 import ProfilePage from '../pages/ProfilePage.vue'
 import NotFoundPage from '../pages/404NotFound.vue'
+import LoaderPage from '@/pages/LoaderPage.vue';
+import CallBackPage from '@/domain/auth0/pages/CallBackPage.vue';
 
 const routes = [
   {
@@ -36,6 +38,16 @@ const routes = [
     name: 'profile',
     component: ProfilePage,
     beforeEnter: authGuard,
+  },
+  {
+    path: '/loader',
+    name: 'loader',
+    component: LoaderPage,
+  },
+  {
+    path: "/callback",
+    name: "callback",
+    component: CallBackPage,
   },
   {
     path: "/:catchAll(.*)",
