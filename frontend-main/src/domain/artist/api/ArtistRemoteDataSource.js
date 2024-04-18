@@ -12,12 +12,12 @@ function artistApi() {
     // basique CRUD for artists
     ////
 
-    async function getAllArtist() {
-        return await CRUDapi('GET', 'artists')
+    async function getAllArtists() {
+        return await CRUDapi('GET', 'artists');
     }
 
     async function getArtistById(id) {
-        return await CRUDapi('GET', 'artists', id)
+        return await CRUDapi('GET', `artists/${id}`);
     }
 
     async function createArtist(data) {
@@ -57,11 +57,11 @@ function artistApi() {
     }
     // TODO: à enlever
     async function getAllPost() {
-        return await CRUDapi('GET', "post")
+        return await CRUDapi('GET', "posts")
     }
 
     return {
-        getAllArtist,
+        getAllArtists,
         getArtistById,
         createArtist,
         modifyArtist,
@@ -74,3 +74,7 @@ function artistApi() {
 }
 
 export { artistApi };
+
+
+
+

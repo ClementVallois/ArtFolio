@@ -9,19 +9,22 @@
 
 <script setup>
 import HeroBannerComponent from '@/components/toolBox/HeroBannerComponent.vue';
-import { ref, onMounted, toRaw } from 'vue';
+import { onMounted, ref, toRaw} from 'vue';
 
 
 /// Test artiste list
 import { artistStore } from '@/domain/artist/store/artistStore';
 const artistsStore = artistStore();
-const allArtistData = artistsStore.getAllArtist;
 
+
+const allArtistData = ref([])
 
 onMounted(async () => {
-    const allPosts = await artistsStore.getAllPost();
-    console.log(allPosts);
+    allArtistData.value = await artistsStore.getAllArtists();
+    console.log(toRaw(allArtistData.value));
 });
+
+
 
 
 
