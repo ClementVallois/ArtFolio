@@ -29,20 +29,9 @@ const props = defineProps({
 
 // Récupérez l'artist demandé
 const artistsStore = artistStore();
-
-
 const artist = ref([])
-
 onMounted(async () => {
     artist.value = await artistsStore.getArtistById(props.artistId);
-    console.log(toRaw(artist.value));
 });
-
-
-
-// console.log(storeArtist.getAllArtist)
-// const allArtistData = JSON.parse(JSON.stringify(toRaw(storeArtist.getAllArtist)));
-
-// const artist = allArtistData.find(artist => artist.id === props.artistId);
 
 </script>

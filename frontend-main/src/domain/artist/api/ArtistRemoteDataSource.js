@@ -53,7 +53,7 @@ function artistApi() {
     ////
 
     async function getArtistPosts(id) {
-        return await CRUDapi('GET', 'artists/posts', id)
+        return await CRUDapi('GET', `artists/${id}/posts`)
     }
     // TODO: à enlever
     async function getAllPost() {

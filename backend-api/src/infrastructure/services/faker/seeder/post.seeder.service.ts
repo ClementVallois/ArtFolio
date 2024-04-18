@@ -15,7 +15,7 @@ export class PostSeederService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) {}
+  ) { }
 
   async clear(): Promise<void> {
     await this.postRepository.query('TRUNCATE TABLE posts CASCADE');
@@ -24,7 +24,7 @@ export class PostSeederService {
   async seed(): Promise<void> {
     const users = await this.userRepository.find({ where: { role: 'artist' } });
 
-    const fakeData = Array.from({ length: 10 }, () => {
+    const fakeData = Array.from({ length: 50 }, () => {
       const user = faker.helpers.arrayElement(users);
 
       const fakeEntity = new Post();

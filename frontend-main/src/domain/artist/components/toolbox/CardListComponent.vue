@@ -6,10 +6,9 @@
 </template>
 
 <script setup>
-import { toRaw, defineProps } from 'vue';
-import { postStore } from '@/domain/artist/store/postStore';
+import {  defineProps, ref, onMounted } from 'vue';
 import CardPostComponent from '@/domain/artist/components/toolbox/CardPostComponent.vue'
-import { assetsStore } from '@/store/assetStore';
+import { artistStore } from '@/domain/artist/store/artistStore';
 
 const props = defineProps({
     postDescription: String,
@@ -21,9 +20,14 @@ const props = defineProps({
 
 
 // Récupérez les posts demandés 
-const storePost = postStore();
-const allPostsData = JSON.parse(JSON.stringify(toRaw(storePost.getAllPosts)));
-const allPostForArtist = allPostsData.filter(post => post.user_id === props.artistId);
+const artistsStore = artistStore();
+const allPostForArtist = ref([])
+onMounted(async () => {
+    allPostForArtist.value = await artistsStore.getArtistPosts(props.artistId);
+
+});
+
+
 
 // permet de formater la date 
 function formatDate(dateString) {
