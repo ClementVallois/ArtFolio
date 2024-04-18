@@ -8,7 +8,7 @@
         </div>
         <div class="flex flex-col px-[1rem]  lg:h-[100%]">
 
-            <p class="text-xs font-boldText pt-[1rem] lg:text-base "> {{ artist.first_name }} {{ artist.last_name }}</p>
+            <p class="text-xs font-boldText pt-[1rem] lg:text-base "> {{ artist.firstName }} {{ artist.lastName }}</p>
             <p class="text-xs font-lightText lg:pt-[1rem] lg:text-base"> {{ artist.description }}</p>
             <div class="pt-[1rem] lg:h-[100%] lg:flex lg:justify-center">
                 <ButtonComponent textButton="Contacter" class="lg:self-end"></ButtonComponent>
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import { toRaw, defineProps } from 'vue';
+import { toRaw, defineProps, ref, onMounted } from 'vue';
 import { artistStore } from '@/domain/artist/store/artistStore';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 
@@ -28,10 +28,21 @@ const props = defineProps({
 
 
 // Récupérez l'artist demandé
-const storeArtist = artistStore();
-console.log(storeArtist.getAllArtist)
-const allArtistData = JSON.parse(JSON.stringify(toRaw(storeArtist.getAllArtist)));
+const artistsStore = artistStore();
 
-const artist = allArtistData.find(artist => artist.id === props.artistId);
+
+const artist = ref([])
+
+onMounted(async () => {
+    artist.value = await artistsStore.getArtistById(props.artistId);
+    console.log(toRaw(artist.value));
+});
+
+
+
+// console.log(storeArtist.getAllArtist)
+// const allArtistData = JSON.parse(JSON.stringify(toRaw(storeArtist.getAllArtist)));
+
+// const artist = allArtistData.find(artist => artist.id === props.artistId);
 
 </script>
