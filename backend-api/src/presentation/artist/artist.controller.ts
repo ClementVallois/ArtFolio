@@ -10,7 +10,11 @@ import {
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistService } from 'src/application/artist/artist.service';
-import { FindIdParams, FindUserPostParams } from '../utils/findParams';
+import {
+  FindIdParams,
+  FindNumberParams,
+  FindUserPostParams,
+} from '../utils/findParams';
 
 @Controller(['artists'])
 export class ArtistController {
@@ -34,6 +38,11 @@ export class ArtistController {
   @Get(':userId/posts/:postId')
   async getOneArtistPost(@Param() params: FindUserPostParams) {
     return this.artistService.getOneArtistPost(params.userId, params.postId);
+  }
+
+  @Get('last/:nb')
+  async getLastRegisteredArtistsPosts(@Param() params: FindNumberParams) {
+    return this.artistService.getLastRegisteredArtistsPosts(params.nb);
   }
 
   @Post()
