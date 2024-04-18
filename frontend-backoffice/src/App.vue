@@ -5,7 +5,6 @@
   </div> -->
   <router-view />
   
-  <div> {{  error }}</div>
   <!-- If is Authenticated get the structure layout
   <div v-if="isAuthenticated">
     <div  class="w-screen h-screen flex"> 
@@ -28,9 +27,10 @@
 import { ref } from 'vue'
 import SideBar from '@/components/layout/SideBar.vue';
 import TopBar from '@/components/layout/TopBar.vue';
-import { useAuth0 } from '@auth0/auth0-vue';
+//AUTH0 REACTIVATE
+// import { useAuth0 } from '@auth0/auth0-vue';
 import PageLoader from '@/pages/LoaderPage.vue'
-const { isLoading, error } = useAuth0();
+// const { isLoading, error } = useAuth0();
 
 
 const showSideBar = ref(true)

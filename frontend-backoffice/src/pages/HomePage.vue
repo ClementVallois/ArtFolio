@@ -1,7 +1,8 @@
 <template>
     <PageLayout>
-        <div class="h-[calc(100%-50px)] bg-white flex items-center justify-center">
-            This is the dashboard Admin
+        <div class="h-[calc(100%-50px)] bg-white flex flex-col items-center justify-center">
+            <h1 class="font-title text-[2rem]">Bienvenue sur la plateforme administrateur</h1>
+            <p>Navigue sur les onglets </p>
         </div>
     </PageLayout>
 </template>

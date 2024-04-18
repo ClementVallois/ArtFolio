@@ -15,11 +15,11 @@ export default {
     //   },
     // },
     fontFamily: {
-      // title: ['Bebas Neue', 'sans-serif'],
-      // sans: ['Montserrat Regular', 'sans-serif'],
-      // lightText: ['Montserrat Light', 'sans-serif'],
-      // mediumText: ['Montserrat Medium', 'sans-serif'],
-      // boldText: ['Montserrat Bold', 'sans-serif'],
+      title: ['Bebas Neue', 'sans-serif'],
+      sans: ['Montserrat Regular', 'sans-serif'],
+      lightText: ['Montserrat Light', 'sans-serif'],
+      mediumText: ['Montserrat Medium', 'sans-serif'],
+      boldText: ['Montserrat Bold', 'sans-serif'],
     },
   },
 }

@@ -9,7 +9,8 @@ import { auth0 } from './domain/auth0'
 
 
 const app = createApp(App)
-app.use(auth0)
+//AUTH0 REACTIVATE
+// app.use(auth0)
 app.use(router)
 app.use(createPinia())
 app.mount('#app')
