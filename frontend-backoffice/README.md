@@ -1,3 +1,17 @@
+## Configuration de Tailwinds sur le container docker
+docker exec artfolio-frontend-main npm install -D tailwindcss postcss autoprefixer
+docker exec artfolio-frontend-main npx tailwindcss init -p
+
+## Configuration de de vue-router sur le container docker
+docker exec artfolio-frontend-backoffice npm install vue-router@4
+
+## Ajout de headlessui
+npm install @headlessui/vue@latest
+
+## Ajout de auth0
+npm install @auth0/auth0-vue
+
+
 # frontend-backoffice
 
 This template should help get you started developing with Vue 3 in Vite.
@@ -39,3 +53,4 @@ npm run test:unit
 ```sh
 npm run lint
 ```
+

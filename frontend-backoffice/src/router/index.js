@@ -1,24 +1,49 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../pages/HomeView.vue'
-import ArtistView from '@/domain/artist/pages/ArtistView.vue'
-import UserView from '@/domain/user/pages/UserView.vue'
+import { authGuard } from "@auth0/auth0-vue";
+import SignInPage from '../pages/SignInPage.vue'
+import HomePage from '../pages/HomeView.vue'
+import ArtistPage from '@/domain/artist/pages/ArtistPage.vue'
+import UserPage from '@/domain/user/pages/UserPage.vue'
+import ProfilePage from '../pages/ProfilePage.vue'
+import NotFoundPage from '../pages/404NotFound.vue'
 
 const routes = [
   {
+    path: '/signin',
+    name: 'signin',
+    component: SignInPage
+  },
+  {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomePage,
+    beforeEnter: authGuard,
   },
   {
     path: '/artist',
     name: 'artist',
-    component: ArtistView
+    component: ArtistPage,
+    beforeEnter: authGuard,
   },
   {
     path: '/user',
     name: 'user',
-    component: UserView
+    component: UserPage,
+    beforeEnter: authGuard,
   },
+  {
+    path: '/profile',
+    name: 'profile',
+    component: ProfilePage,
+    beforeEnter: authGuard,
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "notFound",
+    component: NotFoundPage,
+  },
+
+
 
 
   // {

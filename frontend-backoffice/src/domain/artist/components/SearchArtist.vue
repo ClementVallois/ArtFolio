@@ -19,7 +19,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useStoreArtist } from '../store/store-artist.js'
+import { useStoreArtist } from '../store/ArtistStore.js'
 
 const storeArtist = useStoreArtist()
 const searchValue = ref('')
@@ -35,4 +35,4 @@ const updateFilterValue = event => {
     }
 };
 
-</script>../store/ArtistStore.js
+</script>
