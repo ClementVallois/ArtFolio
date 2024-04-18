@@ -8,8 +8,9 @@ import { CreatePostDto } from '../../presentation/post/dto/create-post.dto';
 import { UpdatePostDto } from '../../presentation/post/dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/infrastructure/entities/post.entity';
-import { Repository } from 'typeorm';
+import { DeepPartial, Repository } from 'typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { User } from 'src/infrastructure/entities/user.entity';
 
 @Injectable()
 export class PostService {
@@ -58,14 +59,25 @@ export class PostService {
   async createPost(postData: CreatePostDto): Promise<Post> {
     const postToCreate = this.postRepository.create({
       ...postData,
-      user: { id: postData.userId },
+      userId: { id: postData.userId },
     });
     return await this.postRepository.save(postToCreate);
   }
 
-  async updatePost(id: string, post: UpdatePostDto): Promise<Post> {
+  async updatePost(id: string, postDto: UpdatePostDto): Promise<Post> {
     const existingPost = await this.getPostById(id);
-    this.postRepository.merge(existingPost, post);
+    if (!existingPost) {
+      throw new NotFoundException(`Post with ID '${id}' not found`);
+    }
+    const userId: DeepPartial<User> = {
+      id: postDto.userId,
+    };
+    const updatedPost: DeepPartial<Post> = {
+      ...existingPost,
+      ...postDto,
+      userId: userId,
+    };
+    this.postRepository.merge(existingPost, updatedPost);
     return this.postRepository.save(existingPost);
   }
 

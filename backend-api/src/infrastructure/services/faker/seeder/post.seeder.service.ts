@@ -30,7 +30,7 @@ export class PostSeederService {
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();
       fakeEntity.isPinned = faker.datatype.boolean();
-      fakeEntity.user = user;
+      fakeEntity.userId = user;
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
       fakeEntity.createdAt = faker.date.recent();
       fakeEntity.updatedAt = faker.date.recent();

@@ -25,7 +25,7 @@ export class Post {
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',
   })
-  user: User;
+  userId: User;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

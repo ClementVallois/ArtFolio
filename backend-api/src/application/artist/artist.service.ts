@@ -46,7 +46,7 @@ export class ArtistService {
 
   async getArtistPosts(id: string): Promise<Post[]> {
     const artistPosts = await this.postRepository.find({
-      where: { user: { id: id } },
+      where: { userId: { id: id } },
     });
     if (!artistPosts) {
       throw new NotFoundException(`Posts not found for Artist with ID: ${id}`);
@@ -56,7 +56,7 @@ export class ArtistService {
 
   async getOneArtistPost(userId: string, postId: string): Promise<Post> {
     const artistPost = await this.postRepository.findOne({
-      where: { user: { id: userId }, id: postId },
+      where: { userId: { id: userId }, id: postId },
     });
     if (!artistPost) {
       throw new NotFoundException(
