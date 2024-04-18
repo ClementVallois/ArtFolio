@@ -45,7 +45,7 @@ export class PostService {
 
   async getPostAssets(postId: string): Promise<Asset[]> {
     const postAssets = await this.assetRepository.find({
-      where: { post: { id: postId } },
+      where: { postId: { id: postId } },
     });
 
     if (!postAssets || postAssets.length === 0) {

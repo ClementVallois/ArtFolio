@@ -22,7 +22,7 @@ export class Post {
   description: string;
 
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne(() => User, {
     onDelete: 'CASCADE',
   })
   userId: User;

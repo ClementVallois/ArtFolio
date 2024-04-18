@@ -43,7 +43,7 @@ export class UserService {
 
   async getUserAssets(userId: string): Promise<Asset[]> {
     const userAssets = await this.assetRepository.find({
-      where: { user: { id: userId } },
+      where: { userId: { id: userId } },
     });
     if (!userAssets || userAssets.length === 0) {
       throw new NotFoundException(
