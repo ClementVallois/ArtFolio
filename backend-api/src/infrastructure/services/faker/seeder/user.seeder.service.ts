@@ -26,11 +26,7 @@ export class UserSeederService {
         lastName: fakeEntity.lastName,
       });
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
-      fakeEntity.status = faker.helpers.arrayElement([
-        'active',
-        'inactive',
-        'deleted',
-      ]);
+      fakeEntity.status = faker.helpers.arrayElement(['active', 'inactive']);
       fakeEntity.role = faker.helpers.arrayElement([
         'artist',
         'user',
