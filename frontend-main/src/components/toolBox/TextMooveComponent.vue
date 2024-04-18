@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper">
+    <div class="wrapper z-[3]">
         <div ref="textWrapper" class="text-wrapper" :key="`word-${currentWordIndex}`">
             <div class="word">
                 <span v-for="(letter, index) in currentWord.split('')" :key="`letter-${currentWordIndex}-${index}`"
@@ -15,10 +15,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-import { categorieStore } from '@/domain/artist/store/categorieStore';
+import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
 const categoryStore = categorieStore();
-const wordss = categoryStore.getAllCategoriesName;
-
 
 
 const speed = 3500;
@@ -67,6 +65,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(100%);
     animation: letter-rise 0.5s forwards;
+    z-index: 2 !important;
 }
 
 @keyframes letter-rise {
@@ -75,4 +74,4 @@ onMounted(() => {
         opacity: 1;
     }
 }
-</style>@/domain/artist/store/categorieStore
+</style>

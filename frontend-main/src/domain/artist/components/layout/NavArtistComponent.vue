@@ -40,13 +40,13 @@
                     <hr class="md:hidden border-t border-gray-200 my-4 w-full">
                     <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
                         class="md:hidden md:mx-4  pb-4" />
-                    <CustomLinkComponent :to="{ name: 'artist' }" text="Accéder à mon profil"
+                    <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Accéder à mon profil"
                         class="md:hidden md:mx-4 pb-4" />
                     <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
-                    <CustomLinkComponent :to="{ name: 'artist' }" text="Ajouter une publication"
+                    <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                         class="md:hidden md:mx-4 pb-4" />
                     <!-- TODO: faire la méthode pour se déconnecter -->
-                    <CustomLinkComponent :to="{ name: 'artist' }" text="Se deconnecter"
+                    <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Se deconnecter"
                         class="md:hidden md:mx-4 pb-3" />
                     <!-- Profile section - desktop mode -->
                     <div class=" relative flex justify-center
@@ -65,13 +65,13 @@
                             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                                 <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
-                                <CustomLinkComponent :to="{ name: 'artist' }" text="Accéder à mon profil"
+                                <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Accéder à mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
-                                <CustomLinkComponent :to="{ name: 'artist' }" text="Ajouter une publication"
+                                <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
-                                <CustomLinkComponent :to="{ name: 'artist' }" text="Se deconnecter"
+                                <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Se deconnecter"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                             </div>
                         </div>
@@ -89,9 +89,6 @@ import { ref } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
 
-// user, artist, none
-const activeRole = "artist";
-
 
 // opens the menu in mobile mode
 const isOpen = ref(false);
@@ -102,6 +99,8 @@ const isProfileMenuOpen = ref(false);
 const toggleProfileMenu = () => {
     isProfileMenuOpen.value = !isProfileMenuOpen.value;
 };
+
+
 
 // TODO: ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors
 </script>

@@ -21,9 +21,7 @@ function artistApi() {
     }
 
     async function createArtist(data) {
-        // const { id, firstName, lastName, birthdate, username, description, status, role, auth0Id } = data;
-        // const newArtist = new User(id, firstName, lastName, birthdate, username, description, status, role, auth0Id);
-        return await CRUDapi('POST', 'artists', null, data)
+        return await CRUDapi('POST', 'artists', data)
     }
 
     async function modifyArtist(id, data) {

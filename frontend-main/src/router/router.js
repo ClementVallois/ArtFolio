@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
-import ArtistPage from '@/domain/artist/pages/ArtistPage.vue'
+import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
+import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
 import SearchPage from '@/pages/SearchPage.vue';
 import ChatPage from '@/domain/chat/pages/ChatPage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
@@ -25,13 +26,18 @@ const routes = [
 
     },
     {
+        path: '/form-post',
+        name: 'PostFormPage',
+        component: PostFormPage
+    },
+    {
         path: '/registration-artist',
-        name: 'registration-artist',
+        name: 'ArtistRegistrationPage',
         component: ArtistRegistrationPage
     },
     {
         path: '/registration-user',
-        name: 'registration-user',
+        name: 'UserRegistrationPage',
         component: UserRegistrationPage
     },
     {

@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid lg:grid-cols-2 justify-center">
         <CardPostComponent :postId="post.id" v-for="(post, index) in allPostForArtist" :key="index"
-            :postDescription="post.description" :postDate="formatDate(post.created_at)" />
+            :postDescription="post.description" :postDate="formatDate(post.createdAt)"  :postIsPinned="post.isPinned"/>
     </div>
 </template>
 
@@ -15,6 +15,7 @@ const props = defineProps({
     postDescription: String,
     postDate: String,
     postPictureUrl: String,
+    postIsPinned: Boolean,
     artistId: String,
     postId: String
 });
@@ -26,7 +27,7 @@ const artistsStore = artistStore();
 const allPostForArtist = ref([])
 onMounted(async () => {
     allPostForArtist.value = await artistsStore.getArtistPosts(props.artistId);
-
+console.log(allPostForArtist.value );
 });
 
 
@@ -37,10 +38,5 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleString("fr-FR", options).replace(',', ' à');
 }
-
-
-
-
-
 
 </script>
