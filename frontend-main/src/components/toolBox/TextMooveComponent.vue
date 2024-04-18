@@ -1,7 +1,7 @@
 <template>
-    <div class="wrapper z-[3]">
+    <div class="wrapper">
         <div ref="textWrapper" class="text-wrapper" :key="`word-${currentWordIndex}`">
-            <div class="word">
+            <div class="word font-title text-[2rem] lg:text-[2.5rem]">
                 <span v-for="(letter, index) in currentWord.split('')" :key="`letter-${currentWordIndex}-${index}`"
                     class="letter" :style="getLetterStyle(index)">
                     {{ letter.trim() === '' ? '\xa0' : letter }}

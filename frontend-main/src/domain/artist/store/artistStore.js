@@ -26,6 +26,7 @@ export const artistStore = defineStore('artistStore', () => {
     async function getArtistById(id) {
         try {
             const response = await artistApi().getArtistById(id);
+            console.log(response);
             return User.fromJson(response);
         } catch (error) {
             console.log(error);

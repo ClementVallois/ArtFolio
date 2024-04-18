@@ -17,7 +17,7 @@
 </template>
 
 <script setup>
-import { toRaw, defineProps, ref, onMounted } from 'vue';
+import {  defineProps, ref, onMounted } from 'vue';
 import { artistStore } from '@/domain/artist/store/artistStore';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 

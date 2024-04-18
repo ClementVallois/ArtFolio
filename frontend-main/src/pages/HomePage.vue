@@ -1,7 +1,7 @@
 <template>
   <HeroBannerComponent></HeroBannerComponent>
   <TitleComponent title="Les derniers inscrits" class="text-[3rem] lg:text-[4rem] pb-[1rem]"> </TitleComponent>
-  <CarousselComponent></CarousselComponent>
+  <CarousselComponent class="mb-[3rem]"></CarousselComponent>
   <TextScrollingComponent text="“L'art, c'est la plus sublime mission de l'homme, puisque c'est l'exercice de la pensée qui cherche à comprendre le monde et à le faire comprendre.” Auguste Rodin"></TextScrollingComponent>
   <TitleComponent title="Les artistes aléatoires" class="text-[3rem] lg:text-[4rem] mt-[3rem] text-end mr-[2rem] pb-[1rem]"> </TitleComponent>
   <CarousselComponent></CarousselComponent>

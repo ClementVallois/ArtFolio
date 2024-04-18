@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
 import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
+import ArtistInfoPage from '@/domain/artist/pages/ArtistInfoPage.vue'
 import SearchPage from '@/pages/SearchPage.vue';
 import ChatPage from '@/domain/chat/pages/ChatPage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
@@ -17,13 +18,17 @@ const routes = [
         name: 'home',
         component: HomePage
     },
-    // TODO: ajout d'une route avec un id 
     {
         path: '/artist/:artistId',
         name: 'artist',
         component: ArtistPage,
         props: true
 
+    },
+    {
+        path: '/artist-info',
+        name: 'ArtistInfoPage',
+        component: ArtistInfoPage
     },
     {
         path: '/form-post',
