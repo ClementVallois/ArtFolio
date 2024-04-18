@@ -9,14 +9,16 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('data_request')
+@Entity('data_requests')
 export class DataRequest {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   // One User can have many DataRequests
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

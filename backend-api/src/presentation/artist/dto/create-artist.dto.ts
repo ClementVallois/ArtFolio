@@ -46,8 +46,8 @@ export class CreateArtistDto {
   @IsNotEmpty({ message: '$property is required' })
   status: string;
 
-  @IsEnum(['artist', 'user'], {
-    message: '$property must be artist or user',
+  @IsEnum(['artist'], {
+    message: '$property must be artist',
   })
   @IsNotEmpty({ message: '$property is required' })
   role: string;

@@ -34,6 +34,8 @@ export class Category {
   @ManyToMany(() => User)
   @JoinTable({
     name: 'users_categories',
+    joinColumn: { name: 'category_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'user_id', referencedColumnName: 'id' },
   })
   user: User[];
 
@@ -49,6 +51,8 @@ export class Category {
   @ManyToMany(() => Post)
   @JoinTable({
     name: 'posts_categories',
+    joinColumn: { name: 'category_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'post_id', referencedColumnName: 'id' },
   })
   post: Post[];
 

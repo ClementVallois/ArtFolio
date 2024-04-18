@@ -17,6 +17,10 @@ export class AssetSeederService {
     private readonly postRepository: Repository<Post>,
   ) {}
 
+  async clear(): Promise<void> {
+    await this.postRepository.query('TRUNCATE TABLE assets CASCADE');
+  }
+
   async seed(): Promise<void> {
     const users = await this.userRepository.find();
     const posts = await this.postRepository.find();

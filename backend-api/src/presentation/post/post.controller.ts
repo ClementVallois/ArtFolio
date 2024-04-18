@@ -12,7 +12,7 @@ import { PostService } from '../../application/post/post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { FindIdParams } from '../utils/findOneParams';
+import { FindIdParams } from '../utils/findParams';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
@@ -27,6 +27,11 @@ export class PostController {
   @Get(':id')
   getPostById(@Param() { id }: FindIdParams) {
     return this.postService.getPostById(id);
+  }
+
+  @Get(':id/assets')
+  getPostAssets(@Param() { id }: FindIdParams) {
+    return this.postService.getPostAssets(id);
   }
 
   @Post()

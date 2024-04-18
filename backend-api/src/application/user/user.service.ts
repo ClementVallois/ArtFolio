@@ -2,7 +2,6 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
-  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateUserDto } from '../../presentation/user/dto/create-user.dto';
@@ -10,12 +9,15 @@ import { UpdateUserDto } from '../../presentation/user/dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { Repository } from 'typeorm';
+import { Asset } from 'src/infrastructure/entities/asset.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Asset)
+    private readonly assetRepository: Repository<Asset>,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -37,6 +39,18 @@ export class UserService {
       throw new NotFoundException(`User not found with ID: ${id}`);
     }
     return user;
+  }
+
+  async getUserAssets(userId: string): Promise<Asset[]> {
+    const userAssets = await this.assetRepository.find({
+      where: { user: { id: userId } },
+    });
+    if (!userAssets || userAssets.length === 0) {
+      throw new NotFoundException(
+        `Assets not found for User with ID: ${userId}`,
+      );
+    }
+    return userAssets;
   }
 
   async createUser(userData: CreateUserDto): Promise<User> {

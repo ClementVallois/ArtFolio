@@ -10,7 +10,7 @@ import {
 import { UserService } from '../../application/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindIdParams } from '../utils/findOneParams';
+import { FindIdParams } from '../utils/findParams';
 
 @Controller('users')
 export class UserController {
@@ -24,6 +24,10 @@ export class UserController {
   @Get(':id')
   getUserById(@Param() { id }: FindIdParams) {
     return this.userService.getUserById(id);
+  }
+  @Get(':id/assets')
+  getUserAssets(@Param() { id }: FindIdParams) {
+    return this.userService.getUserAssets(id);
   }
 
   @Post()
