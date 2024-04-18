@@ -48,10 +48,18 @@ export class ArtistService {
   }
 
   async getArtistPosts(id: string): Promise<Post[]> {
-    const artistPosts = await this.postRepository.find({
-      where: { userId: { id: id } },
+    const pinnedPosts = await this.postRepository.find({
+      where: { userId: { id: id }, isPinned: true },
       order: { createdAt: 'DESC' },
     });
+
+    const nonPinnedPosts = await this.postRepository.find({
+      where: { userId: { id: id }, isPinned: false },
+      order: { createdAt: 'DESC' },
+    });
+
+    const artistPosts = [...pinnedPosts, ...nonPinnedPosts];
+
     if (!artistPosts || artistPosts.length === 0) {
       throw new NotFoundException(`Posts not found for Artist with ID: ${id}`);
     }

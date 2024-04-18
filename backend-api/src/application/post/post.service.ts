@@ -23,7 +23,7 @@ export class PostService {
 
   async getAllPosts(): Promise<Post[]> {
     try {
-      return await this.postRepository.find();
+      return await this.postRepository.find({ order: { createdAt: 'DESC' } });
     } catch (error) {
       throw new HttpException(
         'Failed to fetch posts',
@@ -45,7 +45,7 @@ export class PostService {
 
   async getPostAssets(postId: string): Promise<Asset[]> {
     const postAssets = await this.assetRepository.find({
-      where: { postId: { id: postId } },
+      where: { postId: { id: postId }, type: 'post_picture' },
     });
 
     if (!postAssets || postAssets.length === 0) {
