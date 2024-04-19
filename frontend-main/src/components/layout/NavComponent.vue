@@ -1,5 +1,5 @@
 <template>
-    <nav class="shadow " id="app">
+    <nav class="shadow " >
         <div class="container px-6 py-5 mx-auto ">
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">
@@ -22,7 +22,7 @@
                 </div>
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
                     <CustomLinkComponent :to="{ name: 'login' }" text="Se connecter" class="md:mx-4" />
-                    <CustomLinkComponent :to="{ name: 'registration' }" text="S'inscrire" class="md:mx-4" />
+                    <CustomLinkComponent :to="{ name: 'RegistrationPage' }" text="S'inscrire" class="md:mx-4" />
                 </div>
             </div>
         </div>

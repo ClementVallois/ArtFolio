@@ -1,5 +1,5 @@
 <template>
-    <nav class="shadow " id="app">
+    <nav class="shadow ">
         <div class="container px-6 py-5 mx-auto r  h-full">
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">

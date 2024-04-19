@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomePage from '@/pages/HomePage.vue';
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
 import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
-import ArtistInfoPage from '@/domain/artist/pages/ArtistInfoPage.vue'
+import ArtistInfoPage from '@/domain/artist/pages/ArtistInfoPage.vue';
 import SearchPage from '@/pages/SearchPage.vue';
 import ChatPage from '@/domain/chat/pages/ChatPage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
@@ -67,7 +67,7 @@ const routes = [
     },
     {
         path: '/registration',
-        name: 'registration',
+        name: 'RegistrationPage',
         component: RegistrationPage
     },
     {

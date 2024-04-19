@@ -1,5 +1,5 @@
 <template>
-    <nav class="shadow " id="app">
+    <nav class="shadow" >
         <div class="container px-6 py-5 mx-auto r  h-full">
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">
@@ -71,7 +71,7 @@
                                 <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
-                                <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Se deconnecter"
+                                <CustomLinkComponent :to="{ name: 'ArtistRegistrationPage' }" text="Se deconnecter"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                             </div>
                         </div>

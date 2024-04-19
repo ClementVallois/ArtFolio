@@ -5,7 +5,7 @@ import { defineStore } from 'pinia';
 /////////
 export const globalStore = defineStore('globalStore', () => {
     // user, artist, none
-    const activeRole = "artist";
+    const activeRole = "none";
 
     return {
         activeRole
