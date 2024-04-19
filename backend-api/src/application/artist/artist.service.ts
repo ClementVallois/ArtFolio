@@ -5,6 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { Post } from 'src/infrastructure/entities/post.entity';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
@@ -18,6 +19,8 @@ export class ArtistService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    @InjectRepository(Asset)
+    private readonly assetRepository: Repository<Asset>,
   ) {}
 
   async getAllArtists(): Promise<User[]> {
@@ -78,32 +81,63 @@ export class ArtistService {
     return artistPost;
   }
 
-  async getLastRegisteredArtistsPosts(numberOfPosts: number): Promise<Post[]> {
+  async getLastRegisteredArtistsPosts(numberOfPosts: number): Promise<
+    {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[]
+  > {
     const lastRegisteredArtists = await this.userRepository.find({
       where: { role: 'artist' },
+      // where: { id: '1b47b24b-d4d6-4a1e-9d11-720b40d56016' },
       order: { createdAt: 'DESC' },
       take: numberOfPosts,
     });
 
-    if (!lastRegisteredArtists.length) {
+    if (lastRegisteredArtists.length < numberOfPosts) {
       throw new NotFoundException(
-        `Posts not found for Artist with ID: ${numberOfPosts}`,
+        `Expected ${numberOfPosts} artists, but found ${lastRegisteredArtists.length}`,
       );
     }
 
-    const artistPosts: Post[] = [];
+    const artistWithPostsList: {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[] = [];
+
     for (const artist of lastRegisteredArtists) {
-      const firstPost = await this.postRepository.findOne({
-        where: { userId: artist },
-        order: { createdAt: 'ASC' },
+      const pinnedPost = await this.postRepository.findOne({
+        where: { userId: artist, isPinned: true },
+        order: { createdAt: 'DESC' },
       });
 
-      if (firstPost) {
-        artistPosts.push(firstPost);
+      if (!pinnedPost) {
+        throw new NotFoundException(
+          `Pinned post not found for artist with ID: ${artist.id}`,
+        );
       }
+
+      const postAssets = await this.assetRepository.find({
+        where: { postId: { id: pinnedPost.id } },
+      });
+
+      const artistAsset = await this.assetRepository.findOne({
+        where: { type: 'profile_picture', userId: artist },
+      });
+
+      artistWithPostsList.push({
+        artist,
+        pinnedPost,
+        postAssets: postAssets,
+        artistAsset: artistAsset,
+      });
     }
 
-    return artistPosts;
+    return artistWithPostsList;
   }
 
   async getRandomArtistsPost(numberOfArtists: number): Promise<Post[]> {
