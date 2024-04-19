@@ -19,8 +19,14 @@
                 <!-- DropDown -->
                 <div v-show="showMenuUser" class="absolute right-[10px] z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div class="py-1 text-left">
-                        <a href="#" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1">
-                            <i class="fas fa-right-from-bracket text-s pr-5"></i>
+                        <!-- Profile Link -->
+                        <router-link to="/profile" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                            <i class="fas fa-user text-s pr-5"></i>
+                            Profile
+                        </router-link>
+                        <!-- Logout Link -->
+                        <a href="#" @click="logoutApp" class="text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabindex="-1">
+                            <i class="fas fa-sign-out-alt text-s pr-5"></i>
                             Log out
                         </a>
                     </div>
@@ -31,12 +37,20 @@
 
 <script setup>
 import { ref, defineEmits } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
 
 const emit = defineEmits();
 const showMenuUser = ref(false)
 const toggleMenuUser = () => {
     showMenuUser.value=!showMenuUser.value
 }
+
+const { logout } = useAuth0();
+
+const logoutApp = () => {
+    logout({ logoutParams: { returnTo: window.location.origin } });
+}
+
 
 
 </script>

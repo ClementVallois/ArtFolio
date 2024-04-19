@@ -10,6 +10,22 @@ class User {
       this.role = role;
       this.auth0Id = auth0Id;
   }
+
+  changeFirstName(newFirstName) {
+      this.firstName = newFirstName;
+  }
+
+  changeLastName(newLastName) {
+      this.lastName = newLastName;
+  }
+
+  changeBirthdate(newBirthdate) {
+      this.birthdate = newBirthdate;
+  }
+
+  changeDescription(newDescription) {
+      this.description = newDescription;
+  }
 }
 
 module.exports = User;
