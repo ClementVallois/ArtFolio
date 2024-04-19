@@ -38,9 +38,6 @@ export class ArtistService {
   }
 
   async getArtistById(id: string): Promise<User> {
-    if (!id) {
-      throw new HttpException('Artist ID is required', HttpStatus.BAD_REQUEST);
-    }
     const artist = await this.userRepository.findOne({
       where: { id: id, role: 'artist' },
     });

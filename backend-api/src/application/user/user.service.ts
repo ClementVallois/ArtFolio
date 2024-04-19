@@ -31,9 +31,6 @@ export class UserService {
     }
   }
   async getUserById(id: string): Promise<User> {
-    if (!id) {
-      throw new HttpException('User ID is required', HttpStatus.BAD_REQUEST);
-    }
     const user = await this.userRepository.findOneBy({ id: id });
     if (!user) {
       throw new NotFoundException(`User not found with ID: ${id}`);

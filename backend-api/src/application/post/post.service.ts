@@ -33,9 +33,6 @@ export class PostService {
   }
 
   async getPostById(id: string): Promise<Post> {
-    if (!id) {
-      throw new HttpException('Post ID is required', HttpStatus.BAD_REQUEST);
-    }
     const post = await this.postRepository.findOneBy({ id: id });
     if (!post) {
       throw new NotFoundException(`Post not found with ID: ${id}`);
