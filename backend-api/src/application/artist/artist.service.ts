@@ -22,7 +22,10 @@ export class ArtistService {
 
   async getAllArtists(): Promise<User[]> {
     try {
-      return await this.userRepository.find({ where: { role: 'artist' } });
+      return await this.userRepository.find({
+        where: { role: 'artist' },
+        order: { createdAt: 'DESC' },
+      });
     } catch (error) {
       throw new HttpException(
         'Error getting artists',
@@ -45,10 +48,19 @@ export class ArtistService {
   }
 
   async getArtistPosts(id: string): Promise<Post[]> {
-    const artistPosts = await this.postRepository.find({
-      where: { user: { id: id } },
+    const pinnedPosts = await this.postRepository.find({
+      where: { userId: { id: id }, isPinned: true },
+      order: { createdAt: 'DESC' },
     });
-    if (!artistPosts) {
+
+    const nonPinnedPosts = await this.postRepository.find({
+      where: { userId: { id: id }, isPinned: false },
+      order: { createdAt: 'DESC' },
+    });
+
+    const artistPosts = [...pinnedPosts, ...nonPinnedPosts];
+
+    if (!artistPosts || artistPosts.length === 0) {
       throw new NotFoundException(`Posts not found for Artist with ID: ${id}`);
     }
     return artistPosts;
@@ -56,7 +68,7 @@ export class ArtistService {
 
   async getOneArtistPost(userId: string, postId: string): Promise<Post> {
     const artistPost = await this.postRepository.findOne({
-      where: { user: { id: userId }, id: postId },
+      where: { userId: { id: userId }, id: postId },
     });
     if (!artistPost) {
       throw new NotFoundException(
@@ -64,6 +76,53 @@ export class ArtistService {
       );
     }
     return artistPost;
+  }
+
+  async getLastRegisteredArtistsPosts(numberOfPosts: number): Promise<Post[]> {
+    const lastRegisteredArtists = await this.userRepository.find({
+      where: { role: 'artist' },
+      order: { createdAt: 'DESC' },
+      take: numberOfPosts,
+    });
+
+    if (!lastRegisteredArtists.length) {
+      throw new NotFoundException(
+        `Posts not found for Artist with ID: ${numberOfPosts}`,
+      );
+    }
+
+    const artistPosts: Post[] = [];
+    for (const artist of lastRegisteredArtists) {
+      const firstPost = await this.postRepository.findOne({
+        where: { userId: artist },
+        order: { createdAt: 'ASC' },
+      });
+
+      if (firstPost) {
+        artistPosts.push(firstPost);
+      }
+    }
+
+    return artistPosts;
+  }
+
+  async getRandomArtistsPost(numberOfArtists: number): Promise<Post[]> {
+    const randomArtists = await this.userRepository.find({
+      where: { role: 'artist' },
+    });
+    const artistsInDB = randomArtists.length;
+    const randomArtistsPost = [];
+
+    for (let i = 0; i < numberOfArtists; i++) {
+      const randomIndex = Math.floor(Math.random() * artistsInDB);
+      const randomArtist = randomArtists[randomIndex];
+      const firstPost = await this.postRepository.findOne({
+        where: { userId: randomArtist },
+        order: { createdAt: 'ASC' },
+      });
+      randomArtistsPost.push(firstPost);
+    }
+    return randomArtistsPost;
   }
 
   async createArtist(artistData: CreateArtistDto): Promise<User> {

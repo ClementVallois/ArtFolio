@@ -1,5 +1,5 @@
 <template>
-
+<PageLayout>
 <div class="h-[calc(100%-50px)] bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center">
 
     <!-- Start block -->
@@ -88,6 +88,7 @@
 
                         </tbody>
                     </table>
+                    <p>{{ message }}</p>
                 </div>
             </div>
         </div>
@@ -99,12 +100,13 @@
 
 </div>
 
-
+</PageLayout>
 
 </template>
 
 <script setup>
 import { computed, ref, onMounted } from 'vue'
+import PageLayout from '@/components/layout/PageLayout.vue'
 import EditButton from '@/components/toolbox/EditButtonComponent.vue'
 import PreviewButton from '@/components/toolbox/PreviewButtonComponent.vue'
 import DeleteButton from '@/components/toolbox/DeleteButtonComponent.vue'
@@ -113,6 +115,7 @@ import SuccessAlert from '@/components/state/success/SuccessAlert.vue'
 import ErrorAlert from '@/components/state/error/ErrorAlert.vue'
 import SearchUser from '@/domain/user/components/SearchUser.vue'
 import { useStoreUser } from '../store/store-user'
+import { useAuth0 } from "@auth0/auth0-vue";
 
 const isOpenDeleteModal= ref(false)
 const itemModal=ref({})
@@ -123,8 +126,45 @@ const successMessage = ref('Votre opération est un success')
 const errorMessage=ref('Une erreur est survenue')
 const storeUser = useStoreUser() 
 
+
+// const message = ref("");
+
+// const getUsers = async () => {
+//   const { getAccessTokenSilently } = useAuth0();
+//   const accessToken = await getAccessTokenSilently();
+//   const { data, error } = await getProtectedResource(accessToken);
+
+//   if (data) {
+//     message.value = JSON.stringify(data, null, 2);
+//   }
+
+//   if (error) {
+//     message.value = JSON.stringify(error, null, 2);
+//   }
+// };
+
+
+// const getProtectedResource = async (accessToken) => {
+//   const config = {
+//     url: `${apiServerUrl}/post`,
+//     method: "GET",
+//     headers: {
+//       "content-type": "application/json",
+//       Authorization: `Bearer ${accessToken}`,
+//     },
+//   };
+
+//   const { data, error } = await callExternalApi({ config });
+
+//   return {
+//     data: data || null,
+//     error,
+//   };
+// };
+
 onMounted(() => {
     storeUser.getAllUsers()
+    // getUsers()
 })
 
 
@@ -148,7 +188,7 @@ const displaySuccessDeleteAlert = async () => {
 }
 
 const displayErrorAlert = async () => {
-    isOpenDeleteModal=false
+    isOpenDeleteModal.value=false
     isError.value=true
     errorMessage.value='Mauvaise requête'
 }

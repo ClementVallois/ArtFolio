@@ -20,17 +20,17 @@ export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Get()
-  getAllPosts() {
+  async getAllPosts() {
     return this.postService.getAllPosts();
   }
 
   @Get(':id')
-  getPostById(@Param() { id }: FindIdParams) {
+  async getPostById(@Param() { id }: FindIdParams) {
     return this.postService.getPostById(id);
   }
 
   @Get(':id/assets')
-  getPostAssets(@Param() { id }: FindIdParams) {
+  async getPostAssets(@Param() { id }: FindIdParams) {
     return this.postService.getPostAssets(id);
   }
 
