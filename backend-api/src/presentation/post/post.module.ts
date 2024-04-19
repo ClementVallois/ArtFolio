@@ -6,10 +6,7 @@ import { Post } from 'src/infrastructure/entities/post.entity';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Post]),
-    TypeOrmModule.forFeature([Asset]),
-  ],
+  imports: [TypeOrmModule.forFeature([Post, Asset])],
   controllers: [PostController],
   providers: [PostService],
 })

@@ -6,10 +6,7 @@ import { User } from 'src/infrastructure/entities/user.entity';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    TypeOrmModule.forFeature([Asset]),
-  ],
+  imports: [TypeOrmModule.forFeature([User, Asset])],
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
