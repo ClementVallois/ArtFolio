@@ -63,9 +63,6 @@ export class PostService {
 
   async updatePost(id: string, postDto: UpdatePostDto): Promise<Post> {
     const existingPost = await this.getPostById(id);
-    if (!existingPost) {
-      throw new NotFoundException(`Post not found with ID: ${id}`);
-    }
     const userId: DeepPartial<User> = {
       id: postDto.userId,
     };
