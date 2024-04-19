@@ -3,8 +3,7 @@ class Post {
         this.id = id;
         this.isPinned = isPinned;
         this.description = description;
-        //TODO: Rajouter le user_id quand il sera effectif sur les fake data
-        // this.user_id = user_id;
+        //  this.user_id = user_id;
         this.createdAt = createdAt;
     }
 

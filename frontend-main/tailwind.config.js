@@ -4,7 +4,24 @@ export default {
     "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}"
   ],
-  plugins: [],
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: [
+      {
+        mytheme: {
+          "primary": "#f3f4f6",
+          "secondary": "#1c1917",
+          "accent": "#e5e7eb",
+          "neutral": "#050207",
+          "base-100": "#ffffff",
+          "info": "#dbeafe",
+          "success": "#dcfce7",
+          "warning": "#fef3c7",
+          "error": "#fee2e2",
+        },
+      },
+    ],
+  },
   theme: {
     colors: {
       black: '#000',

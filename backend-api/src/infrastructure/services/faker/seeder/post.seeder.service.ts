@@ -15,7 +15,7 @@ export class PostSeederService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) {}
+  ) { }
 
   async clear(): Promise<void> {
     await this.postRepository.query('TRUNCATE TABLE posts CASCADE');
@@ -44,9 +44,10 @@ export class PostSeederService {
       }
     }
 
-    //Add random posts to artists
-    const fakeData = Array.from({ length: 10 }, () => {
-      const user = faker.helpers.arrayElement(artists);
+ED_feat_frontend-main_domain-artist-3
+    const fakeData = Array.from({ length: 50 }, () => {
+      const user = faker.helpers.arrayElement(users);
+
 
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();

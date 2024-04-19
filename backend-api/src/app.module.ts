@@ -50,7 +50,7 @@ export class AppModule implements OnModuleInit {
     private readonly dataRequestSeederService: DataRequestSeederService,
     private readonly postSeederService: PostSeederService,
     private readonly categorySeederService: CategorySeederService,
-  ) {}
+  ) { }
 
   async onModuleInit(): Promise<void> {
     if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
