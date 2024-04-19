@@ -1,4 +1,4 @@
-const { CRUDapi } = require("@/api/CrudApi");
+import { CRUDapi } from "@/api/CrudApi";
 
 ////////////
 ////////////
@@ -12,26 +12,26 @@ function artistApi() {
     // basique CRUD for artists
     ////
 
-    function getAllArtist() {
-        return CRUDapi('GET', '/artists')
+    async function getAllArtists() {
+        return await CRUDapi('GET', 'artists');
     }
 
-    function getArtistById(id) {
-        return CRUDapi('GET', '/artists', id)
+    async function getArtistById(id) {
+        return await CRUDapi('GET', `artists/${id}`);
     }
 
-    function createArtist(data) {
+    async function createArtist(data) {
         // const { id, firstName, lastName, birthdate, username, description, status, role, auth0Id } = data;
         // const newArtist = new User(id, firstName, lastName, birthdate, username, description, status, role, auth0Id);
-        return CRUDapi('POST', '/artists', null, data)
+        return await CRUDapi('POST', 'artists', null, data)
     }
 
-    function modifyArtist(id, data) {
-        return CRUDapi('PATCH', '/artist', id, data)
+    async function modifyArtist(id, data) {
+        return await CRUDapi('PATCH', 'artist', id, data)
     }
 
-    function deleteArtist(id) {
-        return CRUDapi('DELETE', '/artists', id)
+    async function deleteArtist(id) {
+        return await CRUDapi('DELETE', 'artists', id)
     }
 
 
@@ -39,12 +39,12 @@ function artistApi() {
     // Recover artist's pinned post for home page
     ////
 
-    function getLastRegisteredArtist(number) {
-        return CRUDapi('GET', `/users/artists/last/${number}`)
+    async function getLastRegisteredArtist(number) {
+        return await CRUDapi('GET', `users/artists/last/${number}`)
     }
 
-    function getRandomArtist(number) {
-        return CRUDapi('GET', `/users/artists/random/${number}`)
+    async function getRandomArtist(number) {
+        return await CRUDapi('GET', `users/artists/random/${number}`)
     }
 
 
@@ -52,20 +52,25 @@ function artistApi() {
     // Artist post
     ////
 
-    function getArtistPosts(id) {
-        return CRUDapi('GET', '/artists/posts', id)
+    async function getArtistPosts(id) {
+        return await CRUDapi('GET', 'artists/posts', id)
+    }
+    // TODO: à enlever
+    async function getAllPost() {
+        return await CRUDapi('GET', "posts")
     }
 
     return {
-        getAllArtist,
+        getAllArtists,
         getArtistById,
         createArtist,
         modifyArtist,
         deleteArtist,
         getLastRegisteredArtist,
         getRandomArtist,
-        getArtistPosts
+        getArtistPosts,
+        getAllPost
     };
 }
 
-module.exports = artistApi;
+export { artistApi };
