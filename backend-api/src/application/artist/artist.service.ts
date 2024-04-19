@@ -140,23 +140,57 @@ export class ArtistService {
     return artistWithPostsList;
   }
 
-  async getRandomArtistsPost(numberOfArtists: number): Promise<Post[]> {
+  async getRandomArtistsPost(numberOfArtists: number): Promise<
+    {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[]
+  > {
     const randomArtists = await this.userRepository.find({
       where: { role: 'artist' },
     });
+
     const artistsInDB = randomArtists.length;
-    const randomArtistsPost = [];
+    const selectedArtists: {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[] = [];
 
     for (let i = 0; i < numberOfArtists; i++) {
       const randomIndex = Math.floor(Math.random() * artistsInDB);
       const randomArtist = randomArtists[randomIndex];
-      const firstPost = await this.postRepository.findOne({
-        where: { userId: randomArtist },
-        order: { createdAt: 'ASC' },
+
+      const pinnedPost = await this.postRepository.findOne({
+        where: { userId: randomArtist, isPinned: true },
       });
-      randomArtistsPost.push(firstPost);
+
+      if (!pinnedPost) {
+        throw new NotFoundException(
+          `Pinned post not found for artist with ID: ${randomArtist.id}`,
+        );
+      }
+
+      const postAssets = await this.assetRepository.find({
+        where: { postId: { id: pinnedPost.id } },
+      });
+
+      const artistAsset = await this.assetRepository.findOne({
+        where: { type: 'profile_picture', userId: randomArtist },
+      });
+
+      selectedArtists.push({
+        artist: randomArtist,
+        pinnedPost: pinnedPost,
+        postAssets: postAssets,
+        artistAsset: artistAsset,
+      });
     }
-    return randomArtistsPost;
+
+    return selectedArtists;
   }
 
   async createArtist(artistData: CreateArtistDto): Promise<User> {
