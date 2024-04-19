@@ -8,14 +8,14 @@ import { User } from 'src/infrastructure/entities/user.entity';
 export class UserSeederService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async clear(): Promise<void> {
     await this.userRepository.query('TRUNCATE TABLE users CASCADE');
   }
 
   async seed(): Promise<void> {
-    const fakeData = Array.from({ length: 10 }, () => {
+    const fakeData = Array.from({ length: 50 }, () => {
       const fakeEntity = new User();
       fakeEntity.id = faker.string.uuid();
       fakeEntity.firstName = faker.person.firstName();

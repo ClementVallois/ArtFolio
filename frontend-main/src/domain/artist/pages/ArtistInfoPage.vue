@@ -8,7 +8,7 @@
 
 <script setup>
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
-import { artistStore } from '@/domain/artist/store/artistStore';
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 import {  defineProps, ref, onMounted } from 'vue';
 
 // const props = defineProps({
@@ -17,10 +17,10 @@ import {  defineProps, ref, onMounted } from 'vue';
 
 
 // Récupérez l'artist demandé
-const artistsStore = artistStore();
+const artistStore = useStoreArtist();
 const artist = ref([])
 onMounted(async () => {
-    artist.value = await artistsStore.getArtistById("d53b730c-18ff-449b-a5f2-937f65f615ca");
+    artist.value = await artistStore.getArtistById("d53b730c-18ff-449b-a5f2-937f65f615ca");
     console.log(artist.value);
 });
 

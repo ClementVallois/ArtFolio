@@ -13,7 +13,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref, onMounted } from 'vue';
+import { defineProps,} from 'vue';
 //import { postStore } from '@/domain/artist/store/PostStore';
 
 const props = defineProps({
@@ -35,3 +35,4 @@ const props = defineProps({
 
 
 </script>
+
