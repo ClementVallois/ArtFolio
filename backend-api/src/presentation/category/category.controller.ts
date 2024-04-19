@@ -10,36 +10,37 @@ import {
 import { CategoryService } from '../../application/category/category.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
+import { FindIdParams } from '../utils/params.dto';
 
 @Controller('categories')
 export class CategoryController {
   constructor(private readonly categoryService: CategoryService) {}
 
-  @Post()
-  async create(@Body() createCategoryDto: CreateCategoryDto) {
-    return this.categoryService.create(createCategoryDto);
-  }
-
   @Get()
-  async findAll() {
-    return this.categoryService.findAll();
+  async getAllCategories() {
+    return this.categoryService.getAllCategories();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.categoryService.findOne(+id);
+  async getOneCategory(@Param() { id }: FindIdParams) {
+    return this.categoryService.getOneCategory(id);
+  }
+
+  @Post()
+  async createCategory(@Body() categoryData: CreateCategoryDto) {
+    return this.categoryService.createCategory(categoryData);
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
+  async updateCategory(
+    @Param() { id }: FindIdParams,
+    @Body() categoryData: UpdateCategoryDto,
   ) {
-    return this.categoryService.update(+id, updateCategoryDto);
+    return this.categoryService.updateCategory(id, categoryData);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.categoryService.remove(+id);
+  async removeCategory(@Param() { id }: FindIdParams) {
+    return this.categoryService.removeCategory(id);
   }
 }
