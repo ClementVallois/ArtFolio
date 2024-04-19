@@ -16,8 +16,8 @@ export class DataRequestController {
   constructor(private readonly dataRequestService: DataRequestService) {}
 
   @Post()
-  async create(@Body() createDataRequestDto: CreateDataRequestDto) {
-    return this.dataRequestService.create(createDataRequestDto);
+  async create(@Body() dataRequestData: CreateDataRequestDto) {
+    return this.dataRequestService.create(dataRequestData);
   }
 
   @Get()
@@ -33,9 +33,9 @@ export class DataRequestController {
   @Patch(':id')
   async update(
     @Param('id') id: string,
-    @Body() updateDataRequestDto: UpdateDataRequestDto,
+    @Body() dataRequestData: UpdateDataRequestDto,
   ) {
-    return this.dataRequestService.update(+id, updateDataRequestDto);
+    return this.dataRequestService.update(+id, dataRequestData);
   }
 
   @Delete(':id')

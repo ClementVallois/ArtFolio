@@ -91,7 +91,6 @@ export class ArtistService {
   > {
     const lastRegisteredArtists = await this.userRepository.find({
       where: { role: 'artist' },
-      // where: { id: '1b47b24b-d4d6-4a1e-9d11-720b40d56016' },
       order: { createdAt: 'DESC' },
       take: numberOfPosts,
     });

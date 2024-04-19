@@ -35,13 +35,16 @@ export class PostController {
   }
 
   @Post()
-  async createPost(@Body() post: CreatePostDto) {
-    return this.postService.createPost(post);
+  async createPost(@Body() postData: CreatePostDto) {
+    return this.postService.createPost(postData);
   }
 
   @Patch(':id')
-  async updatePost(@Param() { id }: FindIdParams, @Body() post: UpdatePostDto) {
-    return this.postService.updatePost(id, post);
+  async updatePost(
+    @Param() { id }: FindIdParams,
+    @Body() postData: UpdatePostDto,
+  ) {
+    return this.postService.updatePost(id, postData);
   }
 
   @Delete(':id')

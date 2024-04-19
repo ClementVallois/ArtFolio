@@ -51,16 +51,16 @@ export class ArtistController {
   }
 
   @Post()
-  async createArtist(@Body() artist: CreateArtistDto) {
-    return this.artistService.createArtist(artist);
+  async createArtist(@Body() artistData: CreateArtistDto) {
+    return this.artistService.createArtist(artistData);
   }
 
   @Patch(':id')
   async updateArtist(
     @Param() { id }: FindIdParams,
-    @Body() artist: UpdateArtistDto,
+    @Body() artistData: UpdateArtistDto,
   ) {
-    return this.artistService.updateArtist(id, artist);
+    return this.artistService.updateArtist(id, artistData);
   }
 
   @Delete(':id')
