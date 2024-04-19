@@ -40,8 +40,8 @@ export class CreateUserDto {
   })
   description: string;
 
-  @IsEnum(['active', 'inactive', 'deleted'], {
-    message: '$property must be active, inactive or deleted',
+  @IsEnum(['active', 'inactive'], {
+    message: '$property must be active or inactive',
   })
   @IsNotEmpty({ message: '$property is required' })
   status: string;
