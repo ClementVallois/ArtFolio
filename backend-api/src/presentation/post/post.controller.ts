@@ -48,7 +48,7 @@ export class PostController {
   }
 
   @Delete(':id')
-  async deletePost(@Param() { id }: FindIdParams) {
-    return this.postService.deletePost(id);
+  async removePost(@Param() { id }: FindIdParams) {
+    return this.postService.removePost(id);
   }
 }

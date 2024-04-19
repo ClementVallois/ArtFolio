@@ -80,7 +80,7 @@ export class UserService {
     return this.userRepository.save(existingUser);
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async removeUser(id: string): Promise<User> {
     const user = await this.getUserById(id);
     return this.userRepository.remove(user);
   }
