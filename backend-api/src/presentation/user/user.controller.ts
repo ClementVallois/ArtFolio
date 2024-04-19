@@ -17,31 +17,31 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  getAllUsers() {
+  async getAllUsers() {
     return this.userService.getAllUsers();
   }
 
   @Get(':id')
-  getUserById(@Param() { id }: FindIdParams) {
+  async getUserById(@Param() { id }: FindIdParams) {
     return this.userService.getUserById(id);
   }
   @Get(':id/assets')
-  getUserAssets(@Param() { id }: FindIdParams) {
+  async getUserAssets(@Param() { id }: FindIdParams) {
     return this.userService.getUserAssets(id);
   }
 
   @Post()
-  createUser(@Body() user: CreateUserDto) {
+  async createUser(@Body() user: CreateUserDto) {
     return this.userService.createUser(user);
   }
 
   @Patch(':id')
-  updateUser(@Param() { id }: FindIdParams, @Body() user: UpdateUserDto) {
+  async updateUser(@Param() { id }: FindIdParams, @Body() user: UpdateUserDto) {
     return this.userService.updateUser(id, user);
   }
 
   @Delete(':id')
-  removeUser(@Param() { id }: FindIdParams) {
+  async removeUser(@Param() { id }: FindIdParams) {
     return this.userService.deleteUser(id);
   }
 }

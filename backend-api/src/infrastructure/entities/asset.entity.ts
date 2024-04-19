@@ -30,13 +30,13 @@ export class Asset {
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',
   })
-  user: User;
+  userId: User;
 
   @JoinColumn({ name: 'post_id', referencedColumnName: 'id' })
   @ManyToOne(() => Post, (post) => post.id, {
     onDelete: 'CASCADE',
   })
-  post: Post;
+  postId: Post;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

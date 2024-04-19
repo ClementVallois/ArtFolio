@@ -11,7 +11,7 @@ export class AssetService {
   ) {}
   async getPostAssets(postId: string): Promise<Asset[]> {
     const postAssets = await this.assetRepository.find({
-      where: { post: { id: postId } },
+      where: { postId: { id: postId } },
     });
 
     if (!postAssets || postAssets.length === 0) {
@@ -24,7 +24,7 @@ export class AssetService {
 
   async getUserAssets(userId: string): Promise<Asset[]> {
     const userAssets = await this.assetRepository.find({
-      where: { user: { id: userId } },
+      where: { userId: { id: userId } },
     });
     if (!userAssets || userAssets.length === 0) {
       throw new NotFoundException(
