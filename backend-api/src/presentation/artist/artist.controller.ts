@@ -14,7 +14,7 @@ import {
   FindIdParams,
   FindNumberParams,
   FindUserPostParams,
-} from '../utils/findParams';
+} from '../utils/params.dto';
 
 @Controller(['artists'])
 export class ArtistController {

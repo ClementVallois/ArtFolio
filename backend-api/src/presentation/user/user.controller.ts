@@ -10,7 +10,7 @@ import {
 import { UserService } from '../../application/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindIdParams } from '../utils/findParams';
+import { FindIdParams } from '../utils/params.dto';
 
 @Controller('users')
 export class UserController {

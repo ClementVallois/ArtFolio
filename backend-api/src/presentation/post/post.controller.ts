@@ -12,7 +12,7 @@ import { PostService } from '../../application/post/post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { FindIdParams } from '../utils/findParams';
+import { FindIdParams } from '../utils/params.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
