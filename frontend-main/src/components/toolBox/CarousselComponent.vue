@@ -28,7 +28,7 @@ const itemsToShow = ref(2.5); // Garde le même ratio par défaut
 const adjustItemsToShow = () => {
   const screenWidth = window.innerWidth;
   if (screenWidth <= 768) {
-    itemsToShow.value = 1; // Réduit à une seule carte pour les écrans plus petits
+    itemsToShow.value = 1.5; // Réduit à une seule carte pour les écrans plus petits
   } else {
     // Garde le même ratio pour les écrans plus larges
     itemsToShow.value = Math.min(4.5, Math.max(2.5, (screenWidth / 400))); 
