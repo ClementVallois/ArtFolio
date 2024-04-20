@@ -143,19 +143,24 @@ const submitForm = () => {
     console.log(isFormValid);
     // Vérifiez si le formulaire est valide
     if (isFormValid.value) {
-        const artistData = {
-            username: username.value,
-            firstName: firstName.value,
-            lastName: lastName.value,
-            birthDate: birthDate.value,
-            profilDescription: profilDescription.value,
-            postDescription: postDescription.value,
-            selectedCategories: selectedCategories.value
-            // Ajoutez d'autres propriétés si nécessaire
+        const formData = {
+            artistData: {
+                username: username.value,
+                firstName: firstName.value,
+                lastName: lastName.value,
+                birthDate: birthDate.value,
+                profilDescription: profilDescription.value,
+            },
+            pinnedPost: {
+                postDescription: postDescription.value,
+            },
+            artistCategories: {
+                selectedCategories: selectedCategories.value
+            }
         };
         
         // TODO: Envoyez l'object
-        console.log(artistData);
+        console.log(formData);
     } else {
         // Sinon, affichez la popup
         showErrorAlert.value = true;
