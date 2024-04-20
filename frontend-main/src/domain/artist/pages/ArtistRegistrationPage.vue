@@ -68,7 +68,7 @@
     </div>
 
     
-
+<ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
 
 </template>
 
@@ -76,6 +76,7 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
+import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { ref } from 'vue';
 import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
 
@@ -90,7 +91,7 @@ const postDescription = ref('');
 const firstSection = ref(true);
 const secondSection = ref(false);
 const selectedCategories = ref([]);
-
+const showErrorAlert = ref(false); 
 
 
 // Find categories Array name
@@ -98,19 +99,29 @@ const categories = categoryStore.getAllCategoriesName;
 
 // Méthode pour basculer entre les sections 
 const toggleSections = () => {
-    firstSection.value = !firstSection.value;
-    secondSection.value = !secondSection.value;
+    if (username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
+        firstSection.value = !firstSection.value;
+        secondSection.value = !secondSection.value;
+        showErrorAlert.value = false; 
+    } else {
+        showErrorAlert.value = true; 
+    }
 };
 
 // Put in array clicked categories 
 const handleCategoryClicked = (category) => {
     if (!selectedCategories.value.includes(category)) {
-    selectedCategories.value.push(category);
-} else {
-    selectedCategories.value = selectedCategories.value.filter((cat) => cat !== category);
-}
-// Affiche les catégories sélectionnées dans la console
-  console.log(selectedCategories.value); 
+        selectedCategories.value.push(category);
+    } else {
+        selectedCategories.value = selectedCategories.value.filter((cat) => cat !== category);
+    }
+    console.log(selectedCategories.value); 
+};
+
+// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
+const handleCloseErrorAlert = () => {
+    console.log(showErrorAlert.value);
+    showErrorAlert.value = false;
 };
 </script>
 
