@@ -1,5 +1,5 @@
 <template>
-    <div v-if="firstSection">
+    <div v-if="firstSection"  class="flex flex-col items-center">
         <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
 
         <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
@@ -30,14 +30,14 @@
                 <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
                 <textarea  v-model="profilDescription" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."   class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " ></textarea>   
             </div>
-            <div class="flex flex-col w-[90vw] pb-[1rem]">
-                <ButtonComponent type="submit"  textButton="Suivant" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
-            </div>
+         
         
         </form>
-    
+        <div class="flex flex-col w-[90vw] pb-[1rem]">
+            <ButtonComponent type="submit"  textButton="Suivant" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
+        </div>
     </div>
-    <div v-if="secondSection">
+    <div v-if="secondSection" class="flex flex-col items-center">
         <TitleComponent title="Mes catégories" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
         <div class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem] lg:items-start">
             <div class="flex  flex-wrap pb-[1rem] pt-[2rem] w-[90vw] lg:w-[40vw] lg:p-[3rem]">    
@@ -59,12 +59,13 @@
                 <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
                 <textarea  v-model="postDescription" class="textarea textarea-bordered h-[20vh] w-[90%] resize-none lg:w-[40%] " placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."></textarea>    
             </div>
-            <div class="flex flex justify-between w-[90vw] pb-[1rem]">
-                <ButtonComponent type="submit"  textButton="Précédent" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
-                <ButtonComponent type="submit"  textButton="S'inscrire" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="submitForm"></ButtonComponent>
-            </div>
+   
         
         </form>
+        <div class="flex flex justify-between w-[90vw] pb-[1rem]">
+            <ButtonComponent type="submit"  textButton="Précédent" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
+            <ButtonComponent type="submit"  textButton="S'inscrire" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="submitForm" ></ButtonComponent>
+        </div>
     </div>
 
     
@@ -77,7 +78,7 @@ import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref } from 'vue';
+import { ref,computed } from 'vue';
 import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
 
 const categoryStore = categorieStore();
@@ -120,8 +121,45 @@ const handleCategoryClicked = (category) => {
 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {
-    console.log(showErrorAlert.value);
     showErrorAlert.value = false;
+};
+
+
+
+
+// Calcul de la validité du formulaire
+const isFormValid = computed(() => {
+    // Vérifiez si tous les champs obligatoires sont remplis
+    const isFieldsFilled = username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value && postDescription.value;
+    // Vérifiez s'il y a au moins une catégorie sélectionnée
+    const isCategorySelected = selectedCategories.value.length > 0;
+
+    // Retourne vrai si tous les champs sont remplis et au moins une catégorie est sélectionnée
+    return isFieldsFilled && isCategorySelected;
+});
+
+// Méthode pour soumettre le formulaire avec validation
+const submitForm = () => {
+    console.log(isFormValid);
+    // Vérifiez si le formulaire est valide
+    if (isFormValid.value) {
+        const artistData = {
+            username: username.value,
+            firstName: firstName.value,
+            lastName: lastName.value,
+            birthDate: birthDate.value,
+            profilDescription: profilDescription.value,
+            postDescription: postDescription.value,
+            selectedCategories: selectedCategories.value
+            // Ajoutez d'autres propriétés si nécessaire
+        };
+        
+        // TODO: Envoyez l'object
+        console.log(artistData);
+    } else {
+        // Sinon, affichez la popup
+        showErrorAlert.value = true;
+    }
 };
 </script>
 
