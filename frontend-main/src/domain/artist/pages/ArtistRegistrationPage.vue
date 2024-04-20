@@ -41,7 +41,7 @@
         <TitleComponent title="Mes catégories" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
         <div class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem] lg:items-start">
             <div class="flex  flex-wrap pb-[1rem] pt-[2rem] w-[90vw] lg:w-[40vw] lg:p-[3rem]">    
-                <CategoryTagComponent v-for="(category, index) in categories" :key="index" :textTag="category" ></CategoryTagComponent>
+                <CategoryTagComponent v-for="(category, index) in categories" :key="index" :textTag="category" @categoryClicked="handleCategoryClicked"></CategoryTagComponent>
             </div>
         </div>
     
@@ -76,7 +76,10 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
-import { ref } from 'vue'
+import { ref } from 'vue';
+import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
+
+const categoryStore = categorieStore();
 
 const username = ref('');
 const firstName = ref('');
@@ -84,29 +87,30 @@ const lastName = ref('');
 const birthDate = ref('');
 const profilDescription = ref('');
 const postDescription = ref('');
-
-
-
-import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
-const categoryStore = categorieStore();
-const categories = categoryStore.getAllCategoriesName;
-console.log(categories);
-
-
 const firstSection = ref(true);
 const secondSection = ref(false);
+const selectedCategories = ref([]);
 
 
-// Méthode pour basculer entre les sections
+
+// Find categories Array name
+const categories = categoryStore.getAllCategoriesName;
+
+// Méthode pour basculer entre les sections 
 const toggleSections = () => {
     firstSection.value = !firstSection.value;
     secondSection.value = !secondSection.value;
 };
-// Méthode pour soumettre le formulaire
-const submitForm = () => {
-  // Traitement du formulaire
 
-  // Par exemple, une fois que le formulaire est soumis, vous pouvez rediriger l'utilisateur ou effectuer d'autres actions nécessaires
+// Put in array clicked categories 
+const handleCategoryClicked = (category) => {
+    if (!selectedCategories.value.includes(category)) {
+    selectedCategories.value.push(category);
+} else {
+    selectedCategories.value = selectedCategories.value.filter((cat) => cat !== category);
+}
+// Affiche les catégories sélectionnées dans la console
+  console.log(selectedCategories.value); 
 };
 </script>
 
