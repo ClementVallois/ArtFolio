@@ -16,22 +16,22 @@ export class DataRequestController {
   constructor(private readonly dataRequestService: DataRequestService) {}
 
   @Post()
-  create(@Body() createDataRequestDto: CreateDataRequestDto) {
+  async create(@Body() createDataRequestDto: CreateDataRequestDto) {
     return this.dataRequestService.create(createDataRequestDto);
   }
 
   @Get()
-  findAll() {
+  async findAll() {
     return this.dataRequestService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.dataRequestService.findOne(+id);
   }
 
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateDataRequestDto: UpdateDataRequestDto,
   ) {
@@ -39,7 +39,7 @@ export class DataRequestController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  async remove(@Param('id') id: string) {
     return this.dataRequestService.remove(+id);
   }
 }

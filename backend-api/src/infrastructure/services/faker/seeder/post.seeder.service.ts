@@ -15,22 +15,44 @@ export class PostSeederService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) {}
+  ) { }
 
   async clear(): Promise<void> {
     await this.postRepository.query('TRUNCATE TABLE posts CASCADE');
   }
 
   async seed(): Promise<void> {
-    const users = await this.userRepository.find({ where: { role: 'artist' } });
+    const artists = await this.userRepository.find({
+      where: { role: 'artist' },
+    });
 
-    const fakeData = Array.from({ length: 10 }, () => {
+    //Add pinned post to existing artists
+    for (const artist of artists) {
+      const existingPinnedPost = await this.postRepository.findOne({
+        where: { userId: { id: artist.id }, isPinned: true },
+      });
+
+      if (!existingPinnedPost) {
+        const fakeEntity = new Post();
+        fakeEntity.id = faker.string.uuid();
+        fakeEntity.isPinned = true;
+        fakeEntity.userId = artist;
+        fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
+        fakeEntity.createdAt = faker.date.recent();
+        fakeEntity.updatedAt = faker.date.recent();
+        await this.postRepository.save(fakeEntity);
+      }
+    }
+
+ED_feat_frontend-main_domain-artist-3
+    const fakeData = Array.from({ length: 50 }, () => {
       const user = faker.helpers.arrayElement(users);
+
 
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();
-      fakeEntity.isPinned = faker.datatype.boolean();
-      fakeEntity.user = user;
+      fakeEntity.isPinned = false;
+      fakeEntity.userId = user;
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
       fakeEntity.createdAt = faker.date.recent();
       fakeEntity.updatedAt = faker.date.recent();

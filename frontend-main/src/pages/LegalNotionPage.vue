@@ -1,14 +1,14 @@
 <template>
 
     <section class="border-l-4 border-black ml-[4rem]">
-        <TitleComponent title="Mention Légale" class="text-[4rem] mt-[3rem]"> </TitleComponent>
+        <TitleComponent title="Mention Légale" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
 
-        <SecondTitleComponent title="Informations légales" class="mt-[4rem]"></SecondTitleComponent>
+        <SecondTitleComponent title="Informations légales" class="mt-[4rem]  ml-[2rem] "></SecondTitleComponent>
         <p class="m-[2rem]">
             ArtFolio est une plateforme en ligne exploitée par ArtCollectif. Notre siège social est situé à Paris.
         </p>
 
-        <SecondTitleComponent title="Propriété intellectuelle" class="mt-[1.5rem]"></SecondTitleComponent>
+        <SecondTitleComponent title="Propriété intellectuelle" class="mt-[1.5rem]  ml-[2rem] "></SecondTitleComponent>
         <p class="m-[2rem]">
             Tous les contenus présents sur ArtFolio, y compris mais sans s'y limiter, les textes, les images, les
             vidéos,
@@ -22,7 +22,7 @@
             judiciaires.
         </p>
 
-        <SecondTitleComponent title="Responsabilité" class="mt-[1.5rem]"></SecondTitleComponent>
+        <SecondTitleComponent title="Responsabilité" class="mt-[1.5rem]  ml-[2rem] "></SecondTitleComponent>
         <p class="m-[2rem]">
             Nous nous efforçons de fournir des informations précises et à jour sur ArtFolio, mais nous ne pouvons
             garantir l'exactitude, l'exhaustivité ou la pertinence de ces informations. En conséquence, nous
@@ -32,7 +32,7 @@
             informations.
         </p>
 
-        <SecondTitleComponent title="Liens externes" class="mt-[1.5rem]"></SecondTitleComponent>
+        <SecondTitleComponent title="Liens externes" class="mt-[1.5rem]  ml-[2rem] "></SecondTitleComponent>
         <p class="m-[2rem]">
             ArtFolio peut contenir des liens vers des sites Web externes qui ne sont pas sous notre contrôle. Nous
             déclinons toute responsabilité quant au contenu de ces sites Web externes et quant aux conséquences de
@@ -40,7 +40,7 @@
             utilisation.
         </p>
 
-        <SecondTitleComponent title="Protection des données personnelles" class="mt-[1.5rem]">
+        <SecondTitleComponent title="Protection des données personnelles" class="mt-[1.5rem]  ml-[2rem] ">
         </SecondTitleComponent>
         <p class="m-[2rem]">
             Nous respectons la vie privée de nos utilisateurs et nous nous engageons à protéger leurs données
@@ -50,7 +50,7 @@
             l'utilisation et à la divulgation de vos données personnelles telles que décrites dans ladite politique.
         </p>
 
-        <SecondTitleComponent title="Modification des mentions légales" class="mt-[1.5rem]"></SecondTitleComponent>
+        <SecondTitleComponent title="Modification des mentions légales" class="mt-[1.5rem]  ml-[2rem] "></SecondTitleComponent>
         <p class="m-[2rem]">
             Nous nous réservons le droit de modifier ces mentions légales à tout moment et sans préavis. Il est de
             votre

@@ -43,8 +43,9 @@ export class UserService {
 
   async getUserAssets(userId: string): Promise<Asset[]> {
     const userAssets = await this.assetRepository.find({
-      where: { user: { id: userId } },
+      where: { userId: { id: userId }, type: 'profile_picture' },
     });
+
     if (!userAssets || userAssets.length === 0) {
       throw new NotFoundException(
         `Assets not found for User with ID: ${userId}`,

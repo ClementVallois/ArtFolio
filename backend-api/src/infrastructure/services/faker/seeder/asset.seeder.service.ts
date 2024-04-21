@@ -23,23 +23,74 @@ export class AssetSeederService {
 
   async seed(): Promise<void> {
     const users = await this.userRepository.find();
-    const posts = await this.postRepository.find();
+    const posts = await this.postRepository.find({ relations: ['userId'] });
 
+    //Add post asset for artists only
     const fakeData = Array.from({ length: 10 }, () => {
-      const user = faker.helpers.arrayElement(users);
+      const artistUsers = faker.helpers.arrayElement(
+        users.filter((user) => {
+          return user.role === 'artist';
+        }),
+      );
       const post = faker.helpers.arrayElement(posts);
+      const asset = new Asset();
+      asset.id = faker.string.uuid();
+      asset.url = faker.internet.url();
+      asset.postId = post;
+      asset.type = 'post_picture';
+      asset.userId = artistUsers;
+      asset.createdAt = faker.date.recent();
+      asset.updatedAt = faker.date.recent();
+      return asset;
+    });
+    await this.assetRepository.save(fakeData);
 
-      const fakeEntity = new Asset();
-      fakeEntity.id = faker.string.uuid();
-      fakeEntity.post = post;
-      fakeEntity.user = user;
-      fakeEntity.url = faker.internet.url();
-      fakeEntity.createdAt = faker.date.recent();
-      fakeEntity.updatedAt = faker.date.recent();
+    // Add profile pictures asset for users
+    for (const user of users) {
+      const existingProfilePicture = await this.assetRepository.findOne({
+        where: { userId: { id: user.id }, type: 'profile_picture' },
+      });
 
-      return fakeEntity;
+      if (!existingProfilePicture) {
+        const newProfilePicture = new Asset();
+        newProfilePicture.type = 'profile_picture';
+        newProfilePicture.userId = { id: user.id } as User;
+        newProfilePicture.id = faker.string.uuid();
+        newProfilePicture.url = faker.internet.url();
+        newProfilePicture.createdAt = faker.date.recent();
+        newProfilePicture.updatedAt = faker.date.recent();
+
+        await this.assetRepository.save(newProfilePicture);
+      }
+    }
+
+    // Add post pictures asset for existing artists
+    const artistUsers = await this.userRepository.find({
+      where: { role: 'artist' },
     });
 
-    await this.assetRepository.save(fakeData);
+    for (const user of artistUsers) {
+      const posts = await this.postRepository.find({
+        where: { userId: { id: user.id } },
+      });
+
+      for (const post of posts) {
+        const existingAsset = await this.assetRepository.findOne({
+          where: { postId: { id: post.id }, type: 'post_picture' },
+        });
+
+        if (!existingAsset) {
+          const asset = new Asset();
+          asset.id = faker.string.uuid();
+          asset.postId = post;
+          asset.type = 'post_picture';
+          asset.userId = user;
+          asset.url = faker.internet.url();
+          asset.createdAt = faker.date.recent();
+          asset.updatedAt = faker.date.recent();
+          await this.assetRepository.save(asset);
+        }
+      }
+    }
   }
 }

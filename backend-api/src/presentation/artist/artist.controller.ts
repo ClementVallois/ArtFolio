@@ -11,8 +11,11 @@ import {
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistService } from 'src/application/artist/artist.service';
-import { FindIdParams, FindUserPostParams } from '../utils/findParams';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  FindIdParams,
+  FindNumberParams,
+  FindUserPostParams,
+} from '../utils/findParams';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
@@ -20,37 +23,50 @@ export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}
 
   @Get()
-  getAllArtists() {
+  async getAllArtists() {
     return this.artistService.getAllArtists();
   }
 
   @Get(':id')
-  getArtistById(@Param() { id }: FindIdParams) {
+  async getArtistById(@Param() { id }: FindIdParams) {
     return this.artistService.getArtistById(id);
   }
 
   @Get(':id/posts')
-  getArtistPosts(@Param() { id }: FindIdParams) {
+  async getArtistPosts(@Param() { id }: FindIdParams) {
     return this.artistService.getArtistPosts(id);
   }
 
   @Get(':userId/posts/:postId')
-  getOneArtistPost(@Param() params: FindUserPostParams) {
+  async getOneArtistPost(@Param() params: FindUserPostParams) {
     return this.artistService.getOneArtistPost(params.userId, params.postId);
   }
 
+  @Get('last/:nb')
+  async getLastRegisteredArtistsPosts(@Param() params: FindNumberParams) {
+    return this.artistService.getLastRegisteredArtistsPosts(params.nb);
+  }
+
+  @Get('random/:nb')
+  async getRandomArtistsPost(@Param() params: FindNumberParams) {
+    return this.artistService.getRandomArtistsPost(params.nb);
+  }
+
   @Post()
-  createArtist(@Body() artist: CreateArtistDto) {
+  async createArtist(@Body() artist: CreateArtistDto) {
     return this.artistService.createArtist(artist);
   }
 
   @Patch(':id')
-  updateArtist(@Param() { id }: FindIdParams, @Body() artist: UpdateArtistDto) {
+  async updateArtist(
+    @Param() { id }: FindIdParams,
+    @Body() artist: UpdateArtistDto,
+  ) {
     return this.artistService.updateArtist(id, artist);
   }
 
   @Delete(':id')
-  removeArtist(@Param() { id }: FindIdParams) {
+  async removeArtist(@Param() { id }: FindIdParams) {
     return this.artistService.removeArtist(id);
   }
 }
