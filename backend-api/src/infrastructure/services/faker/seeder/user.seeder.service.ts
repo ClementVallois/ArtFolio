@@ -15,7 +15,7 @@ export class UserSeederService {
   }
 
   async seed(): Promise<void> {
-    const fakeData = Array.from({ length: 10 }, () => {
+    const fakeData = Array.from({ length: 50 }, () => {
       const fakeEntity = new User();
       fakeEntity.id = faker.string.uuid();
       fakeEntity.firstName = faker.person.firstName();

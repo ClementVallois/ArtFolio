@@ -1,6 +1,8 @@
 <template>
+<!-- AUTH0 REACTIVATE  -->
     <!-- If is Authenticated get the structure layout -->
-    <div v-if="isAuthenticated">
+    <!-- <div v-if="isAuthenticated"> -->
+    <div>
       <div  class="w-screen h-screen flex"> 
         <SideBar  v-show=showSideBar />
         <div class="w-full h-full bg-gray-400">
@@ -11,9 +13,9 @@
     </div>
     
     <!-- Else get the simple page  -->
-    <div v-else>
+    <!-- <div v-else>
       <router-view />
-    </div>
+    </div> -->
 
 </template>
 
@@ -21,6 +23,7 @@
 import { ref } from 'vue'
 import SideBar from '@/components/layout/SideBar.vue';
 import TopBar from '@/components/layout/TopBar.vue';
+//AUTH0 REACTIVATE
 import { useAuth0 } from '@auth0/auth0-vue';
 const { isAuthenticated } = useAuth0();
 

@@ -36,7 +36,10 @@
 </template>
 
 <script setup>
+
 import { ref, defineEmits } from 'vue';
+
+//AUTH0 REACTIVATE
 import { useAuth0 } from '@auth0/auth0-vue';
 
 const emit = defineEmits();
@@ -45,6 +48,7 @@ const toggleMenuUser = () => {
     showMenuUser.value=!showMenuUser.value
 }
 
+//AUTH0 REACTIVATE
 const { logout } = useAuth0();
 
 const logoutApp = () => {

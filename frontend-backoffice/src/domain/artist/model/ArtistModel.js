@@ -3,7 +3,7 @@ class Artist {
       this.id = id;
       this.firstName = firstName;
       this.lastName = lastName;
-      this.birthdate = birthdate;
+      this.birthDate = birthDate;
       this.username = username;
       this.description = description;
       this.status = status;
