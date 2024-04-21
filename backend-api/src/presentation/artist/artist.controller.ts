@@ -6,12 +6,15 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { ArtistService } from 'src/application/artist/artist.service';
 import { FindIdParams, FindUserPostParams } from '../utils/findParams';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
 export class ArtistController {
   constructor(private readonly artistService: ArtistService) {}

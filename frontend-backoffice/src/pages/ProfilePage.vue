@@ -32,10 +32,11 @@
 
 <script setup>
 //AUTH0 REACTIVATE
-// import { useAuth0 } from "@auth0/auth0-vue";
+import { useAuth0 } from "@auth0/auth0-vue";
+
 import PageLayout from "../components/layout/PageLayout.vue";
 
-// const { user } = useAuth0();
-
-// const code = user ? JSON.stringify(user.value, null, 2) : "";
+//AUTH0 REACTIVATE
+const { user } = useAuth0();
+const code = user ? JSON.stringify(user.value, null, 2) : "";
 </script>

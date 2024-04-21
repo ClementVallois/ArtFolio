@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 //AUTH0 REACTIVATE
-// import { authGuard } from "@auth0/auth0-vue";
+import { authGuard } from "@auth0/auth0-vue";
 import SignInPage from '../pages/SignInPage.vue'
 import HomePage from '../pages/HomePage.vue'
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue'
@@ -9,6 +9,7 @@ import ProfilePage from '../pages/ProfilePage.vue'
 import NotFoundPage from '../pages/404NotFound.vue'
 import LoaderPage from '@/pages/LoaderPage.vue';
 import CallBackPage from '@/domain/auth0/pages/CallBackPage.vue';
+import Auth0ArtistPage from '@/domain/auth0/pages/Auth0ArtistPage.vue'
 
 const routes = [
   {
@@ -20,25 +21,30 @@ const routes = [
     path: '/',
     name: 'home',
     component: HomePage,
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
   },
   {
     path: '/artist',
     name: 'artist',
     component: ArtistPage,
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
+  },
+  {
+    path: '/artistAuth0',
+    name: 'artistAuth0',
+    component: Auth0ArtistPage,
   },
   {
     path: '/user',
     name: 'user',
     component: UserPage,
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
   },
   {
     path: '/profile',
     name: 'profile',
     component: ProfilePage,
-    // beforeEnter: authGuard,
+    beforeEnter: authGuard,
   },
   {
     path: '/loader',

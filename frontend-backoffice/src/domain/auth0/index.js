@@ -8,7 +8,8 @@ export const auth0 = createAuth0({
     domain: Auth0Config.domain,
     clientId: Auth0Config.clientId,
     authorizationParams: {
-        redirect_uri: Auth0Config.redirectUri
+        redirect_uri: Auth0Config.redirectUri,
+        audience: Auth0Config.audience,
     }
 });
 

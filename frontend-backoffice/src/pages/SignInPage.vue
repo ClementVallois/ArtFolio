@@ -12,11 +12,11 @@
 
 <script setup>
 //AUTH0 REACTIVATE
-// import { useAuth0 } from '@auth0/auth0-vue';
-// const { user, isAuthenticated, loginWithRedirect } = useAuth0();
+import { useAuth0 } from '@auth0/auth0-vue';
+const { user, isAuthenticated, loginWithRedirect } = useAuth0();
 
 
-// const login = () => {
-//     loginWithRedirect();
-// };
+const login = () => {
+    loginWithRedirect();
+};
 </script>

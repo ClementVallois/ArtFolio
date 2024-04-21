@@ -24,8 +24,8 @@ import { ref } from 'vue'
 import SideBar from '@/components/layout/SideBar.vue';
 import TopBar from '@/components/layout/TopBar.vue';
 //AUTH0 REACTIVATE
-// import { useAuth0 } from '@auth0/auth0-vue';
-// const { isAuthenticated } = useAuth0();
+import { useAuth0 } from '@auth0/auth0-vue';
+const { isAuthenticated } = useAuth0();
 
 const showSideBar = ref(true)
 

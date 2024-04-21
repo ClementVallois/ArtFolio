@@ -40,7 +40,7 @@
 import { ref, defineEmits } from 'vue';
 
 //AUTH0 REACTIVATE
-// import { useAuth0 } from '@auth0/auth0-vue';
+import { useAuth0 } from '@auth0/auth0-vue';
 
 const emit = defineEmits();
 const showMenuUser = ref(false)
@@ -49,11 +49,11 @@ const toggleMenuUser = () => {
 }
 
 //AUTH0 REACTIVATE
-// const { logout } = useAuth0();
+const { logout } = useAuth0();
 
-// const logoutApp = () => {
-//     logout({ logoutParams: { returnTo: window.location.origin } });
-// }
+const logoutApp = () => {
+    logout({ logoutParams: { returnTo: window.location.origin } });
+}
 
 
 
