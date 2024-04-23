@@ -89,9 +89,9 @@ export class UserService {
     );
   }
 
-  async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, userData: UpdateUserDto): Promise<User> {
     const existingUser = await this.getUserById(id);
-    this.userRepository.merge(existingUser, user);
+    this.userRepository.merge(existingUser, userData);
     return this.userRepository.save(existingUser);
   }
 

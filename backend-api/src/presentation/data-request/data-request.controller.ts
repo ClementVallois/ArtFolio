@@ -10,36 +10,37 @@ import {
 import { DataRequestService } from '../../application/data-request/data-request.service';
 import { CreateDataRequestDto } from './dto/create-data-request.dto';
 import { UpdateDataRequestDto } from './dto/update-data-request.dto';
+import { FindIdParams } from '../utils/params.dto';
 
 @Controller('data-requests')
 export class DataRequestController {
   constructor(private readonly dataRequestService: DataRequestService) {}
 
-  @Post()
-  async create(@Body() dataRequestData: CreateDataRequestDto) {
-    return this.dataRequestService.create(dataRequestData);
-  }
-
   @Get()
-  async findAll() {
-    return this.dataRequestService.findAll();
+  async getAllDataRequests() {
+    return this.dataRequestService.getAllDataRequests();
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.dataRequestService.findOne(+id);
+  async getOneDataRequest(@Param() { id }: FindIdParams) {
+    return this.dataRequestService.getOneDataRequest(id);
+  }
+
+  @Post()
+  async createDataRequest(@Body() dataRequestData: CreateDataRequestDto) {
+    return this.dataRequestService.createDataRequest(dataRequestData);
   }
 
   @Patch(':id')
   async update(
-    @Param('id') id: string,
+    @Param() { id }: FindIdParams,
     @Body() dataRequestData: UpdateDataRequestDto,
   ) {
-    return this.dataRequestService.update(+id, dataRequestData);
+    return this.dataRequestService.update(id, dataRequestData);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return this.dataRequestService.remove(+id);
+  async remove(@Param() { id }: FindIdParams) {
+    return this.dataRequestService.remove(id);
   }
 }
