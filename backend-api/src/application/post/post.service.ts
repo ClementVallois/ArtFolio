@@ -19,6 +19,8 @@ export class PostService {
     private readonly postRepository: Repository<Post>,
     @InjectRepository(Asset)
     private readonly assetRepository: Repository<Asset>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async getAllPosts(): Promise<Post[]> {
@@ -33,7 +35,10 @@ export class PostService {
   }
 
   async getPostById(id: string): Promise<Post> {
-    const post = await this.postRepository.findOneBy({ id: id });
+    const post = await this.postRepository.findOne({
+      where: { id: id },
+      relations: ['user'],
+    });
     if (!post) {
       throw new NotFoundException(`Post not found with ID: ${id}`);
     }
@@ -54,25 +59,24 @@ export class PostService {
   }
 
   async createPost(postData: CreatePostDto): Promise<Post> {
+    const user = await this.userRepository.findOneBy({
+      id: postData.userId,
+    });
+
+    if (!user) {
+      throw new NotFoundException(`User not found with ID: ${postData.userId}`);
+    }
     const postToCreate = this.postRepository.create({
       ...postData,
-      userId: { id: postData.userId },
+      user: user,
     });
     return await this.postRepository.save(postToCreate);
   }
 
-  async updatePost(id: string, postDto: UpdatePostDto): Promise<Post> {
+  async updatePost(id: string, postData: UpdatePostDto): Promise<Post> {
     const existingPost = await this.getPostById(id);
-    const userId: DeepPartial<User> = {
-      id: postDto.userId,
-    };
-    const updatedPost: DeepPartial<Post> = {
-      ...existingPost,
-      ...postDto,
-      userId: userId,
-    };
-    this.postRepository.merge(existingPost, updatedPost);
-    return this.postRepository.save(existingPost);
+    const postToUpdate = this.postRepository.merge(existingPost, postData);
+    return this.postRepository.save(postToUpdate);
   }
 
   async removePost(id: string): Promise<Post> {
