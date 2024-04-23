@@ -52,12 +52,12 @@ export class ArtistService {
 
   async getArtistPosts(id: string): Promise<Post[]> {
     const pinnedPosts = await this.postRepository.find({
-      where: { userId: { id: id }, isPinned: true },
+      where: { user: { id: id }, isPinned: true },
       order: { createdAt: 'DESC' },
     });
 
     const nonPinnedPosts = await this.postRepository.find({
-      where: { userId: { id: id }, isPinned: false },
+      where: { user: { id: id }, isPinned: false },
       order: { createdAt: 'DESC' },
     });
 
@@ -71,7 +71,7 @@ export class ArtistService {
 
   async getOneArtistPost(userId: string, postId: string): Promise<Post> {
     const artistPost = await this.postRepository.findOne({
-      where: { userId: { id: userId }, id: postId },
+      where: { user: { id: userId }, id: postId },
     });
     if (!artistPost) {
       throw new NotFoundException(
@@ -122,7 +122,7 @@ export class ArtistService {
 
     for (const artist of lastRegisteredArtists) {
       const pinnedPost = await this.postRepository.findOne({
-        where: { userId: artist, isPinned: true },
+        where: { user: artist, isPinned: true },
         order: { createdAt: 'DESC' },
       });
 
@@ -176,7 +176,7 @@ export class ArtistService {
       const randomArtist = randomArtists[randomIndex];
 
       const pinnedPost = await this.postRepository.findOne({
-        where: { userId: randomArtist, isPinned: true },
+        where: { user: randomArtist, isPinned: true },
       });
 
       if (!pinnedPost) {

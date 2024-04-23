@@ -71,7 +71,7 @@ export class AssetSeederService {
 
     for (const user of artistUsers) {
       const posts = await this.postRepository.find({
-        where: { userId: { id: user.id } },
+        where: { user: { id: user.id } },
       });
 
       for (const post of posts) {

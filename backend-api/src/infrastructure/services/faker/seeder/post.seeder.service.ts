@@ -29,14 +29,14 @@ export class PostSeederService {
     //Add pinned post to existing artists
     for (const artist of artists) {
       const existingPinnedPost = await this.postRepository.findOne({
-        where: { userId: { id: artist.id }, isPinned: true },
+        where: { user: { id: artist.id }, isPinned: true },
       });
 
       if (!existingPinnedPost) {
         const fakeEntity = new Post();
         fakeEntity.id = faker.string.uuid();
         fakeEntity.isPinned = true;
-        fakeEntity.userId = artist;
+        fakeEntity.user = artist;
         fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
         fakeEntity.createdAt = faker.date.recent();
         fakeEntity.updatedAt = faker.date.recent();
@@ -51,7 +51,7 @@ export class PostSeederService {
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();
       fakeEntity.isPinned = false;
-      fakeEntity.userId = user;
+      fakeEntity.user = user;
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
       fakeEntity.createdAt = faker.date.recent();
       fakeEntity.updatedAt = faker.date.recent();
