@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Asset)
     private readonly assetRepository: Repository<Asset>,
+    @InjectRepository(DataRequest)
+    private readonly dataRequestRepository: Repository<DataRequest>,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -49,6 +52,18 @@ export class UserService {
       );
     }
     return userAssets;
+  }
+
+  async getUserDataRequests(userId: string): Promise<DataRequest[]> {
+    const dataRequests = await this.dataRequestRepository.find({
+      where: { user: { id: userId } },
+    });
+    if (!dataRequests || dataRequests.length === 0) {
+      throw new NotFoundException(
+        `Data Requests not found for User with ID: ${userId}`,
+      );
+    }
+    return dataRequests;
   }
 
   async createUser(userData: CreateUserDto): Promise<User> {

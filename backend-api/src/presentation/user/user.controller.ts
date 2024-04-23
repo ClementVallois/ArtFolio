@@ -30,6 +30,11 @@ export class UserController {
     return this.userService.getUserAssets(id);
   }
 
+  @Get(':id/data-requests')
+  async getUserDataRequests(@Param() { id }: FindIdParams) {
+    return this.userService.getUserDataRequests(id);
+  }
+
   @Post()
   async createUser(@Body() userData: CreateUserDto) {
     return this.userService.createUser(userData);
