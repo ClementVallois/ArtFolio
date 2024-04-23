@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { Category } from 'src/infrastructure/entities/category.entity';
 import { Post } from 'src/infrastructure/entities/post.entity';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
@@ -21,6 +22,8 @@ export class ArtistService {
     private readonly postRepository: Repository<Post>,
     @InjectRepository(Asset)
     private readonly assetRepository: Repository<Asset>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
   ) {}
 
   async getAllArtists(): Promise<User[]> {
@@ -76,6 +79,18 @@ export class ArtistService {
       );
     }
     return artistPost;
+  }
+
+  async getArtistCategories(userId: string): Promise<Category[]> {
+    const categories = await this.categoryRepository.find({
+      where: { user: { id: userId } },
+    });
+    if (!categories || categories.length === 0) {
+      throw new NotFoundException(
+        `Categories not found for User with ID: ${userId}`,
+      );
+    }
+    return categories;
   }
 
   async getLastRegisteredArtistsPosts(numberOfPosts: number): Promise<

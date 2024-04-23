@@ -35,6 +35,11 @@ export class ArtistController {
     return this.artistService.getArtistPosts(id);
   }
 
+  @Get(':id/categories')
+  async getArtistCategories(@Param() { id }: FindIdParams) {
+    return this.artistService.getArtistCategories(id);
+  }
+
   @Get(':userId/posts/:postId')
   async getOneArtistPost(@Param() params: FindUserPostParams) {
     return this.artistService.getOneArtistPost(params.userId, params.postId);
