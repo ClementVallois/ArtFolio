@@ -5,7 +5,7 @@
     <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
         <div class="flex flex-col w-[90vw] pb-[1rem]">
             <label for=""> Votre photo de profil</label>
-            <input name="assetName"  type="file" required class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
+            <input @change="handleFileChange" name="profil_picture"  type="file" required class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
         </div>
         <div class="flex flex-col w-[90vw] pb-[1rem]">
             <label for=""> Votre nom d'utilisateur</label>
@@ -45,17 +45,21 @@ const firstName = ref('');
 const lastName = ref('');
 const birthDate = ref('');
 const showErrorAlert = ref(false); 
-
+const fileUserPicture = ref(null);
 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {
     showErrorAlert.value = false;
 };
 
+const handleFileChange = (event) => {
+    fileUserPicture.value = event.target.files[0].name;
+};
+
 // Calcul de la validité du formulaire
 const isFormValid = computed(() => {
     // Vérifiez si tous les champs obligatoires sont remplis
-    const isFieldsFilled = username.value && firstName.value && lastName.value && birthDate.value;
+    const isFieldsFilled = username.value && firstName.value && lastName.value && birthDate.value && fileUserPicture.value;
 
     // Retourne vrai si tous les champs sont remplis et au moins une catégorie est sélectionnée
     return isFieldsFilled;
@@ -67,6 +71,7 @@ const submitForm = () => {
     if (isFormValid.value) {
 
         const formData = {
+                profilePicture: fileUserPicture.value,
                 username: username.value,
                 firstName: firstName.value,
                 lastName: lastName.value,

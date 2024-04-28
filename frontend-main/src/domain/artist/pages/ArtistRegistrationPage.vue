@@ -5,8 +5,7 @@
         <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
             <div class="flex flex-col w-[90vw] pb-[1rem]">
                 <label for=""> Votre photo de profil</label>
-                <!-- TODO: v-model ne fonctionne pas sur les types file -->
-                <input  name="assetName"  type="file" required class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
+                <input @change="handleProfilPictureFileChange"  name="assetName"  type="file" required class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
             </div>
             <div class="flex flex-col w-[90vw] pb-[1rem]">
                 <label for=""> Votre nom d'utilisateur</label>
@@ -50,7 +49,7 @@
             <div class="flex flex-col w-[90vw] pb-[1rem]"> Cette publication sera présente en premier sur votre page.</div>
             <div class="flex flex-col w-[90vw] pb-[1rem]">
                 <label class="block mb-2 text-[1rem] font-medium text-gray-900" for="user_avatar">Importer votre photo</label>
-                <input type="file" class="file-input file-input-bordered w-[90%] text-[0.8rem] lg:w-[40%]" />
+                <input @change="handlePostPictureFileChange"   type="file" class="file-input file-input-bordered w-[90%] text-[0.8rem] lg:w-[40%]" />
             </div>
     
             <div class="flex flex-col w-[90vw] pb-[1rem]">
@@ -76,16 +75,18 @@ import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref,computed, toRaw } from 'vue';
+import { ref,computed } from 'vue';
 import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
 
 const categoryStore = categorieStore();
 
+const fileUserPicture = ref(null);
 const username = ref('');
 const firstName = ref('');
 const lastName = ref('');
 const birthDate = ref('');
 const profilDescription = ref('');
+const filePostPicture = ref(null);
 const postDescription = ref('');
 const firstSection = ref(true);
 const secondSection = ref(false);
@@ -98,7 +99,7 @@ const categories = categoryStore.getAllCategoriesName;
 
 // Méthode pour basculer entre les sections 
 const toggleSections = () => {
-    if (username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
+    if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
         firstSection.value = !firstSection.value;
         secondSection.value = !secondSection.value;
         showErrorAlert.value = false; 
@@ -121,13 +122,21 @@ const handleCloseErrorAlert = () => {
     showErrorAlert.value = false;
 };
 
+// permet de récupérer le nom de la photo de profil
+const handleProfilPictureFileChange = (event) => {
+    fileUserPicture.value = event.target.files[0].name;
+};
 
+// permet de récupérer le nom de la photo deu post epinglé
+const handlePostPictureFileChange = (event) => {
+    filePostPicture.value = event.target.files[0].name;
+};
 
 
 // Calcul de la validité du formulaire
 const isFormValid = computed(() => {
     // Vérifiez si tous les champs obligatoires sont remplis
-    const isFieldsFilled = username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value && postDescription.value;
+    const isFieldsFilled = fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value && postDescription.value && filePostPicture.value;
     // Vérifiez s'il y a au moins une catégorie sélectionnée
     const isCategorySelected = selectedCategories.value.length > 0;
 
@@ -142,6 +151,7 @@ const submitForm = () => {
 
         const formData = {
             artistData: {
+                profilePicture: fileUserPicture.value,
                 username: username.value,
                 firstName: firstName.value,
                 lastName: lastName.value,
@@ -149,6 +159,7 @@ const submitForm = () => {
                 profilDescription: profilDescription.value,
             },
             pinnedPost: {
+                postPicture: filePostPicture.value,
                 postDescription: postDescription.value,
             },
             artistCategories: {
