@@ -29,9 +29,7 @@
             <div class="flex flex-col w-[90vw] pb-[1rem]">
                 <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
                 <textarea  v-model="profilDescription" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."   class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " ></textarea>   
-            </div>
-         
-        
+            </div>    
         </form>
         <div class="flex flex-col w-[90vw] pb-[1rem]">
             <ButtonComponent type="submit"  textButton="Suivant" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
