@@ -76,7 +76,7 @@ import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref,computed } from 'vue';
+import { ref,computed, toRaw } from 'vue';
 import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
 
 const categoryStore = categorieStore();
@@ -114,7 +114,6 @@ const handleCategoryClicked = (category) => {
     } else {
         selectedCategories.value = selectedCategories.value.filter((cat) => cat !== category);
     }
-    console.log(selectedCategories.value); 
 };
 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
@@ -138,9 +137,9 @@ const isFormValid = computed(() => {
 
 // Méthode pour soumettre le formulaire avec validation
 const submitForm = () => {
-    console.log(isFormValid);
     // Vérifiez si le formulaire est valide
     if (isFormValid.value) {
+
         const formData = {
             artistData: {
                 username: username.value,

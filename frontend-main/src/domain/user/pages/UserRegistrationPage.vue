@@ -1,4 +1,5 @@
 <template>
+    <div class="flex flex-col items-center">
     <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
 
     <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
@@ -25,21 +26,59 @@
         </div>
 
     </form>
-    <div class="flex flex-col w-[90vw] pb-[1rem]">
-        <ButtonComponent type="submit"  textButton="S'enregistrer" class="w-[30vw] lg:self-end lg:w-[10vw]"></ButtonComponent>
+    <div class="flex flex justify-between w-[90vw] pb-[1rem]">
+        <ButtonComponent type="submit"  textButton="S'inscrire" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="submitForm" ></ButtonComponent>
     </div>
+    </div>
+    <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
+
 </template>
 
 <script setup>
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
-import { ref } from 'vue'
+import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
+import { ref,computed } from 'vue';
 
 const username = ref('');
 const firstName = ref('');
 const lastName = ref('');
 const birthDate = ref('');
+const showErrorAlert = ref(false); 
 
 
+// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
+const handleCloseErrorAlert = () => {
+    showErrorAlert.value = false;
+};
+
+// Calcul de la validité du formulaire
+const isFormValid = computed(() => {
+    // Vérifiez si tous les champs obligatoires sont remplis
+    const isFieldsFilled = username.value && firstName.value && lastName.value && birthDate.value;
+
+    // Retourne vrai si tous les champs sont remplis et au moins une catégorie est sélectionnée
+    return isFieldsFilled;
+});
+
+// Méthode pour soumettre le formulaire avec validation
+const submitForm = () => {
+    // Vérifiez si le formulaire est valide
+    if (isFormValid.value) {
+
+        const formData = {
+                username: username.value,
+                firstName: firstName.value,
+                lastName: lastName.value,
+                birthDate: birthDate.value,
+        };
+        
+        // TODO: Envoyez l'object
+        console.log(formData);
+    } else {
+        // Sinon, affichez la popup
+        showErrorAlert.value = true;
+    }
+};
 </script>
 
