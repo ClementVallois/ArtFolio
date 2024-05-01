@@ -1,6 +1,8 @@
 import { defineStore } from 'pinia'
 import users from '@/assets/data/users.js'
 import { ref } from 'vue'
+import { userApi } from '../api/UserRemoteDataSource'
+import { userService } from '../service/UserService'
 
 export const useStoreUser = defineStore('storeUser', () => {
 
@@ -8,9 +10,12 @@ const usersAll = ref([])
 const userFiltered = ref([])
 
 
-function getAllUsers() {
-    const role = 'user'; // Your desired role
-    usersAll.value= users.filter(user => user.role === role);
+async function getAllUsers() {
+    try {
+        usersAll.value = await userService.getAllUsers()
+    } catch (error) {
+        return error
+    }
 }
 
 

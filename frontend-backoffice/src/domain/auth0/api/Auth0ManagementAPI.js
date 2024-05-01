@@ -28,8 +28,8 @@ const auth0ManagementApi = axios.create({
 export function getAccessTokenManagementAPI() {
     auth0ManagementApi.request(options).then(function (response) {
         const token = response.data.access_token
-        storeAccessToken(response.data.access_token, response.data.expires_in)
-        return(Response.data);
+        storeAccessToken(token, response.data.expires_in)
+        return(response.data);
     }).catch(function (error) {
         console.error(error);
     });
@@ -52,6 +52,7 @@ function isAccessTokenExpired() {
 auth0ManagementApi.interceptors.request.use(
     async(config) => {
 
+        
     if (sessionStorage.getItem('auth0AccessToken') && !isAccessTokenExpired()){
         const token = sessionStorage.getItem('auth0AccessToken')
         config.headers.Authorization = `Bearer ${token}`;

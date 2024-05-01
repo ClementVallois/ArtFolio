@@ -19,14 +19,14 @@ import LoaderPage from "@/pages/LoaderPage.vue";
 const router = useRouter()
 const { error, isAuthenticated, isLoading } = useAuth0();
 const loading = ref(true)
+import { getAccessTokenManagementAPI } from '@/domain/auth0/api/Auth0ManagementAPI'
 
 onMounted(() => {
     setTimeout(() => {
-        console.log('isAuthenticated', isAuthenticated.value)
-        console.log('isLoading', isLoading.value)
         if(!isLoading.value && isAuthenticated.value){
-        console.log('YAYY')
+        getAccessTokenManagementAPI()
         loading.value=false
+
         router.push('/')
     }
     }, 1000)

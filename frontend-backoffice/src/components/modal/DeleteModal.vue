@@ -26,6 +26,8 @@
 <script setup>
 import { ref, watch } from 'vue';
 import { useGlobalStore } from '@/stores/store'
+import { CRUDAuth0API } from '@/domain/auth0/api/CRUDAuth0API';
+import { CRUDapi } from '@/api/CrudApi'
 
 const store = useGlobalStore();
 const params = defineProps(['isDelete', 'user']);
@@ -48,10 +50,10 @@ function closeModal() {
     emit('closeModal')
 }
 
-const deleteItem = async(idItem) => {
+const deleteItem = async(user) => {
     try {
-        //TODO: ACTIVATE THE CRUD
-        // await store.CRUDapi('DELETE', 'inventory', idItem)
+        await CRUDAuth0API('DELETE', `users/${user.auth0Id}`)
+        await CRUDapi('DELETE', `users/${user.id}`)
         emit('stateSuccess')
     } catch (error) {
         emit('stateError')
