@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { User } from 'src/infrastructure/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -8,6 +9,8 @@ export class AssetService {
   constructor(
     @InjectRepository(Asset)
     private readonly assetRepository: Repository<Asset>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
   async getPostAssets(postId: string): Promise<Asset[]> {
     const postAssets = await this.assetRepository.find({
@@ -32,6 +35,22 @@ export class AssetService {
       );
     }
     return userAssets;
+  }
+
+  async addProfilePicture(userId: string, file: any): Promise<Asset> {
+    const user = await this.userRepository.findOneBy({
+      id: userId,
+    });
+    if (!user) {
+      throw new NotFoundException(`User not found with ID: ${userId}`);
+    }
+
+    const assetToCreate = this.assetRepository.create({
+      url: file.path,
+      type: 'profile_picture',
+      userId: user,
+    });
+    return await this.assetRepository.save(assetToCreate);
   }
 
   // create(createAssetDto: CreateAssetDto) {
