@@ -8,7 +8,7 @@ import { CreatePostDto } from '../../presentation/post/dto/create-post.dto';
 import { UpdatePostDto } from '../../presentation/post/dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/infrastructure/entities/post.entity';
-import { DeepPartial, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { User } from 'src/infrastructure/entities/user.entity';
 
