@@ -71,7 +71,7 @@ export class AppModule implements OnModuleInit {
     }
 
     // Uncomment to generate fake data
-    await this.userSeederService.seed();
+    // await this.userSeederService.seed();
     // await this.postSeederService.seed();
     // await this.assetSeederService.seed();
     // await this.dataRequestSeederService.seed();
