@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/infrastructure/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
 
 @Injectable()
 export class UserService {
@@ -18,6 +19,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Asset)
     private readonly assetRepository: Repository<Asset>,
+    @InjectRepository(DataRequest)
+    private readonly dataRequestRepository: Repository<DataRequest>,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -31,9 +34,6 @@ export class UserService {
     }
   }
   async getUserById(id: string): Promise<User> {
-    if (!id) {
-      throw new HttpException('User ID is required', HttpStatus.BAD_REQUEST);
-    }
     const user = await this.userRepository.findOneBy({ id: id });
     if (!user) {
       throw new NotFoundException(`User not found with ID: ${id}`);
@@ -52,6 +52,18 @@ export class UserService {
       );
     }
     return userAssets;
+  }
+
+  async getUserDataRequests(userId: string): Promise<DataRequest[]> {
+    const dataRequests = await this.dataRequestRepository.find({
+      where: { user: { id: userId } },
+    });
+    if (!dataRequests || dataRequests.length === 0) {
+      throw new NotFoundException(
+        `Data Requests not found for User with ID: ${userId}`,
+      );
+    }
+    return dataRequests;
   }
 
   async createUser(userData: CreateUserDto): Promise<User> {
@@ -77,13 +89,13 @@ export class UserService {
     );
   }
 
-  async updateUser(id: string, user: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, userData: UpdateUserDto): Promise<User> {
     const existingUser = await this.getUserById(id);
-    this.userRepository.merge(existingUser, user);
+    this.userRepository.merge(existingUser, userData);
     return this.userRepository.save(existingUser);
   }
 
-  async deleteUser(id: string): Promise<User> {
+  async removeUser(id: string): Promise<User> {
     const user = await this.getUserById(id);
     return this.userRepository.remove(user);
   }

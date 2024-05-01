@@ -10,7 +10,7 @@ import {
 import { UserService } from '../../application/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindIdParams } from '../utils/findParams';
+import { FindIdParams } from '../utils/params.dto';
 
 @Controller('users')
 export class UserController {
@@ -30,18 +30,26 @@ export class UserController {
     return this.userService.getUserAssets(id);
   }
 
+  @Get(':id/data-requests')
+  async getUserDataRequests(@Param() { id }: FindIdParams) {
+    return this.userService.getUserDataRequests(id);
+  }
+
   @Post()
-  async createUser(@Body() user: CreateUserDto) {
-    return this.userService.createUser(user);
+  async createUser(@Body() userData: CreateUserDto) {
+    return this.userService.createUser(userData);
   }
 
   @Patch(':id')
-  async updateUser(@Param() { id }: FindIdParams, @Body() user: UpdateUserDto) {
-    return this.userService.updateUser(id, user);
+  async updateUser(
+    @Param() { id }: FindIdParams,
+    @Body() userData: UpdateUserDto,
+  ) {
+    return this.userService.updateUser(id, userData);
   }
 
   @Delete(':id')
   async removeUser(@Param() { id }: FindIdParams) {
-    return this.userService.deleteUser(id);
+    return this.userService.removeUser(id);
   }
 }

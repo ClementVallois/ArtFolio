@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDataRequestDto } from '../../presentation/data-request/dto/create-data-request.dto';
 import { UpdateDataRequestDto } from '../../presentation/data-request/dto/update-data-request.dto';
+import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/infrastructure/entities/user.entity';
 
 @Injectable()
 export class DataRequestService {
-  create(createDataRequestDto: CreateDataRequestDto) {
-    return 'This action adds a new dataRequest';
+  constructor(
+    @InjectRepository(DataRequest)
+    private readonly dataRequestRepository: Repository<DataRequest>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  async getAllDataRequests(): Promise<DataRequest[]> {
+    const dataRequests = await this.dataRequestRepository.find({
+      relations: ['user'],
+    });
+    return dataRequests;
   }
 
-  findAll() {
-    return `This action returns all dataRequest`;
+  getOneDataRequest(id: string): Promise<DataRequest> {
+    return this.dataRequestRepository.findOneBy({ id });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} dataRequest`;
+  async createDataRequest(
+    dataRequestData: CreateDataRequestDto,
+  ): Promise<DataRequest> {
+    const user = await this.userRepository.findOneBy({
+      id: dataRequestData.user,
+    });
+    const dataRequest = new DataRequest();
+    dataRequest.user = user;
+    return this.dataRequestRepository.save(dataRequest);
   }
 
-  update(id: number, updateDataRequestDto: UpdateDataRequestDto) {
-    return `This action updates a #${id} dataRequest`;
+  update(id: string, updateDataRequestData: UpdateDataRequestDto) {
+    return 'this.dataRequestRepository.save(updateDataRequestData);';
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} dataRequest`;
   }
 }

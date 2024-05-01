@@ -15,7 +15,7 @@ import {
   FindIdParams,
   FindNumberParams,
   FindUserPostParams,
-} from '../utils/findParams';
+} from '../utils/params.dto';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
@@ -37,6 +37,11 @@ export class ArtistController {
     return this.artistService.getArtistPosts(id);
   }
 
+  @Get(':id/categories')
+  async getArtistCategories(@Param() { id }: FindIdParams) {
+    return this.artistService.getArtistCategories(id);
+  }
+
   @Get(':userId/posts/:postId')
   async getOneArtistPost(@Param() params: FindUserPostParams) {
     return this.artistService.getOneArtistPost(params.userId, params.postId);
@@ -53,16 +58,16 @@ export class ArtistController {
   }
 
   @Post()
-  async createArtist(@Body() artist: CreateArtistDto) {
-    return this.artistService.createArtist(artist);
+  async createArtist(@Body() artistData: CreateArtistDto) {
+    return this.artistService.createArtist(artistData);
   }
 
   @Patch(':id')
   async updateArtist(
     @Param() { id }: FindIdParams,
-    @Body() artist: UpdateArtistDto,
+    @Body() artistData: UpdateArtistDto,
   ) {
-    return this.artistService.updateArtist(id, artist);
+    return this.artistService.updateArtist(id, artistData);
   }
 
   @Delete(':id')
