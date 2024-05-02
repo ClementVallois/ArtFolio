@@ -1,23 +1,52 @@
 import { File } from '@nest-lab/fastify-multer';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
+import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class FileService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    @InjectRepository(Asset)
+    private readonly assetRepository: Repository<Asset>,
+    private readonly configService: ConfigService,
+  ) {}
   async saveProfilePicture(file: File, artistId: string): Promise<string> {
     const cleanFilename = file.originalname.replace(/\s+/g, '_');
     const fileName = `${artistId}-${Date.now()}-${cleanFilename}`;
     const filePath = `${this.configService.get<string>('DEV_PROFILE_ASSETS_LOCATION')}/${fileName}`;
-    await fs.promises.writeFile(filePath, file.buffer);
+    try {
+      await fs.promises.writeFile(filePath, file.buffer);
+    } catch (error) {
+      throw new HttpException(
+        'Error saving profile picture',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     return filePath;
   }
 
-  // async deleteProfilePicture(fileName: string): Promise<void> {
-  //   const filePath = `assets/profile_pictures/${fileName}`;
-  //   await fs.promises.unlink(filePath);
-  // }
+  async deleteProfilePicture(artistId): Promise<void> {
+    const userProfilePicture = await this.assetRepository.findOne({
+      where: {
+        userId: { id: artistId },
+        type: 'profile_picture',
+      },
+    });
+    if (!userProfilePicture) {
+      return;
+    }
+    try {
+      await fs.promises.unlink(userProfilePicture.url);
+    } catch (error) {
+      throw new HttpException(
+        'Error deleting profile picture',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 
   // async savePostPicture(file: File, postId: string): Promise<string> {
   //   const cleanFilename = file.originalname.replace(/\s+/g, '_');

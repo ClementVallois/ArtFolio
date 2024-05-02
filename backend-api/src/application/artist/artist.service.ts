@@ -258,6 +258,24 @@ export class ArtistService {
 
   async removeArtist(id: string): Promise<User> {
     const existingArtist = await this.getArtistById(id);
-    return this.userRepository.remove(existingArtist);
+
+    try {
+      await this.fileService.deleteProfilePicture(id);
+    } catch (error) {
+      throw new HttpException(
+        "Failed to remove the artist's profile picture",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    try {
+      return await this.userRepository.remove(existingArtist);
+    } catch (error) {
+      console.error(`Failed to remove artist from database: ${error}`);
+      throw new HttpException(
+        'Failed to remove artist',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
