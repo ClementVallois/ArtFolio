@@ -20,15 +20,11 @@ import {
 } from '../utils/params.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
-import { AssetService } from 'src/application/asset/asset.service';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
 export class ArtistController {
-  constructor(
-    private readonly artistService: ArtistService,
-    private readonly assetService: AssetService,
-  ) {}
+  constructor(private readonly artistService: ArtistService) {}
 
   @Get()
   async getAllArtists() {
@@ -66,23 +62,13 @@ export class ArtistController {
   }
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor('profile_picture', {
-      dest: 'assets/profile_pictures/',
-    }),
-  )
+  //TODO : Add a custom interceptor
+  @UseInterceptors(FileInterceptor('profile_picture'))
   async createArtist(
     @UploadedFile() file: File,
     @Body() artistData: CreateArtistDto,
   ) {
-    console.log(file);
-    const artist = await this.artistService.createArtist(artistData);
-    const asset = await this.assetService.addProfilePicture(artist.id, file);
-    return {
-      message: 'Artist created successfully',
-      artist,
-      asset,
-    };
+    return await this.artistService.createArtist(artistData, file);
   }
 
   @Patch(':id')

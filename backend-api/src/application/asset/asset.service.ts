@@ -37,7 +37,7 @@ export class AssetService {
     return userAssets;
   }
 
-  async addProfilePicture(userId: string, file: any): Promise<Asset> {
+  async addProfilePicture(userId: string, filePath: string): Promise<Asset> {
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
@@ -46,7 +46,7 @@ export class AssetService {
     }
 
     const assetToCreate = this.assetRepository.create({
-      url: file.path,
+      url: filePath,
       type: 'profile_picture',
       userId: user,
     });
