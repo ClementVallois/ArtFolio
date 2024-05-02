@@ -12,4 +12,6 @@ export const configValidationSchema = Joi.object({
   BACKEND_API_SERVER_PORT: Joi.required(),
   AUTH0_ISSUER_URL: Joi.required(),
   AUTH0_AUDIENCE: Joi.required(),
+  DEV_POST_ASSETS_LOCATION: Joi.required(),
+  DEV_PROFILE_ASSETS_LOCATION: Joi.required(),
 });
