@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDataRequestDto } from '../../presentation/data-request/dto/create-data-request.dto';
-import { UpdateDataRequestDto } from '../../presentation/data-request/dto/update-data-request.dto';
 import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -37,11 +36,11 @@ export class DataRequestService {
     return this.dataRequestRepository.save(dataRequest);
   }
 
-  update(id: string, updateDataRequestData: UpdateDataRequestDto) {
-    return 'this.dataRequestRepository.save(updateDataRequestData);';
-  }
+  // update(id: string, updateDataRequestData: UpdateDataRequestDto) {
+  //   return 'this.dataRequestRepository.save(updateDataRequestData);';
+  // }
 
-  remove(id: string) {
-    return `This action removes a #${id} dataRequest`;
-  }
+  // remove(id: string) {
+  //   return `This action removes a #${id} dataRequest`;
+  // }
 }

@@ -6,10 +6,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Post } from 'src/infrastructure/entities/post.entity';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { Category } from 'src/infrastructure/entities/category.entity';
+import { AssetService } from 'src/application/asset/asset.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
   controllers: [ArtistController],
-  providers: [ArtistService],
+  providers: [ArtistService, AssetService],
 })
 export class ArtistModule {}

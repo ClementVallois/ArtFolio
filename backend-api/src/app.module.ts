@@ -16,6 +16,7 @@ import { AssetSeederService } from './infrastructure/services/faker/seeder/asset
 import { DataRequestSeederService } from './infrastructure/services/faker/seeder/data-request.seeder.service';
 import { CategorySeederService } from './infrastructure/services/faker/seeder/category.seeder.service';
 import { ArtistModule } from './presentation/artist/artist.module';
+import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ArtistModule } from './presentation/artist/artist.module';
     DataRequestModule,
     EnvConfigModule,
     SeederModule,
+    FastifyMulterModule,
   ],
   controllers: [],
   providers: [],
@@ -71,7 +73,7 @@ export class AppModule implements OnModuleInit {
     }
 
     // Uncomment to generate fake data
-    await this.userSeederService.seed();
+    // await this.userSeederService.seed();
     // await this.postSeederService.seed();
     // await this.assetSeederService.seed();
     // await this.dataRequestSeederService.seed();

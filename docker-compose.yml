@@ -1,5 +1,3 @@
-version: "3"
-
 networks:
     ArtFolioNetwork:
         driver: bridge
@@ -49,7 +47,7 @@ services:
 
     # Main Database 
     postgres-api:
-        image: postgres:latest
+        image: postgres:16.2
         ports:
             - "${DB_API_PORT}:5432"
         volumes:
@@ -80,7 +78,7 @@ services:
 
     # Database used for the chat feature
     postgres-chat:
-        image: postgres:latest
+        image: postgres:16.2
         ports:
             - "${DB_CHAT_PORT}:5432"
         volumes:

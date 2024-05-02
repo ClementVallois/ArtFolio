@@ -6,7 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards
+  UseGuards,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -16,11 +18,17 @@ import {
   FindNumberParams,
   FindUserPostParams,
 } from '../utils/params.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { File, FileInterceptor } from '@nest-lab/fastify-multer';
+import { AssetService } from 'src/application/asset/asset.service';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly assetService: AssetService,
+  ) {}
 
   @Get()
   async getAllArtists() {
@@ -58,8 +66,23 @@ export class ArtistController {
   }
 
   @Post()
-  async createArtist(@Body() artistData: CreateArtistDto) {
-    return this.artistService.createArtist(artistData);
+  @UseInterceptors(
+    FileInterceptor('profile_picture', {
+      dest: 'assets/profile_pictures/',
+    }),
+  )
+  async createArtist(
+    @UploadedFile() file: File,
+    @Body() artistData: CreateArtistDto,
+  ) {
+    console.log(file);
+    const artist = await this.artistService.createArtist(artistData);
+    const asset = await this.assetService.addProfilePicture(artist.id, file);
+    return {
+      message: 'Artist created successfully',
+      artist,
+      asset,
+    };
   }
 
   @Patch(':id')
