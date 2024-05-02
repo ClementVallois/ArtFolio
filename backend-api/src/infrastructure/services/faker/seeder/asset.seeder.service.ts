@@ -23,7 +23,7 @@ export class AssetSeederService {
 
   async seed(): Promise<void> {
     const users = await this.userRepository.find();
-    const posts = await this.postRepository.find({ relations: ['userId'] });
+    const posts = await this.postRepository.find({ relations: ['user'] });
 
     //Add post asset for artists only
     const fakeData = Array.from({ length: 10 }, () => {
@@ -38,6 +38,7 @@ export class AssetSeederService {
       asset.url = faker.internet.url();
       asset.postId = post;
       asset.type = 'post_picture';
+      asset.mimetype = faker.helpers.arrayElement(['image/png', 'image/jpeg']);
       asset.userId = artistUsers;
       asset.createdAt = faker.date.recent();
       asset.updatedAt = faker.date.recent();
@@ -55,6 +56,10 @@ export class AssetSeederService {
         const newProfilePicture = new Asset();
         newProfilePicture.type = 'profile_picture';
         newProfilePicture.userId = { id: user.id } as User;
+        newProfilePicture.mimetype = faker.helpers.arrayElement([
+          'image/png',
+          'image/jpeg',
+        ]);
         newProfilePicture.id = faker.string.uuid();
         newProfilePicture.url = faker.internet.url();
         newProfilePicture.createdAt = faker.date.recent();
@@ -84,6 +89,10 @@ export class AssetSeederService {
           asset.id = faker.string.uuid();
           asset.postId = post;
           asset.type = 'post_picture';
+          asset.mimetype = faker.helpers.arrayElement([
+            'image/jpeg',
+            'image/png',
+          ]);
           asset.userId = user;
           asset.url = faker.internet.url();
           asset.createdAt = faker.date.recent();
