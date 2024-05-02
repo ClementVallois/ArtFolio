@@ -17,7 +17,6 @@ export class FileService {
     file: File,
     artistId: string,
   ): Promise<{
-    fileName: string;
     filePath: string;
     fileType: string;
   }> {
@@ -33,7 +32,7 @@ export class FileService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return { fileName, filePath, fileType };
+    return { filePath, fileType };
   }
 
   async deleteProfilePicture(artistId): Promise<void> {
