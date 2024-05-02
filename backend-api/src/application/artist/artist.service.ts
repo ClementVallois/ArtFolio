@@ -235,11 +235,11 @@ export class ArtistService {
 
     if (file) {
       try {
-        const filePath = await this.fileService.saveProfilePicture(
+        const fileData = await this.fileService.saveProfilePicture(
           file,
           artist.id,
         );
-        await this.assetService.addProfilePicture(artist.id, filePath);
+        await this.assetService.addProfilePicture(artist.id, fileData);
       } catch (error) {
         throw new HttpException(
           'Failed to save profile picture',

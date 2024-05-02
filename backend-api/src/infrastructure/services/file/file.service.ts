@@ -13,9 +13,17 @@ export class FileService {
     private readonly assetRepository: Repository<Asset>,
     private readonly configService: ConfigService,
   ) {}
-  async saveProfilePicture(file: File, artistId: string): Promise<string> {
+  async saveProfilePicture(
+    file: File,
+    artistId: string,
+  ): Promise<{
+    fileName: string;
+    filePath: string;
+    fileType: string;
+  }> {
     const cleanFilename = file.originalname.replace(/\s+/g, '_');
     const fileName = `${artistId}-${Date.now()}-${cleanFilename}`;
+    const fileType = file.mimetype;
     const filePath = `${this.configService.get<string>('DEV_PROFILE_ASSETS_LOCATION')}/${fileName}`;
     try {
       await fs.promises.writeFile(filePath, file.buffer);
@@ -25,7 +33,7 @@ export class FileService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    return filePath;
+    return { fileName, filePath, fileType };
   }
 
   async deleteProfilePicture(artistId): Promise<void> {

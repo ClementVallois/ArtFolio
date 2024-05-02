@@ -1,3 +1,4 @@
+import { File } from '@nest-lab/fastify-multer';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
@@ -37,7 +38,7 @@ export class AssetService {
     return userAssets;
   }
 
-  async addProfilePicture(userId: string, filePath: string): Promise<Asset> {
+  async addProfilePicture(userId: string, fileData): Promise<Asset> {
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
@@ -46,7 +47,8 @@ export class AssetService {
     }
 
     const assetToCreate = this.assetRepository.create({
-      url: filePath,
+      url: fileData.filePath,
+      mimetype: fileData.fileType,
       type: 'profile_picture',
       userId: user,
     });

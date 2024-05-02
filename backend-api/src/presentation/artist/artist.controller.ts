@@ -62,7 +62,7 @@ export class ArtistController {
   }
 
   @Post()
-  //TODO : Add a custom interceptor
+  //TODO : Add a custom interceptor to filter the file type and more
   @UseInterceptors(FileInterceptor('profile_picture'))
   async createArtist(
     @UploadedFile() file: File,
