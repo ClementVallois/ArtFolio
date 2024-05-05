@@ -16,6 +16,7 @@ const options = {
 }
 
 // Create the axios Instance
+//TODO: modify with .env
 const auth0ManagementApi = axios.create({
     baseURL: 'https://dev-03ri6j5f0csn4op2.eu.auth0.com/api/v2/', // Your API base URL
     timeout: 10000, // expression en milisecondes, 10s pour envoyer une erreur après un temps de latence 
@@ -28,8 +29,8 @@ const auth0ManagementApi = axios.create({
 export function getAccessTokenManagementAPI() {
     auth0ManagementApi.request(options).then(function (response) {
         const token = response.data.access_token
-        storeAccessToken(response.data.access_token, response.data.expires_in)
-        return(Response.data);
+        storeAccessToken(token, response.data.expires_in)
+        return(response.data);
     }).catch(function (error) {
         console.error(error);
     });
@@ -52,6 +53,7 @@ function isAccessTokenExpired() {
 auth0ManagementApi.interceptors.request.use(
     async(config) => {
 
+        
     if (sessionStorage.getItem('auth0AccessToken') && !isAccessTokenExpired()){
         const token = sessionStorage.getItem('auth0AccessToken')
         config.headers.Authorization = `Bearer ${token}`;

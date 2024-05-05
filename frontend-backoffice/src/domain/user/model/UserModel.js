@@ -26,6 +26,7 @@ class User {
   changeDescription(newDescription) {
       this.description = newDescription;
   }
+
 }
 
 module.exports = User;

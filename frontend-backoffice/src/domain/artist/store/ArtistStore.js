@@ -9,7 +9,7 @@ export const useStoreArtist = defineStore('storeArtist', () => {
 
 
 const artistsAll = ref([])
-const artistFiltered = ref([])
+const artistsFiltered = ref([])
 
 //Static Data Source
 // function getAllArtists() {
@@ -43,12 +43,12 @@ function filterDataArtist(searchInput) {
         const artistsAllRaw = toRaw(artistsAll.value)
 
         // Filter the array of artist objects based on first_name or last_name matching the search input
-        artistFiltered.value = artistsAllRaw.filter(artist => {
+        artistsFiltered.value = artistsAllRaw.filter(artist => {
             return regex.test(artist.firstName) || regex.test(artist.lastName);
         })
     } else {
         // Reset artistFiltered if searchInput is empty or null
-        artistFiltered.value = [];
+        artistsFiltered.value = [];
     }
 }
 
@@ -56,7 +56,7 @@ function filterDataArtist(searchInput) {
 
 return {
     artistsAll,
-    artistFiltered,
+    artistsFiltered,
     getAllArtists,
     filterDataArtist
 }

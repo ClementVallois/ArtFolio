@@ -44,9 +44,10 @@ export class PostSeederService {
       }
     }
 
-    //Add random posts to artists
-    const fakeData = Array.from({ length: 10 }, () => {
+
+    const fakeData = Array.from({ length: 50 }, () => {
       const user = faker.helpers.arrayElement(artists);
+
 
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();

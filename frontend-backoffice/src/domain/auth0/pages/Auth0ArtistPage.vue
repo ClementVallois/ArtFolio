@@ -27,6 +27,9 @@
                     <td class="border px-4 py-2">{{ attribute }}</td>
                     <td class="border px-4 py-2">{{ value }}</td>
                     </tr>
+                    <tr>
+                        <DeleteButtonComponent @clickDelete="deleteUser(userFields['User Id'])"/>
+                    </tr>
                 </tbody>
                 </table>
             </div>
@@ -40,14 +43,15 @@
 import { onMounted, ref, computed } from 'vue';
 import auth0ManagementApi from '../api/Auth0ManagementAPI'
 import PageLayout from '@/components/layout/PageLayout.vue';
+import DeleteButtonComponent from '@/components/toolbox/DeleteButtonComponent.vue';
+import { CRUDAuth0API } from '@/domain/auth0/api/CRUDAuth0API.js'
+import { CRUDapi } from '@/api/CrudApi';
 
 const users = ref(null)
 
 onMounted(() => {
-
-const response = auth0ManagementApi.get('https://dev-03ri6j5f0csn4op2.eu.auth0.com/api/v2/clients')
-console.log(response)
-
+    const response = CRUDAuth0API('GET', 'users')
+    console.log(response)
 })
 
 const getAllUsers = async () => {
@@ -56,13 +60,22 @@ const getAllUsers = async () => {
     users.value = response.data
 }
 
+const deleteUser = async (Auth0id) => {
+    const response = CRUDAuth0API('DELETE', `users/${id}`)
+    console.log(response)
+    
+    const resp = CRUDapi('DELETE', `users/${id}`)
+
+}
+
 // Computed property to format users data
 const formattedUsers = computed(() => {
   return users.value.map(user => ({
-    Email: user.email,
+    "Email": user.email,
     "Email Verified": user.email_verified ? 'Yes' : 'No',
     "Last Login": new Date(user.last_login).toLocaleString(),
     "Logins Count": user.logins_count,
+    "User Id": user.user_id
     // Add more fields as needed
   }));
 });

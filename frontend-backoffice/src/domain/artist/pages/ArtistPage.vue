@@ -19,7 +19,7 @@
                         </div>
                     </div>
                     <div class="overflow-y-auto min-w-full max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-14rem)] md:max-h-[calc(100vh-16rem)] lg:max-h-[calc(100vh-18rem)] xl:max-h-[calc(100vh-20rem)]">
-                        <ListUserTableComponent :isSearch="isSearch" @openDeleteModal="openDeleteModal"/>
+                        <ListUserTableComponent :isSearch="isSearch" :users="storeArtist.artistsAll" :usersFiltered="storeArtist.artistsFiltered" @openDeleteModal="openDeleteModal"/>
                     </div>
                 </div>
             </div>

@@ -10,8 +10,8 @@
                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-100 uppercase tracking-wider">Action</th>
             </tr>
         </thead>
-            <BodyTableUserComponent v-if="params.isSearch == false" :users="storeArtist.artistsAll" @emitOpenDeleteModal="emitOpenDeleteModal" />
-            <BodyTableUserComponent v-else :users="storeArtist.artistFiltered" @emitOpenDeleteModal="emitOpenDeleteModal" />
+            <BodyTableUserComponent v-if="params.isSearch == false" :users="params.users" @emitOpenDeleteModal="emitOpenDeleteModal" />
+            <BodyTableUserComponent v-else :users="params.usersFiltered" @emitOpenDeleteModal="emitOpenDeleteModal" />
     </table>
 </template>
 
@@ -19,10 +19,8 @@
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore'
 import BodyTableUserComponent from './BodyTableUserComponent.vue'
 
-const params = defineProps(['isSearch'])
+const params = defineProps(['isSearch', 'users', 'usersFiltered'])
 const emits = defineEmits(['openDeleteModal'])
-
-const storeArtist = useStoreArtist()
 
 const emitOpenDeleteModal = (item) => {
     emits('openDeleteModal', item)
