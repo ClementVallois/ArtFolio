@@ -1,29 +1,33 @@
 <template>
 <PageLayout>
-<div class="h-[calc(100%-50px)] bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center">
+    <div class="h-[calc(100%-50px)] bg-gray-50 flex flex-col items-center justify-center">
 
-    <!-- Start block -->
+    <section class="bg-gray-100 py-6 px-4 sm:px-6 lg:px-10 lg:w-full">
+    <!-- Alerts -->
     <SuccessAlert v-if="isSuccess" :message="successMessage" @closeAlert="toggleSuccessAlert()"/>
     <ErrorAlert v-if="isError" :message="errorMessage" />
-    <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5 antialiased w-full">
-        <div class="mx-auto max-w-screen-xl px-4 lg:px-12">
-            <!-- Start coding here -->
-            <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-                <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+    <div class="max-w-9xl mx-auto">
+            <div class="bg-white rounded-lg overflow-hidden">
+                <div class="px-6 py-4">
+                    <h2 class="text-2xl font-semibold text-gray-800">User List</h2>
+                </div>
+                <div class="px-6 py-4">
+                    <div class="flex items-center justify-between mb-4">
                     <div class="w-full md:w-1/2">
                         <SearchUser @isSearchActive="activateSearch" />
                     </div>
                 </div>
                 <div class="overflow-y-auto min-w-full max-h-[calc(100vh-12rem)] sm:max-h-[calc(100vh-14rem)] md:max-h-[calc(100vh-16rem)] lg:max-h-[calc(100vh-18rem)] xl:max-h-[calc(100vh-20rem)]">
-                    <ListUserTableComponent :isSearch="isSearch" @openDeleteModal="openDeleteModal"/>
+                    <ListUserTableComponent :isSearch="isSearch" :users="storeUser.usersAll" :usersFiltered="storeUser.usersFiltered" @openDeleteModal="openDeleteModal"/>
                 </div>
             </div>
         </div>
+    </div>
     </section>
     <!-- End block -->
 
 
-<DeleteModal :isDelete=isOpenDeleteModal :user=itemModal @closeModal="toggleDeleteModal" @stateSuccess="displaySuccessDeleteAlert" @stateError=""displayErrorAlert />
+<DeleteModal :isDelete=isOpenDeleteModal :user=itemModal @closeModal="toggleDeleteModal" @stateSuccess="displaySuccessDeleteAlert" @stateError="displayErrorAlert" />
 
 </div>
 
@@ -32,15 +36,14 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import PageLayout from '@/components/layout/PageLayout.vue'
 import DeleteModal from '@/components/modal/DeleteModal.vue'
 import SuccessAlert from '@/components/state/success/SuccessAlert.vue'
 import ErrorAlert from '@/components/state/error/ErrorAlert.vue'
 import SearchUser from '@/domain/user/components/SearchUser.vue'
 import ListUserTableComponent from '@/components/table/ListUserTableComponent.vue'
-import { useStoreUser } from '../store/store-user'
-import { useAuth0 } from "@auth0/auth0-vue";
+import { useStoreUser } from '../store/UserStore.js'
 
 const isOpenDeleteModal= ref(false)
 const itemModal=ref({})
@@ -52,13 +55,13 @@ const errorMessage=ref('Une erreur est survenue')
 const storeUser = useStoreUser() 
 
 
-onMounted(() => {
-    storeUser.getAllUsers()
-    // getUsers()
+onMounted(async() => {
+    console.log('onMounted')
+    await storeUser.getAllUsers()
 })
 
 
-const OpenDeleteModal = (item) => {
+const openDeleteModal = (item) => {
     itemModal.value = item
     isOpenDeleteModal.value = true
 }
@@ -100,4 +103,4 @@ const activateSearch = (isSearchActivated) => {
     }
 }
 
-</script>
+</script>../store/UserStore

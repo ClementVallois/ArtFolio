@@ -1,18 +1,17 @@
 import { defineStore } from 'pinia'
-import users from '@/assets/data/users.js'
-import { ref } from 'vue'
-import { userApi } from '../api/UserRemoteDataSource'
-import { userService } from '../service/UserService'
+import { ref, toRaw } from 'vue'
+import { userService } from '../service/UserService.js'
 
 export const useStoreUser = defineStore('storeUser', () => {
 
 const usersAll = ref([])
-const userFiltered = ref([])
+const usersFiltered = ref([])
 
 
 async function getAllUsers() {
     try {
-        usersAll.value = await userService.getAllUsers()
+        const response = await userService().getAllUsers()
+        usersAll.value=response
     } catch (error) {
         return error
     }
@@ -30,12 +29,12 @@ function filterDataUser(searchInput) {
         const userAllRaw = toRaw(usersAll.value)
 
         // Filter the array of artist objects based on first_name or last_name matching the search input
-        userFiltered.value = userAllRaw.filter(user => {
-            return regex.test(user.first_name) || regex.test(user.last_name);
+        usersFiltered.value = userAllRaw.filter(user => {
+            return regex.test(user.firstName) || regex.test(user.lastName);
         })
     } else {
         // Reset artistFiltered if searchInput is empty or null
-        userFiltered.value = [];
+        usersFiltered.value = [];
     }
 }
 
@@ -43,14 +42,10 @@ function filterDataUser(searchInput) {
 
 return {
     usersAll,
-    userFiltered,
+    usersFiltered,
     getAllUsers,
     filterDataUser
 }
 
 
-
-return {
-    user
-}
 })

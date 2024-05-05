@@ -26,8 +26,7 @@ onMounted(() => {
         if(!isLoading.value && isAuthenticated.value){
         getAccessTokenManagementAPI()
         loading.value=false
-
-        router.push('/')
+        router.push('/home')
     }
     }, 1000)
 

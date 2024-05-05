@@ -13,7 +13,7 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-main
         volumes:
             - ./frontend-main:/app/frontend-main
-            - ./frontend-main/node_modules:/app/frontend-main/node_modules
+            # - ./frontend-main/node_modules:/app/frontend-main/node_modules
         ports:
             - "${FRONTEND_MAIN_SERVER_PORT}:5174"
         env_file:
@@ -26,11 +26,12 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-backoffice
         volumes:
             - ./frontend-backoffice:/app/frontend-backoffice
-            - ./frontend-backoffice/node_modules:/app/frontend-backoffice/node_modules
+            # - ./frontend-backoffice/node_modules:/app/frontend-backoffice/node_modules
         ports:
             - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
         env_file:
             - ./.env
+        # command: tail -f /dev/null
 
     # Main backend
     backend-api:
@@ -49,7 +50,7 @@ services:
 
     # Main Database 
     postgres-api:
-        image: postgres:latest
+        image: postgres:15.6
         ports:
             - "${DB_API_PORT}:5432"
         volumes:

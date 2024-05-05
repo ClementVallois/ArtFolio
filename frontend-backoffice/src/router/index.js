@@ -13,12 +13,12 @@ import Auth0ArtistPage from '@/domain/auth0/pages/Auth0ArtistPage.vue'
 
 const routes = [
   {
-    path: '/signin',
+    path: '/',
     name: 'signin',
     component: SignInPage
   },
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: HomePage,
     beforeEnter: authGuard,

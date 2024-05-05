@@ -1,27 +1,27 @@
-import { CRUDAuth0API } from "@/domain/auth0/api/CRUDAuth0API";
+import { CRUDapi } from "@/api/CrudApi.js";
 
 function userApi() {
 
     async function getAllUsers() {
-        return await CRUDAuth0API('GET', 'users');
+        console.log('starting the call to CRUDapi')
+        return await CRUDapi('GET', 'users');
     }
 
     async function getUserById(id) {
-        return await CRUDAuth0API('GET', `users/${id}`);
+        return await CRUDapi('GET', `users/${id}`);
     }
 
     async function createUser(data) {
-        return await CRUDAuth0API('POST', 'users', data)
+        return await CRUDapi('POST', 'users', data)
     }
 
     async function modifyUser(id, data) {
-        return await CRUDAuth0API('PATCH', 'users', id, data)
+        return await CRUDapi('PATCH', 'users', id, data)
     }
 
     async function deleteUser(id) {
-        return await CRUDAuth0API('DELETE', 'users', id)
+        return await CRUDapi('DELETE', 'users', id)
     }
-
 
 
     return {

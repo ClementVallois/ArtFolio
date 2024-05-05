@@ -16,6 +16,7 @@ import {
   FindNumberParams,
   FindUserPostParams,
 } from '../utils/findParams';
+import { AuthGuard } from '@nestjs/passport';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])

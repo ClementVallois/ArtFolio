@@ -9,10 +9,10 @@ function userService() {
             const response = await userApi().getAllUsers();
             if (Array.isArray(response)) {
                 const usersAll = response.map(jsonUser => User.fromJson(jsonUser))
-                return response.map(jsonUser => User.fromJson(jsonUser));
+                return usersAll;
             } else {
                 console.error("La réponse n'est pas un tableau d'objets JSON :", response);
-                return usersAll;
+                throw new Error("La réponse n'est pas un tableau d'objets JSON :")
             }
         } catch (error) {
             console.log(error);

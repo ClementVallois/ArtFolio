@@ -16,6 +16,7 @@ const options = {
 }
 
 // Create the axios Instance
+//TODO: modify with .env
 const auth0ManagementApi = axios.create({
     baseURL: 'https://dev-03ri6j5f0csn4op2.eu.auth0.com/api/v2/', // Your API base URL
     timeout: 10000, // expression en milisecondes, 10s pour envoyer une erreur après un temps de latence 
