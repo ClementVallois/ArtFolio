@@ -1,6 +1,6 @@
 <template>
     <div :class="{
-        'bg-white text-black border': !isSelected, 'bg-black text-white': isSelected}" @click="toggleSelection" class="text-sm font-semibold text-center px-7 p-2 hover:bg-gray-800 max-w-[15rem] m-[0.5rem] rounded-[1rem] cursor-pointer">
+        'bg-white text-black border': !isSelected, 'bg-black text-white': isSelected}" @click="toggleSelection" class="text-sm font-semibold text-center px-7 p-2 hover:bg-gray-800 max-w-[20rem] m-[0.5rem] rounded-[1rem] cursor-pointer">
         {{ textTag }}
     </div>
 </template>

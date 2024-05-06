@@ -15,22 +15,25 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 
-import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
-const categoryStore = categorieStore();
+import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
+const categoryStore = useCategoryStore();
+onMounted(async () => {
+    await categoryStore.getAllCategoriesName();
+});
 
 
 const speed = 3500;
 const n = ref(0);
 const currentWordIndex = ref(0);
 const currentWord = computed(() => {
-    const words = categoryStore.getAllCategoriesName;
+    const words = categoryStore.allCategoriesName;
     return words.length > 0 ? words[n.value % words.length] : "";
 });
 
 const cycleWords = () => {
-    if (categoryStore.getAllCategoriesName.length > 0) {
+    if (categoryStore.allCategoriesName.length > 0) {
         setInterval(() => {
-            n.value = (n.value + 1) % categoryStore.getAllCategoriesName.length;
+            n.value = (n.value + 1) % categoryStore.allCategoriesName.length;
             currentWordIndex.value++;
         }, speed);
     }

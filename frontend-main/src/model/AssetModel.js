@@ -8,6 +8,9 @@ class Asset {
     }
 
     toJson() {
+        if (!type) {
+            throw new Error('Les champs obligatoires doivent être spécifiés : type');
+        }
         return {
             id: this.id,
             url: this.url,

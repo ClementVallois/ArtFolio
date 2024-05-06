@@ -1,29 +1,28 @@
 import { defineStore } from 'pinia';
-import { dataSourceCategories } from '@/domain/artist/api/categoriesDataSource';
-import { Optional } from '@/optionnal';
-import { ref, computed } from 'vue';
-
+import { ref } from 'vue';
+import { categoryService } from '@/domain/artist/service/CategoryService.js';
 
 /////////
 ///// Categories Store
 /////////
-export const categorieStore = defineStore('categorieStore', () => {
-    const allCategoriesData = ref(Optional.of(dataSourceCategories));
+export const useCategoryStore = defineStore('categorieStore', () => {
+    const allCategoriesDatas = ref([]);
+    const allCategoriesName = ref([]);
 
-    const getAllCategoriesName = computed(() => {
-        return !allCategoriesData.value.isEmpty()
-            ? allCategoriesData.value.get().map(category => category.name)
-            : [];
-    });
+    async function getAllCategories() {
+        allCategoriesDatas.value = await categoryService().getAllCategories();
+    };
 
-    function setCategories(categories) {
-        allCategoriesData.value = Optional.of(categories);
-    }
+    async function getAllCategoriesName() {
+        const categories = await categoryService().getAllCategories();
+        allCategoriesName.value = categories.map(category => category.name);
+    };
+
 
     return {
-        allCategoriesData,
-        getAllCategoriesName,
-        setCategories
+        allCategoriesDatas,
+        allCategoriesName,
+        getAllCategories,
+        getAllCategoriesName
     }
 });
-
