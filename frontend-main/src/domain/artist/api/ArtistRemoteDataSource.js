@@ -38,11 +38,11 @@ function artistApi() {
     ////
 
     async function getLastRegisteredArtist(number) {
-        return await CRUDapi('GET', `users/artists/last/${number}`)
+        return await CRUDapi('GET', `artists/last/${number}`)
     }
 
     async function getRandomArtist(number) {
-        return await CRUDapi('GET', `users/artists/random/${number}`)
+        return await CRUDapi('GET', `artists/random/${number}`)
     }
 
 

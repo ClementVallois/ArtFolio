@@ -8,7 +8,7 @@ import { User } from 'src/infrastructure/entities/user.entity';
 export class UserSeederService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async clear(): Promise<void> {
     await this.userRepository.query('TRUNCATE TABLE users CASCADE');

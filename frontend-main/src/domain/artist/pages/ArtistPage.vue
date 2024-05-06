@@ -14,4 +14,5 @@ import { defineProps } from 'vue';
 const props = defineProps({
     artistId: String
 })
+console.log(props.artistId);
 </script>

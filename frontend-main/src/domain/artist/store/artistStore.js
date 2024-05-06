@@ -1,60 +1,61 @@
 import { defineStore } from 'pinia';
-import { artistApi } from '@/domain/artist/api/ArtistRemoteDataSource';
-import { Post } from '@/domain/artist/model/PostModel';
-import { User } from '@/model/UserModel';
+import { artistService } from '@/domain/artist/service/ArtistService.js';
+import { ref } from 'vue';
+
 
 /////////
 ///// Artist Store
 /////////
-export const artistStore = defineStore('artistStore', () => {
+export const useStoreArtist = defineStore('artistStore', () => {
 
+    const allArtistData = ref([]);
+    const artist = ref([]);
+    const artistPosts = ref([]);
+    const lastRegisteredArtist = ref([]);
+    const randomArtist = ref([]);
+
+    ////
+    // basique CRUD for artists
+    ////
     async function getAllArtists() {
-        try {
-            const response = await artistApi().getAllArtists();
-            if (Array.isArray(response)) {
-                return response.map(jsonUser => User.fromJson(jsonUser));
-            } else {
-                console.error("La réponse n'est pas un tableau d'objets JSON :", response);
-                return [];
-            }
-        } catch (error) {
-            console.log(error);
-            console.error("Erreur lors de la récupération des artistes:", error);
-        }
-    }
+        allArtistData.value = await artistService().getAllArtists();
+    };
 
     async function getArtistById(id) {
-        try {
-            const response = await artistApi().getArtistById(id);
-            console.log(response);
-            return User.fromJson(response);
-        } catch (error) {
-            console.log(error);
-            console.error("Erreur lors de la récupération d'un artiste' :", error);
-        }
-    }
+        artist.value = await artistService().getArtistById(id);
+    };
 
 
+    ////
+    // Recover artist's pinned post for home page
+    ////
+    async function getLastRegisteredArtist(number) {
+        lastRegisteredArtist.value = await artistService().getLastRegisteredArtist(number);
+    };
+
+    async function getRandomArtist(number) {
+        randomArtist.value = await artistService().getRandomArtist(number);
+    };
+
+
+    ////
+    // Artist post
+    ////
     async function getArtistPosts(id) {
-        try {
-            const response = await artistApi().getArtistPosts(id);
-            if (Array.isArray(response)) {
-                return response.map(jsonPost => Post.fromJson(jsonPost));
-            } else {
-                console.error("La réponse n'est pas un tableau d'objets JSON :", response);
-                return [];
-            }
-        } catch (error) {
-            console.log(error);
-            console.error("Erreur lors de la récupération d'un artiste' :", error);
-        }
-    }
-
+        artistPosts.value = await artistService().getArtistPosts(id);
+    };
 
     return {
+        allArtistData,
+        artist,
+        artistPosts,
+        lastRegisteredArtist,
+        randomArtist,
         getAllArtists,
         getArtistById,
-        getArtistPosts
+        getArtistPosts,
+        getLastRegisteredArtist,
+        getRandomArtist
     }
 });
 

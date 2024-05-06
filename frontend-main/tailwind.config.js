@@ -17,7 +17,7 @@ export default {
           "info": "#dbeafe",
           "success": "#dcfce7",
           "warning": "#fef3c7",
-          "error": "#fee2e2",
+          "error": "#fda4af",
         },
       },
     ],

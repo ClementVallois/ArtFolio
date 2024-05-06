@@ -1,12 +1,10 @@
 <template>
-    <nav class="shadow " id="app">
-        <div class="container px-6 py-5 mx-auto r  h-full">
+    <nav class="shadow" >
+        <div class="container px-6 py-2 mx-auto r  h-full">
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">
                     <router-link :to="{ name: 'home' }" class="text-gray-800 text-sm  md:mx-4">
-                        <p class="font-title text-[3rem]">
-                            ArtFolio
-                        </p>
+                        <img class="max-w-[6rem]" src="@/assets/img/artfolio_logo_black.png" alt="logo Art Folio">
                     </router-link>
                     <div class="md:hidden">
                         <button type="button"
@@ -71,7 +69,7 @@
                                 <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
-                                <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Se deconnecter"
+                                <CustomLinkComponent :to="{ name: 'ArtistRegistrationPage' }" text="Se deconnecter"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                             </div>
                         </div>

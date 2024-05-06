@@ -1,5 +1,5 @@
 <template>
-    <div class="h-[94vh] flex flex-col items-center justify-center">
+    <div class="h-[93vh] flex flex-col items-center justify-center">
         <div class="w-[90vw] flex flex-col items-center justify-center ">
             <p class="md:text-2xl text-center">Découvrez une communauté d'âmes artistiques, voguant à travers un océan
                 de
