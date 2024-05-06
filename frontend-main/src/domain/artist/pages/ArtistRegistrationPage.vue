@@ -75,8 +75,10 @@ import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { User } from '@/model/UserModel';
+import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref,computed, toRaw, onMounted } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
+import { Asset } from '@/model/AssetModel';
 
 
 
@@ -95,9 +97,12 @@ const firstSection = ref(true);
 const secondSection = ref(false);
 const selectedCategories = ref([]);
 const showErrorAlert = ref(false); 
-const defaultTextAlert = ref('Vous devez remplir tous les champs présents.')
-const newUser = ref(null)
-const categories = ref(null)
+const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+const newUser = ref(null);
+const newPost = ref(null);
+const assetPost = ref(null);
+const assetProfile = ref(null);
+const categories = ref(null);
 // Regex
 const descriptionRegex =  /^[a-zA-Z0-9._\-() "&,;:/]+$/;
 
@@ -150,8 +155,10 @@ const isValueValid = (value, regex) => {
 /////
 const toggleSections = () => {
     try {
+        
         if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
             const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"actif", "artist");
+            const asset = new Asset( null, null, "profil_picture", null)
             user.validateUsername(username.value);  
             user.validateName(firstName.value, 'prénom');
             user.validateName(lastName.value, 'nom'); 
@@ -161,6 +168,7 @@ const toggleSections = () => {
             secondSection.value = !secondSection.value;
             showErrorAlert.value = false; 
             newUser.value = user;
+            assetProfile.value = asset;
 
         } else {
             // Vérifier si les images sont autorisées
@@ -181,22 +189,32 @@ const toggleSections = () => {
 // Calcul de la validité du formulaire
 /////
 const isFormValid = computed(() => {
-    defaultTextAlert.value = "Vous devez sélectionner au moins une catégories";
-    showErrorAlert.value = true; 
-    if (selectedCategories.value.length > 0) {
-        defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg"
-        showErrorAlert.value = true; 
+    try {
+        const post = new Post( null, true , postDescription.value);
+        const asset = new Asset( null, null, "post_picture", null);
+        if (selectedCategories.value.length > 0) {
         if (filePostPicture.value && (typePostPicture.value == "image/png" || typePostPicture.value == "image/jpg" || typePostPicture.value == "image/jpeg")) {
-            defaultTextAlert.value = "Les carractères acceptés pour la descriptions sont sont de A-Z, 1-9, ainsi que . - _";
-            showErrorAlert.value = true; 
-            if (isValueValid(postDescription.value, descriptionRegex)) {
-                if (fileUserPicture.value && typeUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
+            post.validateDescription(postDescription.value)
+            if (fileUserPicture.value && typeUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
+                    newPost.value = post;
+                    assetPost.value = asset;
                     return true;
-                }
             }
+        }else{
+            defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg"
+            showErrorAlert.value = true; 
         }
+    }else{
+        defaultTextAlert.value = "Vous devez sélectionner au moins une catégories";
+        showErrorAlert.value = true; 
+    }
+    } catch (error) {
+        // Gérer les erreurs de validation
+        defaultTextAlert.value = error.message;
+        showErrorAlert.value = true;
     }
 });
+
 
 
 
@@ -209,14 +227,11 @@ const submitForm = () => {
 
         const formData = {
             artist: toRaw(newUser.value),
-            post: {
-                postPictureName: filePostPicture.value,
-                postPictureType: typePostPicture.value,
-                description: postDescription.value,
-            },
-            category: {
-                // TODO: faire en sorte d'envoyer l'id des catégories plutot que le nom
-                selectedCategories: toRaw(selectedCategories.value)
+            post: toRaw(newPost.value),
+            category: toRaw(selectedCategories.value),
+            asset : {
+                assetProfile : toRaw(assetProfile.value),
+                assetPost : toRaw(assetPost.value)
             }
         };
         

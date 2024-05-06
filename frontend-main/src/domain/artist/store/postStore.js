@@ -1,7 +1,8 @@
 import { defineStore } from 'pinia';
-import { Post } from '@/domain/artist/model/PostModel';
 import { Asset } from '@/model/AssetModel';
 import { postApi } from '@/domain/artist/api/PostRemoteDataSource';
+
+
 /////////
 ///// Posts Store
 /////////

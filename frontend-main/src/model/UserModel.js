@@ -54,7 +54,7 @@ class User {
         }
     }
 
-    // Méthode pour valider la date de naissance avec un Regex
+    // Méthode pour valider la description avec un Regex
     validateDescription(description) {
         const dateRegex = /^[a-zA-Z0-9._\-() "&,;:/!?]+$/;
         if (!dateRegex.test(description)) {
