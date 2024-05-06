@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { Post } from 'src/infrastructure/entities/post.entity';
 import { User } from 'src/infrastructure/entities/user.entity';
 
 import { Repository } from 'typeorm';
@@ -13,6 +14,8 @@ export class AssetService {
     private readonly assetRepository: Repository<Asset>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Post)
+    private readonly postRepository: Repository<Post>,
   ) {}
   async getPostAssets(postId: string): Promise<Asset[]> {
     const postAssets = await this.assetRepository.find({
@@ -39,7 +42,10 @@ export class AssetService {
     return userAssets;
   }
 
-  async addProfilePicture(userId: string, fileData: FileData): Promise<Asset> {
+  async addProfilePictureMetadataInDatabase(
+    userId: string,
+    fileData: FileData,
+  ): Promise<Asset> {
     const user = await this.userRepository.findOneBy({
       id: userId,
     });
@@ -52,6 +58,26 @@ export class AssetService {
       mimetype: fileData.fileType,
       type: 'profile_picture',
       userId: user,
+    });
+    return await this.assetRepository.save(assetToCreate);
+  }
+
+  async addPostPictureMetadataInDatabase(
+    postId: string,
+    fileData: FileData,
+  ): Promise<Asset> {
+    const post = await this.postRepository.findOneBy({
+      id: postId,
+    });
+    if (!post) {
+      throw new NotFoundException(`Post not found with ID: ${postId}`);
+    }
+
+    const assetToCreate = this.assetRepository.create({
+      url: fileData.filePath,
+      mimetype: fileData.fileType,
+      type: 'post_picture',
+      postId: post,
     });
     return await this.assetRepository.save(assetToCreate);
   }

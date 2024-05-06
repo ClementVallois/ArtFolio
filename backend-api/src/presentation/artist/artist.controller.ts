@@ -8,7 +8,8 @@ import {
   Delete,
   UseGuards,
   UseInterceptors,
-  UploadedFile,
+  UploadedFiles,
+  BadRequestException,
 } from '@nestjs/common';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
@@ -19,12 +20,18 @@ import {
   FindUserPostParams,
 } from '../utils/params.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { File, FileInterceptor } from '@nest-lab/fastify-multer';
+import { File, FileFieldsInterceptor } from '@nest-lab/fastify-multer';
+import { PostService } from 'src/application/post/post.service';
+import { CategoryService } from 'src/application/category/category.service';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly postService: PostService,
+    private readonly categoryService: CategoryService,
+  ) {}
 
   @Get()
   async getAllArtists() {
@@ -63,12 +70,55 @@ export class ArtistController {
 
   @Post()
   //TODO : Add a custom interceptor to filter the file type and more
-  @UseInterceptors(FileInterceptor('profile_picture'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'profilePicture', maxCount: 1 },
+      { name: 'postPicture', maxCount: 1 },
+    ]),
+  )
   async createArtist(
-    @UploadedFile() file: File,
+    @UploadedFiles() files: { profilePicture?: File[]; postPicture?: File[] },
     @Body() artistData: CreateArtistDto,
   ) {
-    return await this.artistService.createArtist(artistData, file);
+    if (!files.profilePicture || files.profilePicture.length === 0) {
+      throw new BadRequestException('Profile picture file is required.');
+    }
+    if (!files.postPicture || files.postPicture.length === 0) {
+      throw new BadRequestException('Post picture file is required.');
+    }
+
+    if (
+      !artistData.selectedCategories ||
+      artistData.selectedCategories.categories.length === 0
+    ) {
+      throw new BadRequestException('Category is required.');
+    }
+
+    const profilePicture = files.profilePicture[0];
+    const postPicture = files.postPicture[0];
+
+    const artist = await this.artistService.createArtist(
+      artistData,
+      profilePicture,
+    );
+
+    const postData = {
+      isPinned: artistData.pinnedPost.isPinned,
+      description: artistData.pinnedPost.description,
+      userId: artist.id,
+    };
+
+    await this.postService.createPost(postData, postPicture);
+
+    await this.categoryService.assignCategoriesToArtist(
+      artist.id,
+      artistData.selectedCategories.categories,
+    );
+
+    return {
+      message: 'Success',
+      artistId: artist.id,
+    };
   }
 
   @Patch(':id')

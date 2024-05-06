@@ -209,13 +209,16 @@ export class ArtistService {
     return selectedArtists;
   }
 
-  async createArtist(artistData: CreateArtistDto, file: File): Promise<User> {
+  async createArtist(
+    artistData: CreateArtistDto,
+    profilePicture: File,
+  ): Promise<User> {
     let artist: User;
     try {
       artist = this.userRepository.create(artistData);
       await this.userRepository.save(artist);
     } catch (error) {
-      // TODO : Add a better error handling
+      // TODO : Add a better error handling (create an error service)
       if (error.code === '23505') {
         let errorMessage: string;
         if (error.detail.includes('username')) {
@@ -233,13 +236,16 @@ export class ArtistService {
       );
     }
 
-    if (file) {
+    if (profilePicture) {
       try {
         const fileData = await this.fileService.saveProfilePicture(
-          file,
+          profilePicture,
           artist.id,
         );
-        await this.assetService.addProfilePicture(artist.id, fileData);
+        await this.assetService.addProfilePictureMetadataInDatabase(
+          artist.id,
+          fileData,
+        );
       } catch (error) {
         throw new HttpException(
           'Failed to save profile picture',

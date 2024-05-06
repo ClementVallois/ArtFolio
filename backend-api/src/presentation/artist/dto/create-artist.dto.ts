@@ -1,3 +1,4 @@
+import { Type } from 'class-transformer';
 import {
   IsEnum,
   IsISO8601,
@@ -5,7 +6,10 @@ import {
   IsOptional,
   IsString,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
+import { CreatePostDto } from 'src/presentation/post/dto/create-post.dto';
+import { ArtistCategoriesDto } from './artist-categories.dto';
 
 export class CreateArtistDto {
   @IsNotEmpty({ message: '$property is required' })
@@ -24,7 +28,7 @@ export class CreateArtistDto {
 
   @IsNotEmpty({ message: '$property is required' })
   @IsISO8601({ strict: true }, { message: '$property must be a date' })
-  birthDate: Date;
+  birthDate: string;
 
   @IsNotEmpty({ message: '$property is required' })
   @IsString({ message: '$property must be a string' })
@@ -55,4 +59,12 @@ export class CreateArtistDto {
   @IsNotEmpty({ message: '$property is required' })
   @IsString({ message: '$property must be a string' })
   auth0Id: string;
+
+  @ValidateNested()
+  @Type(() => CreatePostDto)
+  pinnedPost: CreatePostDto;
+
+  @ValidateNested()
+  @Type(() => ArtistCategoriesDto)
+  selectedCategories: ArtistCategoriesDto;
 }
