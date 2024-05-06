@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
-                    <CustomLinkComponent :to="{ name: 'login' }" text="Se connecter" class="md:mx-4" />
+                    <p class="md:mx-4 text-sm cursor-pointer" @click="loginApp" role="button">Se connecter</p> 
                     <CustomLinkComponent :to="{ name: 'RegistrationPage' }" text="S'inscrire" class="md:mx-4" />
                 </div>
             </div>
@@ -33,10 +33,11 @@
 // for component reactivity 
 import { ref } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
+import { useAuth0 } from '@auth0/auth0-vue';
 
 // user, artist, none
 const activeRole = "none";
-
+const { loginWithRedirect } = useAuth0()
 
 // opens the menu in mobile mode
 const isOpen = ref(false);
@@ -47,5 +48,14 @@ const isProfileMenuOpen = ref(false);
 const toggleProfileMenu = () => {
     isProfileMenuOpen.value = !isProfileMenuOpen.value;
 };
+
+//Connect to Auth0 
+const loginApp = async () => {
+    try{
+        await loginWithRedirect()
+    } catch (error) {
+        console.error('error loggin in :', error)
+    }
+}
 
 </script>

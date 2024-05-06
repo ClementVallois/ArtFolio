@@ -9,6 +9,7 @@ import AboutPage from '@/pages/AboutPage.vue';
 import LoginPage from '@/domain/authentification/pages/LoginPage.vue';
 import RegistrationPage from '@/pages/RegistrationPage.vue';
 import ArtistRegistrationPage from '@/domain/artist/pages/ArtistRegistrationPage.vue';
+import ArtistPreRegistrationPage from '@/domain/artist/pages/ArtistPreRegistrationPage.vue'
 import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
 import LegalNotionPage from '@/pages/LegalNotionPage.vue';
 
@@ -39,6 +40,11 @@ const routes = [
         path: '/registration-artist',
         name: 'ArtistRegistrationPage',
         component: ArtistRegistrationPage
+    },
+    {
+        path: '/preregistration-artist',
+        name: 'ArtistPreRegistrationPage',
+        component: ArtistPreRegistrationPage
     },
     {
         path: '/registration-user',

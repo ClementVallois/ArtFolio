@@ -18,7 +18,7 @@
 
 <script setup>
 import {  defineProps,onMounted } from 'vue';
-import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore.js';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 
 const props = defineProps({
