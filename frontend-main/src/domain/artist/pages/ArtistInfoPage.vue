@@ -8,7 +8,7 @@
         <input type="file" class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
     </div>
    </form>
-   <form action="" class="flex flex-col items-center w-[100vw] pb-[1rem]">
+   <form action="" class="flex flex-col items-center w-[100vw] pb-[1rem]" @submit.prevent="submitForm">
 
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom d'utilisateur</label>
@@ -33,28 +33,58 @@
         <textarea  v-model="artistStore.artist.description" class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " placeholder="Bio"></textarea>   
      </div>
 
-     <div class="flex flex-col w-[90vw] pb-[1rem]">
-        <ButtonComponent textButton="Modifier" class="w-[30vw] lg:self-end lg:w-[10vw]"></ButtonComponent>
+     <div class="pt-[2rem] flex justify-center w-full ">
+        <ButtonComponent textButton="Modifier" class="lg:self-end"></ButtonComponent>
     </div>
  
    </form>
+   <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
 
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
+import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue'; // Importez le composant ErrorAlertComponent
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
-import {   onMounted } from 'vue';
+import { onMounted } from 'vue';
 
-// const props = defineProps({
-//     artistId: String,
-// });
-
-// Récupérez l'artist demandé
 const artistStore = useStoreArtist();
-onMounted(async () => {
-    await artistStore.getArtistById("4a16705f-f810-42b9-9da8-0b1e157db8ee");
+const originalData = ref({}); 
+const showErrorAlert = ref(false);
 
+/// TODO: faire en sorte de comparer l'artist original et les new data
+// Fonction pour masquer l'alerte d'erreur
+const handleCloseErrorAlert = () => {
+    showErrorAlert.value = false;
+};
+
+onMounted(async () => {
+    const artistData = await artistStore.getArtistById("4a16705f-f810-42b9-9da8-0b1e157db8ee");
+    originalData.value = { ...artistData }; // Créez une copie profonde des données de l'artiste
+    console.log(originalData.value);
 });
+
+// Fonction pour comparer les champs modifiés et envoyer uniquement les modifications
+const submitForm = () => {
+    const modifiedData = {};
+    let isModified = false; 
+    console.log(artistStore.artist);
+    for (const key in artistStore.artist) {
+        console.log(key);
+        console.log(artistStore.artist[key], originalData.value[key]);
+        if (artistStore.artist[key] !== originalData.value[key]) {
+            modifiedData[key] = artistStore.artist[key];
+            isModified = true; 
+        }
+    }
+    if (isModified) {
+        console.log('Champs modifiés :', modifiedData);
+    } else {
+        showErrorAlert.value = true;
+    }
+};
+
+
 </script>

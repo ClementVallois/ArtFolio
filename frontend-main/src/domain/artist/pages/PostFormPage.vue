@@ -1,6 +1,6 @@
 <template>
-    <div class="w-[90%] m-auto flex flex-col items-center py-[2rem]">
-        <SecondTitleComponent title="Création de votre post" ></SecondTitleComponent>
+    <div class="w-[90%] m-auto flex flex-col items-center py-[2rem] lg:py-[5rem]">
+        <TitleComponent title="Création de votre post" class="text-[2.5rem] lg:text-[3rem] ml-[0rem]" ></TitleComponent>
         <form  @submit.prevent="submitForm" class="w-[100%] mx-auto flex flex-col items-center py-[1rem]">
             <div class="pt-[1rem] flex flex-col items-center w-[100%]">
                 <label class="block mb-2 text-[1rem] font-medium text-gray-900" for="user_avatar">Importer votre photo</label>
@@ -15,7 +15,6 @@
                 <ButtonComponent textButton="Poster" class="lg:self-end"></ButtonComponent>
             </div>
         </form>
-        
     </div>
     <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
 
@@ -23,7 +22,7 @@
 
 <script setup>
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue';
+import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import { ref, computed } from 'vue';
 

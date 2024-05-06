@@ -75,7 +75,7 @@ import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref,computed } from 'vue';
+import { ref,computed, toRaw } from 'vue';
 import { categorieStore } from '@/domain/artist/store/CategorieStore.js';
 
 const categoryStore = categorieStore();
@@ -130,6 +130,7 @@ const handleProfilPictureFileChange = (event) => {
 // permet de récupérer le nom de la photo deu post epinglé
 const handlePostPictureFileChange = (event) => {
     filePostPicture.value = event.target.files[0].name;
+   // filePostPicture.value = event.target.files[0].type; 
 };
 
 
@@ -151,19 +152,20 @@ const submitForm = () => {
 
         const formData = {
             artistData: {
-                profilePicture: fileUserPicture.value,
+                profilePictureName: fileUserPicture.value,
+               // profilePictureType: 
                 username: username.value,
                 firstName: firstName.value,
                 lastName: lastName.value,
                 birthDate: birthDate.value,
-                profilDescription: profilDescription.value,
+                description: profilDescription.value,
             },
             pinnedPost: {
                 postPicture: filePostPicture.value,
-                postDescription: postDescription.value,
+                description: postDescription.value,
             },
             artistCategories: {
-                selectedCategories: selectedCategories.value
+                selectedCategories: toRaw(selectedCategories.value)
             }
         };
         
