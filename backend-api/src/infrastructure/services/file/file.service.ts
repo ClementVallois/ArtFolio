@@ -55,16 +55,45 @@ export class FileService {
     }
   }
 
-  // async savePostPicture(file: File, postId: string): Promise<string> {
-  //   const cleanFilename = file.originalname.replace(/\s+/g, '_');
-  //   const fileName = `${artistId}-${Date.now()}-${cleanFilename}.${file.mimetype.split('/')[1]}`;
-  //   const filePath = `assets/posts_pictures/${fileName}`;
-  //   await fs.promises.writeFile(filePath, file.buffer);
-  //   return fileName;
-  // }
+  async savePostPicture(
+    file: File,
+    postId: string,
+  ): Promise<{
+    filePath: string;
+    fileType: string;
+  }> {
+    const cleanFilename = file.originalname.replace(/\s+/g, '_');
+    const fileName = `${postId}-${Date.now()}-${cleanFilename}`;
+    const fileType = file.mimetype;
+    const filePath = `${this.configService.get<string>('DEV_POST_ASSETS_LOCATION')}/${fileName}`;
+    try {
+      await fs.promises.writeFile(filePath, file.buffer);
+    } catch (error) {
+      throw new HttpException(
+        'Error saving profile picture',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return { filePath, fileType };
+  }
 
-  // async deletePostPicture(fileName: string): Promise<void> {
-  //   const filePath = `assets/posts_pictures/${fileName}`;
-  //   await fs.promises.unlink(filePath);
-  // }
+  async deletePostPicture(artistId): Promise<void> {
+    const postProfilePicture = await this.assetRepository.findOne({
+      where: {
+        userId: { id: artistId },
+        type: 'profile_picture',
+      },
+    });
+    if (!postProfilePicture) {
+      return;
+    }
+    try {
+      await fs.promises.unlink(postProfilePicture.url);
+    } catch (error) {
+      throw new HttpException(
+        'Error deleting profile picture',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
 }
