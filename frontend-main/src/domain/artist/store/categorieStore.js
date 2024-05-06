@@ -6,11 +6,11 @@ import { categoryService } from '@/domain/artist/service/CategoryService.js';
 ///// Categories Store
 /////////
 export const useCategoryStore = defineStore('categorieStore', () => {
-    const allCategoriesDatas = ref([]);
+    const allCategoriesData = ref([]);
     const allCategoriesName = ref([]);
 
     async function getAllCategories() {
-        allCategoriesDatas.value = await categoryService().getAllCategories();
+        allCategoriesData.value = await categoryService().getAllCategories();
     };
 
     async function getAllCategoriesName() {
@@ -20,7 +20,7 @@ export const useCategoryStore = defineStore('categorieStore', () => {
 
 
     return {
-        allCategoriesDatas,
+        allCategoriesData,
         allCategoriesName,
         getAllCategories,
         getAllCategoriesName

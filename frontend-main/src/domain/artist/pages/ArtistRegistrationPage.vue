@@ -39,7 +39,7 @@
         <TitleComponent title="Mes catégories" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
         <div class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem] lg:items-start">
             <div class="flex  flex-wrap pb-[1rem] pt-[2rem] w-[90vw] lg:w-[55vw] lg:p-[3rem]">    
-                <CategoryTagComponent v-for="(category, index) in categories" :key="index" :textTag="category" @categoryClicked="handleCategoryClicked"></CategoryTagComponent>
+                <CategoryTagComponent v-for="(category, index) in categories" :key="index" :textTag="category.name" :categoryId="category.id"  @categoryClicked="handleCategoryClicked"></CategoryTagComponent>
             </div>
         </div>
     
@@ -78,10 +78,7 @@ import { User } from '@/model/UserModel';
 import { ref,computed, toRaw, onMounted } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
 
-const categoryStore = useCategoryStore();
-onMounted(async () => {
-    await categoryStore.getAllCategoriesName();
-});
+
 
 
 const fileUserPicture = ref(null);
@@ -100,14 +97,18 @@ const selectedCategories = ref([]);
 const showErrorAlert = ref(false); 
 const defaultTextAlert = ref('Vous devez remplir tous les champs présents.')
 const newUser = ref(null)
-
+const categories = ref(null)
 // Regex
 const descriptionRegex =  /^[a-zA-Z0-9._\-() "&,;:/]+$/;
 
 
 // Find categories Array name
-const categories = toRaw(categoryStore.allCategoriesName);
-console.log(categories);
+const categoryStore = useCategoryStore();
+onMounted(async () => {
+    await categoryStore.getAllCategories();
+    categories.value = categoryStore.allCategoriesData;
+});
+
 
 
 // Put in array clicked categories 
