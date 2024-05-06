@@ -7,10 +7,19 @@ import { Post } from 'src/infrastructure/entities/post.entity';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { Category } from 'src/infrastructure/entities/category.entity';
 import { AssetService } from 'src/application/asset/asset.service';
+import { FileService } from 'src/infrastructure/services/file/file.service';
+import { CategoryService } from 'src/application/category/category.service';
+import { PostService } from 'src/application/post/post.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
   controllers: [ArtistController],
-  providers: [ArtistService, AssetService],
+  providers: [
+    ArtistService,
+    AssetService,
+    FileService,
+    CategoryService,
+    PostService,
+  ],
 })
 export class ArtistModule {}

@@ -26,6 +26,9 @@ export class Asset {
   })
   type: string;
 
+  @Column({ type: 'varchar', nullable: false })
+  mimetype: string;
+
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',

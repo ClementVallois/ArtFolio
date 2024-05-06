@@ -7,12 +7,21 @@ import {
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  BadRequestException,
+  Res,
+  StreamableFile,
+  UploadedFile,
 } from '@nestjs/common';
 import { PostService } from '../../application/post/post.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FindIdParams } from '../utils/params.dto';
+import { File, FileInterceptor } from '@nest-lab/fastify-multer';
+import { FastifyReply } from 'fastify';
+import { createReadStream } from 'fs';
+import { join } from 'path';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
@@ -30,13 +39,31 @@ export class PostController {
   }
 
   @Get(':id/assets')
-  async getPostAssets(@Param() { id }: FindIdParams) {
-    return this.postService.getPostAssets(id);
+  async getPostAssets(
+    @Param() { id }: FindIdParams,
+    @Res({ passthrough: true }) response: FastifyReply,
+  ) {
+    const files = await this.postService.getPostAssets(id);
+
+    const stream = createReadStream(join(process.cwd(), files[0].url));
+    response.headers({
+      'Content-Disposition': `inline; filename="${files[0].id}"`,
+      'Content-Type': `${files[0].mimetype}`,
+    });
+    return new StreamableFile(stream);
   }
 
   @Post()
-  async createPost(@Body() postData: CreatePostDto) {
-    return this.postService.createPost(postData);
+  @UseInterceptors(FileInterceptor('postPicture'))
+  async createPost(
+    @UploadedFile() file: File,
+    @Body() postData: CreatePostDto,
+  ) {
+    if (!file) {
+      throw new BadRequestException('Post picture file is required.');
+    } else {
+      return this.postService.createPost(postData, file);
+    }
   }
 
   @Patch(':id')

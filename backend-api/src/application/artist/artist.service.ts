@@ -1,3 +1,4 @@
+import { File } from '@nest-lab/fastify-multer';
 import {
   HttpException,
   HttpStatus,
@@ -9,9 +10,11 @@ import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { Category } from 'src/infrastructure/entities/category.entity';
 import { Post } from 'src/infrastructure/entities/post.entity';
 import { User } from 'src/infrastructure/entities/user.entity';
+import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/presentation/artist/dto/update-artist.dto';
 import { Repository } from 'typeorm';
+import { AssetService } from '../asset/asset.service';
 
 @Injectable()
 export class ArtistService {
@@ -24,6 +27,8 @@ export class ArtistService {
     private readonly assetRepository: Repository<Asset>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private fileService: FileService,
+    private assetService: AssetService,
   ) {}
 
   async getAllArtists(): Promise<User[]> {
@@ -204,15 +209,16 @@ export class ArtistService {
     return selectedArtists;
   }
 
-  async createArtist(artistData: CreateArtistDto): Promise<User> {
-    if (artistData.role !== 'artist') {
-      throw new HttpException('Role must be artist', HttpStatus.BAD_REQUEST);
-    }
+  async createArtist(
+    artistData: CreateArtistDto,
+    profilePicture: File,
+  ): Promise<User> {
+    let artist: User;
     try {
-      const artistToCreate = this.userRepository.create(artistData);
-      return await this.userRepository.save(artistToCreate);
+      artist = this.userRepository.create(artistData);
+      await this.userRepository.save(artist);
     } catch (error) {
-      // TODO: Create a validation service to use instead of manual check
+      // TODO : Add a better error handling (create an error service)
       if (error.code === '23505') {
         let errorMessage: string;
         if (error.detail.includes('username')) {
@@ -225,10 +231,29 @@ export class ArtistService {
         throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
       }
       throw new HttpException(
-        'Error creating artist',
+        'Internal server error',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    if (profilePicture) {
+      try {
+        const fileData = await this.fileService.saveProfilePicture(
+          profilePicture,
+          artist.id,
+        );
+        await this.assetService.addProfilePictureMetadataInDatabase(
+          artist.id,
+          fileData,
+        );
+      } catch (error) {
+        throw new HttpException(
+          'Failed to save profile picture',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+    return artist;
   }
 
   async updateArtist(id: string, artist: UpdateArtistDto): Promise<User> {
@@ -239,6 +264,24 @@ export class ArtistService {
 
   async removeArtist(id: string): Promise<User> {
     const existingArtist = await this.getArtistById(id);
-    return this.userRepository.remove(existingArtist);
+
+    try {
+      await this.fileService.deleteProfilePicture(id);
+    } catch (error) {
+      throw new HttpException(
+        "Failed to remove the artist's profile picture",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    try {
+      return await this.userRepository.remove(existingArtist);
+    } catch (error) {
+      console.error(`Failed to remove artist from database: ${error}`);
+      throw new HttpException(
+        'Failed to remove artist',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -11,6 +12,9 @@ import { Post } from 'src/infrastructure/entities/post.entity';
 import { Repository } from 'typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { User } from 'src/infrastructure/entities/user.entity';
+import { File } from '@nest-lab/fastify-multer';
+import { FileService } from 'src/infrastructure/services/file/file.service';
+import { AssetService } from '../asset/asset.service';
 
 @Injectable()
 export class PostService {
@@ -21,6 +25,8 @@ export class PostService {
     private readonly assetRepository: Repository<Asset>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly fileService: FileService,
+    private readonly assetService: AssetService,
   ) {}
 
   async getAllPosts(): Promise<Post[]> {
@@ -58,19 +64,51 @@ export class PostService {
     return postAssets;
   }
 
-  async createPost(postData: CreatePostDto): Promise<Post> {
+  async createPost(postData: CreatePostDto, postPicture: File): Promise<Post> {
+    if (!postPicture) {
+      throw new BadRequestException('Post picture file is required.');
+    }
+
+    let post: Post;
+
     const user = await this.userRepository.findOneBy({
       id: postData.userId,
     });
-
     if (!user) {
       throw new NotFoundException(`User not found with ID: ${postData.userId}`);
     }
-    const postToCreate = this.postRepository.create({
-      ...postData,
-      user: user,
-    });
-    return await this.postRepository.save(postToCreate);
+
+    try {
+      post = this.postRepository.create({
+        ...postData,
+        user: user,
+      });
+      await this.postRepository.save(post);
+    } catch (error) {
+      throw new HttpException(
+        'Failed to create post',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    if (postPicture) {
+      try {
+        const fileData = await this.fileService.savePostPicture(
+          postPicture,
+          post.id,
+        );
+        await this.assetService.addPostPictureMetadataInDatabase(
+          post.id,
+          fileData,
+        );
+      } catch (error) {
+        throw new HttpException(
+          'Failed to upload post picture',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+    return post;
   }
 
   async updatePost(id: string, postData: UpdatePostDto): Promise<Post> {

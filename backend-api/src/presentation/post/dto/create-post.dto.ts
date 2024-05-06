@@ -1,14 +1,17 @@
 import {
   IsBoolean,
   IsNotEmpty,
+  IsOptional,
   IsString,
   IsUUID,
   MaxLength,
 } from 'class-validator';
+import { ToBoolean } from 'src/infrastructure/common/decorators/toBoolean.decorator';
 
 export class CreatePostDto {
   @IsBoolean({ message: '$property must be a boolean' })
   @IsNotEmpty({ message: '$property must not be empty' })
+  @ToBoolean()
   isPinned: boolean;
 
   @IsString({ message: '$property must be a string' })
@@ -17,7 +20,8 @@ export class CreatePostDto {
   })
   description?: string;
 
+  @IsOptional()
   @IsNotEmpty({ message: '$property must not be empty' })
   @IsUUID('4', { message: '$property must be a valid UUID' })
-  userId: string;
+  userId?: string;
 }
