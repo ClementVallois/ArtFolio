@@ -13,8 +13,8 @@ class User {
     }
 
     toJson() {
-        if (!firstName || !lastName || !birthDate || !username) {
-            throw new Error('Les champs obligatoires doivent être spécifiés : id, firstName, lastName, birthDate, username');
+        if (!firstName || !lastName || !birthDate || !username || !status || !role) {
+            throw new Error('Les champs obligatoires doivent être spécifiés :  firstName, lastName, username, birthDate, username, status, role');
         }
         return {
             id: this.id,
@@ -23,7 +23,43 @@ class User {
             birthdate: this.birthDate,
             username: this.username,
             description: this.description,
+            status: this.status,
+            role: this.role,
         };
+    }
+
+
+
+    // Méthode pour valider le prénom et le nom avec des Regex
+    validateName(name, fieldName) {
+        const nameRegex = /^[a-zA-Z-]+$/;
+        if (!nameRegex.test(name)) {
+            throw new Error(`Le champ ${fieldName} ne doit contenir que des lettres et des tirets.`);
+        }
+    }
+
+    // Méthode pour valider le nom d'utilisateur avec un Regex
+    validateUsername(username) {
+        const usernameRegex = /^[a-zA-Z0-9._-]+$/;
+        if (!usernameRegex.test(username)) {
+            throw new Error('Le nom d\'utilisateur ne doit contenir que des lettres, des chiffres, des points, des tirets et des tirets bas.');
+        }
+    }
+
+    // Méthode pour valider la date de naissance avec un Regex
+    validateBirthDate(birthDate) {
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        if (!dateRegex.test(birthDate)) {
+            throw new Error('Le format de la date de naissance doit être YYYY-MM-DD.');
+        }
+    }
+
+    // Méthode pour valider la description avec un Regex
+    validateDescription(description) {
+        const dateRegex = /^[a-zA-Z0-9._\-() "&,;:/!?]+$/;
+        if (!dateRegex.test(description)) {
+            throw new Error("Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!? ");
+        }
     }
 
     // pour transformer le json en object grâce au Model
@@ -57,3 +93,5 @@ class User {
 }
 
 export { User };
+
+

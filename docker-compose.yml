@@ -44,12 +44,13 @@ services:
             - "${BACKEND_API_SERVER_PORT}:3000"
         env_file:
             - ./.env
+        command: tail -f /dev/null
         depends_on:
             - postgres-api
 
     # Main Database 
     postgres-api:
-        image: postgres:15.6
+        image: postgres:16.2
         ports:
             - "${DB_API_PORT}:5432"
         volumes:
