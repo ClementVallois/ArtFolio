@@ -25,6 +25,9 @@ export const useStoreArtist = defineStore('artistStore', () => {
         artist.value = await artistService().getArtistById(id);
     };
 
+    async function createArtist(data) {
+        return await artistService().createArtist(data);
+    };
 
     ////
     // Recover artist's pinned post for home page
@@ -53,6 +56,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
         randomArtist,
         getAllArtists,
         getArtistById,
+        createArtist,
         getArtistPosts,
         getLastRegisteredArtist,
         getRandomArtist

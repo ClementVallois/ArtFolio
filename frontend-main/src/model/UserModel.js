@@ -12,21 +12,23 @@ class User {
         this.createdAt = createdAt;
     }
 
-    toJson() {
-        if (!firstName || !lastName || !birthDate || !username || !status || !role) {
-            throw new Error('Les champs obligatoires doivent être spécifiés :  firstName, lastName, username, birthDate, username, status, role');
-        }
-        return {
-            id: this.id,
-            firstName: this.firstName,
-            lastName: this.lastName,
-            birthdate: this.birthDate,
-            username: this.username,
-            description: this.description,
-            status: this.status,
-            role: this.role,
-        };
-    }
+    // TODO: voir comment utiliser le ToJSon
+    // toJson() {
+    //     if (!firstName || !lastName || !birthDate || !username || !description || !status || !role || !auth0Id) {
+    //         throw new Error('Les champs obligatoires doivent être spécifiés :  firstName, lastName, username, birthDate, username, status, role, auth0Id');
+    //     }
+    //     return {
+    //         id: this.id,
+    //         firstName: this.firstName,
+    //         lastName: this.lastName,
+    //         birthdate: this.birthDate,
+    //         username: this.username,
+    //         description: this.description,
+    //         status: this.status,
+    //         role: this.role,
+    //         auth0Id: this.auth0Id
+    //     };
+    // }
 
 
 
@@ -34,15 +36,15 @@ class User {
     validateName(name, fieldName) {
         const nameRegex = /^[a-zA-Z-]+$/;
         if (!nameRegex.test(name)) {
-            throw new Error(`Le champ ${fieldName} ne doit contenir que des lettres et des tirets.`);
+            throw new Error(`Model Le champ ${fieldName} ne doit contenir que des lettres et des tirets.`);
         }
     }
 
     // Méthode pour valider le nom d'utilisateur avec un Regex
     validateUsername(username) {
-        const usernameRegex = /^[a-zA-Z0-9._-]+$/;
+        const usernameRegex = /^[a-zA-Z0-9._\-éèïù]+$/;
         if (!usernameRegex.test(username)) {
-            throw new Error('Le nom d\'utilisateur ne doit contenir que des lettres, des chiffres, des points, des tirets et des tirets bas.');
+            throw new Error('Model Le nom d\'utilisateur ne doit contenir que des lettres, des chiffres, des points, des tirets et des tirets bas.');
         }
     }
 
@@ -50,15 +52,15 @@ class User {
     validateBirthDate(birthDate) {
         const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
         if (!dateRegex.test(birthDate)) {
-            throw new Error('Le format de la date de naissance doit être YYYY-MM-DD.');
+            throw new Error('Model Le format de la date de naissance doit être YYYY-MM-DD.');
         }
     }
 
     // Méthode pour valider la description avec un Regex
     validateDescription(description) {
-        const dateRegex = /^[a-zA-Z0-9._\-() "&,;:/!?]+$/;
-        if (!dateRegex.test(description)) {
-            throw new Error("Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!? ");
+        const descriptionRegex = /^[a-zA-Z0-9._\-() "&,;:/!?éàèïù@]+$/;
+        if (!descriptionRegex.test(description)) {
+            throw new Error("Model Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!?éàèïù@ ");
         }
     }
 

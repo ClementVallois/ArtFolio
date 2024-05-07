@@ -98,46 +98,71 @@ import { User } from '@/model/UserModel';
 import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref,computed, toRaw, onMounted, onMounted } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
+
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js'
 import { Asset } from '@/model/AssetModel';
 
 
 
+// Store initialisation
+const artistStore = useStoreArtist();
+const categoryStore = useCategoryStore();
 
-const fileUserPicture = ref(null);
-const typeUserPicture = ref(null);
+///
+// Ref
+///
+// Global
+const firstSection = ref(true);
+const secondSection = ref(false);
+const showErrorAlert = ref(false); 
+const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+
+// Artist
 const username = ref('');
 const firstName = ref('');
 const lastName = ref('');
 const birthDate = ref('');
 const profilDescription = ref('');
+
+//Asset
 const filePostPicture = ref(null);
 const typePostPicture = ref(null);
+const fileUserPicture = ref(null);
+const typeUserPicture = ref(null);
+
+// Post
 const postDescription = ref('');
-const firstSection = ref(true);
-const secondSection = ref(false);
+
+// Category
 const selectedCategories = ref([]);
-const showErrorAlert = ref(false); 
-const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+const categories = ref(null);
+
+// New Object
 const newUser = ref(null);
 const newPost = ref(null);
-const assetPost = ref(null);
-const assetProfile = ref(null);
-const categories = ref(null);
-// Regex
-const descriptionRegex =  /^[a-zA-Z0-9._\-() "&,;:/]+$/;
 
 
-// Find categories Array name
-const categoryStore = useCategoryStore();
+
+////
+// Global
+//// 
+// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
+const handleCloseErrorAlert = () => {
+    showErrorAlert.value = false;
+};
+
+
+
+
+////
+// Category
+////
 onMounted(async () => {
     await categoryStore.getAllCategories();
     categories.value = categoryStore.allCategoriesData;
 });
-
-
-
-// Put in array clicked categories 
 const handleCategoryClicked = (category) => {
     if (!selectedCategories.value.includes(category)) {
         selectedCategories.value.push(category);
@@ -146,40 +171,30 @@ const handleCategoryClicked = (category) => {
     }
 };
 
-// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
-const handleCloseErrorAlert = () => {
-    showErrorAlert.value = false;
-};
 
+////
+// Asset
+//
 // permet de récupérer le nom et le type de la photo de profil
 const handleProfilPictureFileChange = (event) => {
-    console.log(event.target.files[0]);
-    fileUserPicture.value = event.target.files[0].name;
+    fileUserPicture.value = event.target.files[0];
     typeUserPicture.value = event.target.files[0].type;
 };
-
 // permet de récupérer le nom et le type de la photo deu post epinglé
 const handlePostPictureFileChange = (event) => {
-    filePostPicture.value = event.target.files[0].name;
+    filePostPicture.value = event.target.files[0];
     typePostPicture.value = event.target.files[0].type;
 };
 
 
-
-const isValueValid = (value, regex) => {
-    return regex.test(value);
-};
-
-
 /////
-// Méthode pour basculer entre les sections 
+// Méthode pour basculer entre les sections et vérifier les champs de la première partie du formulaire
 /////
 const toggleSections = () => {
     try {
-        
-        if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
-            const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"actif", "artist");
-            const asset = new Asset( null, null, "profil_picture", null)
+        if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
+            if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
+            const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"active", "artist", "Jbbgzel-nkedfneznk-ezgze");
             user.validateUsername(username.value);  
             user.validateName(firstName.value, 'prénom');
             user.validateName(lastName.value, 'nom'); 
@@ -189,17 +204,21 @@ const toggleSections = () => {
             secondSection.value = !secondSection.value;
             showErrorAlert.value = false; 
             newUser.value = user;
-            assetProfile.value = asset;
-
         } else {
             // Vérifier si les images sont autorisées
             defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg";
             showErrorAlert.value = true;
         }
+        } else {
+            showErrorAlert.value = true;
+    }
+
     } catch (error) {
-        // Gérer les erreurs de validation
-        defaultTextAlert.value = error.message;
-        showErrorAlert.value = true;
+        if (error.message.includes("Model")) {
+            const errorMessageWithoutModel = error.message.replace("Model", "");
+            defaultTextAlert.value = errorMessageWithoutModel;
+            showErrorAlert.value = true;
+        }
     }
 };
 
@@ -211,28 +230,30 @@ const toggleSections = () => {
 /////
 const isFormValid = computed(() => {
     try {
-        const post = new Post( null, true , postDescription.value);
-        const asset = new Asset( null, null, "post_picture", null);
-        if (selectedCategories.value.length > 0) {
-        if (filePostPicture.value && (typePostPicture.value == "image/png" || typePostPicture.value == "image/jpg" || typePostPicture.value == "image/jpeg")) {
-            post.validateDescription(postDescription.value)
-            if (fileUserPicture.value && typeUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
+        if (selectedCategories.value && filePostPicture.value && postDescription.value) {
+            const post = new Post( null, true , postDescription.value);
+            if (selectedCategories.value.length > 0) {
+                if (filePostPicture.value && (typePostPicture.value == "image/png" || typePostPicture.value == "image/jpg" || typePostPicture.value == "image/jpeg")) {
+                    post.validateDescription(postDescription.value)
                     newPost.value = post;
-                    assetPost.value = asset;
                     return true;
+                }else{
+                    defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg"
+                    showErrorAlert.value = true; 
+                }
+            }else{
+                defaultTextAlert.value = "Vous devez sélectionner au moins une catégories";
+                showErrorAlert.value = true; 
             }
-        }else{
-            defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg"
+        } else {
             showErrorAlert.value = true; 
         }
-    }else{
-        defaultTextAlert.value = "Vous devez sélectionner au moins une catégories";
-        showErrorAlert.value = true; 
-    }
     } catch (error) {
-        // Gérer les erreurs de validation
-        defaultTextAlert.value = error.message;
-        showErrorAlert.value = true;
+        if (error.message.includes("Model")) {
+            const errorMessageWithoutModel = error.message.replace("Model", "");
+            defaultTextAlert.value = errorMessageWithoutModel;
+            showErrorAlert.value = true;
+        }
     }
 });
 
@@ -242,22 +263,48 @@ const isFormValid = computed(() => {
 /////
 // Méthode pour soumettre le formulaire avec validation
 /////
-const submitForm = () => {
+const submitForm = async () => {
     // Vérifiez si le formulaire est valide
     if (isFormValid.value) {
 
-        const formData = {
-            artist: toRaw(newUser.value),
-            post: toRaw(newPost.value),
-            category: toRaw(selectedCategories.value),
-            asset : {
-                assetProfile : toRaw(assetProfile.value),
-                assetPost : toRaw(assetPost.value)
+        try {
+            let data = new FormData();
+            // TODO: mettre le vrai auth0id
+            /// Artist
+            const { firstName, lastName, birthDate, username, description: userDescription, status, role, auth0Id } = toRaw(newUser.value);
+            const randomString = Math.random().toString(36).substring(2, 12);
+            data.append('firstName', firstName);
+            data.append('lastName', lastName);
+            data.append('birthDate', birthDate);
+            data.append('username', username);
+            data.append('description', userDescription);
+            data.append('status', status);
+            data.append('role', role);
+            data.append('auth0Id', randomString)
+
+            /// Post 
+            const { isPinned, description: postDescription} = toRaw(newPost.value);
+            data.append('post[isPinned]', isPinned);
+            data.append('post[description]', postDescription);
+    
+
+            /// Category
+            const categories = toRaw(selectedCategories.value);
+            categories.forEach(categoryId => {
+                data.append('category[categories][]', categoryId);
+            });
+
+            /// Asset
+            data.append('postPicture',filePostPicture.value);
+            data.append('profilePicture',fileUserPicture.value);
+
+            return await artistStore.createArtist(data);
+        } catch (error) {
+            if (error.message.includes("username") && error.message.includes("already exists")) {
+                defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
+                showErrorAlert.value = true;
             }
-        };
-        
-        // TODO: Envoyez l'object
-        console.log(formData);
+        }
     } else {
         // Sinon, affichez la popup
         showErrorAlert.value = true;
