@@ -1,7 +1,7 @@
 class Post {
-    constructor(id, is_pinned, description, createdAt) {
+    constructor(id, isPinned, description, createdAt) {
         this.id = id;
-        this.is_pinned = is_pinned;
+        this.isPinned = isPinned;
         this.description = description;
         //  this.user_id = user_id;
         this.createdAt = createdAt;
@@ -10,7 +10,7 @@ class Post {
     toJson() {
         return {
             id: this.id,
-            is_pinned: this.is_pinned,
+            isPinned: this.isPinned,
             description: this.description,
             // userId: this.userId
         };
@@ -18,28 +18,16 @@ class Post {
 
     // pour transformer le json en object grâce au Model
     static fromJson(json) {
-        const { id, is_pinned, description, createdAt } = json;
-        return new Post(id, is_pinned, description, createdAt);
-    }
-
-
-    // Méthode pour vérifier si la valeur isPinned est true ou false
-    validateIsPinned(is_pinned) {
-        if (is_pinned === true || is_pinned === false) {
-            // La valeur isPinned est soit true soit false
-            return is_pinned;
-        } else {
-            // La valeur isPinned n'est ni true ni false
-            throw new Error("La valeur de 'isPinned' doit être true ou false.");
-        }
+        const { id, isPinned, description, createdAt } = json;
+        return new Post(id, isPinned, description, createdAt);
     }
 
 
     // Méthode pour valider la description avec un Regex
     validateDescription(description) {
-        const dateRegex = /^[a-zA-Z0-9._\-() "&,;:/!?]+$/;
-        if (!dateRegex.test(description)) {
-            throw new Error("Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!? ");
+        const descriptionRegex = /^[a-zA-Z0-9._\-() "&,;:/!?éàèïù@]+$/;
+        if (!descriptionRegex.test(description)) {
+            throw new Error("Model Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!?éàèïù@ ");
         }
     }
 
@@ -49,8 +37,8 @@ class Post {
     static toJsonPatch(modifiedData) {
         const patch = {};
         // Vérifiez chaque propriété modifiée et ajoutez-la au patch
-        if (modifiedData.hasOwnProperty('is_pinned')) {
-            patch.is_pinned = modifiedData.is_pinned;
+        if (modifiedData.hasOwnProperty('isPinned')) {
+            patch.isPinned = modifiedData.isPinned;
         }
         if (modifiedData.hasOwnProperty('description')) {
             patch.description = modifiedData.description;

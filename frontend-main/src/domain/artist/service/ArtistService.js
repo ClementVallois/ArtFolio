@@ -22,16 +22,26 @@ function artistService() {
         }
     };
 
+
     async function getArtistById(id) {
         try {
             const response = await artistApi().getArtistById(id);
             return User.fromJson(response);
         } catch (error) {
-            console.log(error);
             console.error("Erreur lors de la récupération d'un artiste' :", error);
         }
     };
 
+
+    async function createArtist(data) {
+        try {
+            const response = await artistApi().createArtist(data);
+            return response;
+        } catch (error) {
+            console.error("Erreur lors de l'enregistrement d'un artiste' :", error.message);
+            throw new Error(error.message);
+        }
+    }
 
     ////
     // Recover artist's pinned post for home page
@@ -87,6 +97,7 @@ function artistService() {
     return {
         getAllArtists,
         getArtistById,
+        createArtist,
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,
