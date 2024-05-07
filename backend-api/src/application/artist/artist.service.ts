@@ -1,5 +1,6 @@
 import { File } from '@nest-lab/fastify-multer';
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -15,6 +16,9 @@ import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/presentation/artist/dto/update-artist.dto';
 import { Repository } from 'typeorm';
 import { AssetService } from '../asset/asset.service';
+import { PostService } from '../post/post.service';
+import { CategoryService } from '../category/category.service';
+import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 
 @Injectable()
 export class ArtistService {
@@ -29,6 +33,9 @@ export class ArtistService {
     private readonly categoryRepository: Repository<Category>,
     private fileService: FileService,
     private assetService: AssetService,
+    private postService: PostService,
+    private categoryService: CategoryService,
+    private readonly errorService: ErrorService,
   ) {}
 
   async getAllArtists(): Promise<User[]> {
@@ -209,6 +216,46 @@ export class ArtistService {
     return selectedArtists;
   }
 
+  async handleCreateArtist(
+    artistData: CreateArtistDto,
+    files: { profilePicture?: File[]; postPicture?: File[] },
+  ): Promise<User> {
+    this.validateFilesAndCategories(files, artistData);
+    const profilePicture = files.profilePicture[0];
+    const postPicture = files.postPicture[0];
+
+    const artist = await this.createArtist(artistData, profilePicture);
+    await this.postService.createPost(
+      {
+        isPinned: artistData.post.isPinned,
+        description: artistData.post.description,
+        userId: artist.id,
+      },
+      postPicture,
+    );
+
+    await this.categoryService.assignCategoriesToArtist(
+      artist.id,
+      artistData.category.categories,
+    );
+    return artist;
+  }
+
+  private validateFilesAndCategories(
+    files: { profilePicture?: File[]; postPicture?: File[] },
+    artistData: CreateArtistDto,
+  ) {
+    if (!files.profilePicture || files.profilePicture.length === 0) {
+      throw new BadRequestException('Profile picture file is required.');
+    }
+    if (!files.postPicture || files.postPicture.length === 0) {
+      throw new BadRequestException('Post picture file is required.');
+    }
+    if (!artistData.category || artistData.category.categories.length === 0) {
+      throw new BadRequestException('Category is required.');
+    }
+  }
+
   async createArtist(
     artistData: CreateArtistDto,
     profilePicture: File,
@@ -218,42 +265,37 @@ export class ArtistService {
       artist = this.userRepository.create(artistData);
       await this.userRepository.save(artist);
     } catch (error) {
-      // TODO : Add a better error handling (create an error service)
-      if (error.code === '23505') {
-        let errorMessage: string;
-        if (error.detail.includes('username')) {
-          errorMessage = `Artist with username ${artistData.username} already exists`;
-        } else if (error.detail.includes('auth0_id')) {
-          errorMessage = `Artist with Auth0 ID ${artistData.auth0Id} already exists`;
-        } else {
-          errorMessage = 'Error creating artist';
-        }
-        throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
-      }
+      this.handleDatabaseErrors(error, artistData);
+    }
+
+    await this.handleProfilePicture(artist, profilePicture);
+    return artist;
+  }
+
+  private handleDatabaseErrors(error: any, artistData: CreateArtistDto) {
+    const errorMessage = this.errorService.parseDatabaseError(
+      error,
+      artistData,
+    );
+    throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+  }
+
+  private async handleProfilePicture(artist: User, profilePicture: File) {
+    try {
+      const fileData = await this.fileService.saveProfilePicture(
+        profilePicture,
+        artist.id,
+      );
+      await this.assetService.addProfilePictureMetadataInDatabase(
+        artist.id,
+        fileData,
+      );
+    } catch (error) {
       throw new HttpException(
-        'Internal server error',
+        'Failed to save profile picture',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    if (profilePicture) {
-      try {
-        const fileData = await this.fileService.saveProfilePicture(
-          profilePicture,
-          artist.id,
-        );
-        await this.assetService.addProfilePictureMetadataInDatabase(
-          artist.id,
-          fileData,
-        );
-      } catch (error) {
-        throw new HttpException(
-          'Failed to save profile picture',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-    }
-    return artist;
   }
 
   async updateArtist(id: string, artist: UpdateArtistDto): Promise<User> {
@@ -267,6 +309,7 @@ export class ArtistService {
 
     try {
       await this.fileService.deleteProfilePicture(id);
+      await this.fileService.deleteUserPostsPictures(id);
     } catch (error) {
       throw new HttpException(
         "Failed to remove the artist's profile picture",

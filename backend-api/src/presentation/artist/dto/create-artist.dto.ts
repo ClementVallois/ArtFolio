@@ -62,9 +62,9 @@ export class CreateArtistDto {
 
   @ValidateNested()
   @Type(() => CreatePostDto)
-  pinnedPost: CreatePostDto;
+  post: CreatePostDto;
 
   @ValidateNested()
   @Type(() => ArtistCategoriesDto)
-  selectedCategories: ArtistCategoriesDto;
+  category: ArtistCategoriesDto;
 }

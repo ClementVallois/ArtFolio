@@ -99,6 +99,7 @@ export class PostService {
         );
         await this.assetService.addPostPictureMetadataInDatabase(
           post.id,
+          post.user.id,
           fileData,
         );
       } catch (error) {
@@ -119,6 +120,8 @@ export class PostService {
 
   async removePost(id: string): Promise<Post> {
     const existingPost = await this.getPostById(id);
-    return this.postRepository.remove(existingPost);
+    await this.fileService.deletePostsPictures(id);
+    await this.postRepository.remove(existingPost);
+    return existingPost;
   }
 }
