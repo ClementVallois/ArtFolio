@@ -35,12 +35,4 @@ export class DataRequestService {
     dataRequest.user = user;
     return this.dataRequestRepository.save(dataRequest);
   }
-
-  // update(id: string, updateDataRequestData: UpdateDataRequestDto) {
-  //   return 'this.dataRequestRepository.save(updateDataRequestData);';
-  // }
-
-  // remove(id: string) {
-  //   return `This action removes a #${id} dataRequest`;
-  // }
 }

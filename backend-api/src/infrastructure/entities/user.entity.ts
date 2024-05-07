@@ -21,7 +21,7 @@ export class User {
   @Column({ type: 'date', nullable: true })
   birthDate: Date;
 
-  @Column({ unique: true, length: 100, nullable: true })
+  @Column({ unique: true, length: 100, nullable: false })
   username: string;
 
   @Column({ type: 'varchar', length: 750, nullable: true })

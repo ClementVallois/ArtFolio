@@ -20,18 +20,14 @@ import {
   FindUserPostParams,
 } from '../utils/params.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { File, FileFieldsInterceptor } from '@nest-lab/fastify-multer';
-import { PostService } from 'src/application/post/post.service';
-import { CategoryService } from 'src/application/category/category.service';
+import { File } from '@nest-lab/fastify-multer';
+import { User } from 'src/infrastructure/entities/user.entity';
+import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/file-type.interceptor';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller(['artists'])
 export class ArtistController {
-  constructor(
-    private readonly artistService: ArtistService,
-    private readonly postService: PostService,
-    private readonly categoryService: CategoryService,
-  ) {}
+  constructor(private readonly artistService: ArtistService) {}
 
   @Get()
   async getAllArtists() {
@@ -69,50 +65,32 @@ export class ArtistController {
   }
 
   @Post()
-  //TODO : Add a custom interceptor to filter the file type and more
   @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'profilePicture', maxCount: 1 },
-      { name: 'postPicture', maxCount: 1 },
-    ]),
+    LocalFilesInterceptor({
+      fieldNames: [
+        { name: 'profilePicture', maxCount: 1 },
+        { name: 'postPicture', maxCount: 1 },
+      ],
+      limits: { fileSize: 10 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        if (file.mimetype.startsWith('image/')) {
+          callback(null, true);
+        } else {
+          callback(
+            new BadRequestException('Only image files are allowed!'),
+            false,
+          );
+        }
+      },
+    }),
   )
   async createArtist(
-    @UploadedFiles() files: { profilePicture?: File[]; postPicture?: File[] },
+    @UploadedFiles() files: { profilePicture: File[]; postPicture: File[] },
     @Body() artistData: CreateArtistDto,
-  ) {
-    if (!files.profilePicture || files.profilePicture.length === 0) {
-      throw new BadRequestException('Profile picture file is required.');
-    }
-    if (!files.postPicture || files.postPicture.length === 0) {
-      throw new BadRequestException('Post picture file is required.');
-    }
-
-    if (
-      !artistData.selectedCategories ||
-      artistData.selectedCategories.categories.length === 0
-    ) {
-      throw new BadRequestException('Category is required.');
-    }
-
-    const profilePicture = files.profilePicture[0];
-    const postPicture = files.postPicture[0];
-
-    const artist = await this.artistService.createArtist(
+  ): Promise<{ message: string; artistId: string }> {
+    const artist = await this.artistService.handleCreateArtist(
       artistData,
-      profilePicture,
-    );
-
-    const postData = {
-      isPinned: artistData.pinnedPost.isPinned,
-      description: artistData.pinnedPost.description,
-      userId: artist.id,
-    };
-
-    await this.postService.createPost(postData, postPicture);
-
-    await this.categoryService.assignCategoriesToArtist(
-      artist.id,
-      artistData.selectedCategories.categories,
+      files,
     );
 
     return {
@@ -125,7 +103,7 @@ export class ArtistController {
   async updateArtist(
     @Param() { id }: FindIdParams,
     @Body() artistData: UpdateArtistDto,
-  ) {
+  ): Promise<User> {
     return this.artistService.updateArtist(id, artistData);
   }
 

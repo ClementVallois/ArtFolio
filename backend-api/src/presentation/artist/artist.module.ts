@@ -10,6 +10,7 @@ import { AssetService } from 'src/application/asset/asset.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CategoryService } from 'src/application/category/category.service';
 import { PostService } from 'src/application/post/post.service';
+import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
@@ -20,6 +21,7 @@ import { PostService } from 'src/application/post/post.service';
     FileService,
     CategoryService,
     PostService,
+    ErrorService,
   ],
 })
 export class ArtistModule {}
