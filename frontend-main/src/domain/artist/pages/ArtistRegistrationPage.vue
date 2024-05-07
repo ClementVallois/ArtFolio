@@ -96,14 +96,13 @@ import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue'
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { Post } from '@/domain/artist/model/PostModel.js';
-import { ref,computed, toRaw, onMounted, onMounted } from 'vue';
+import { ref,computed, toRaw, onMounted, watch } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js'
-import { Asset } from '@/model/AssetModel';
+import { Asset } from '@/model/AssetModel.js';
+import { useAuth0 } from '@auth0/auth0-vue';
 
-
-
-
+const { error, isAuthenticated, isLoading, user} = useAuth0();
 const fileUserPicture = ref(null);
 const typeUserPicture = ref(null);
 const username = ref('');
@@ -131,11 +130,26 @@ const descriptionRegex =  /^[a-zA-Z0-9._\-() "&,;:/]+$/;
 // Find categories Array name
 const categoryStore = useCategoryStore();
 onMounted(async () => {
+    assignUserRoleIfNeeded()
+
     await categoryStore.getAllCategories();
     categories.value = categoryStore.allCategoriesData;
 });
 
-
+//Assign Artist Role
+const assignUserRoleIfNeeded = () => {
+    if (isAuthenticated.value) {
+        authenticationService().assignUserRole(user.value.sub, 'Artist');
+    }
+};
+// Add a watch whenever there is a bit of lag in auth0
+watch(isAuthenticated, (newValue) => {
+    if (newValue) {
+        setTimeout(()=> {
+            authenticationService().assignUserRole(user.value.sub, 'Artist')
+        }, 500)
+    }
+})
 
 // Put in array clicked categories 
 const handleCategoryClicked = (category) => {

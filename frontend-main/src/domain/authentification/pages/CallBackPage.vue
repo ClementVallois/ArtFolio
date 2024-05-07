@@ -15,17 +15,19 @@ import { onMounted, ref } from "vue";
 import { useRouter } from 'vue-router'
 import LoaderPage from "@/components/states/loading/LoaderPage.vue";
 
+
 const router = useRouter()
-const { error, isAuthenticated, isLoading } = useAuth0();
+const { error, isAuthenticated, isLoading, user} = useAuth0();
 const loading = ref(true)
 
 onMounted(() => {
     setTimeout(() => {
         if(!isLoading.value && isAuthenticated.value){
         loading.value=false
+        console.log(user)
         router.push('/')
     }
-    }, 1000)
+    }, 1000)    
 })
 
 </script>

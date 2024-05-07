@@ -1,6 +1,15 @@
 <template>
     <div class="flex flex-col items-center">
-    <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
+    <!-- <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent> -->
+
+    <ul class="steps mt-10 mb-2">
+        <li class="step step-secondary">Créer un compte</li>
+        <li class="step step-secondary">Compléter son profil </li>
+    </ul>
+
+    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
+    <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
+
 
     <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
         <div class="flex flex-col w-[90vw] pb-[1rem]">
@@ -38,7 +47,9 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref,computed } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+
 
 const username = ref('');
 const firstName = ref('');
@@ -46,6 +57,27 @@ const lastName = ref('');
 const birthDate = ref('');
 const showErrorAlert = ref(false); 
 const fileUserPicture = ref(null);
+
+
+onMounted(async () => {
+    assignUserRoleIfNeeded()
+});
+
+
+//Assign User Role
+const assignUserRoleIfNeeded = () => {
+    if (isAuthenticated.value) {
+        authenticationService().assignUserRole(user.value.sub, 'User');
+    }
+};
+// Add a watch whenever there is a bit of lag in auth0
+watch(isAuthenticated, (newValue) => {
+    if (newValue) {
+        setTimeout(()=> {
+            authenticationService().assignUserRole(user.value.sub, 'User')
+        }, 500)
+    }
+})
 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {

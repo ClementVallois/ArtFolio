@@ -28,15 +28,14 @@ const auth0ManagementApi = axios.create({
 
 //Get the access token to use the API 
 export async function getAccessTokenManagementAPI() {
-    console.log('etape 3')
-    auth0ManagementApi.request(options).then(function (response) {
+    
+    try{
+        const response = await auth0ManagementApi.request(options)
         const token = response.data.access_token
-        // storeAccessToken(token, response.data.expires_in)
-        console.log(token)
-        return(token);
-    }).catch(function (error) {
+        return token
+    } catch(error) {
         console.error(error);
-    });
+    }
 }
 
 
