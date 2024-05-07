@@ -24,6 +24,7 @@ export default {
   },
   theme: {
     colors: {
+      primary: '#000',
       black: '#000',
       white: '#fff',
       gray: {

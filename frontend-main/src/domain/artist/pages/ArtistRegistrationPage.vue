@@ -1,6 +1,15 @@
 <template>
     <div v-if="firstSection"  class="flex flex-col items-center">
-        <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
+        <!-- <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent> -->
+
+        <ul class="steps mt-10 mb-2">
+            <li class="step step-secondary">Créer un compte</li>
+            <li class="step step-secondary">Compléter son profil </li>
+            <li class="step">Epingle ton post</li>
+        </ul>
+
+        <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
+        <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
         <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]"  method="post"  enctype="multipart/form-data">
             <div class="flex flex-col w-[90vw] pb-[1rem]">
@@ -36,6 +45,16 @@
         </div>
     </div>
     <div v-if="secondSection" class="flex flex-col items-center">
+        
+        <ul class="steps mt-10 mb-2">
+            <li class="step step-secondary">Créer un compte</li>
+            <li class="step step-secondary">Compléter son profil </li>
+            <li class="step step-secondary">Epingle ton post</li>
+        </ul>
+
+        <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
+        <p>Bientôt terminé ! 💪 Publie ton premier post pour gagner en visibilité</p>
+        
         <TitleComponent title="Mes catégories" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
         <div class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem] lg:items-start">
             <div class="flex  flex-wrap pb-[1rem] pt-[2rem] w-[90vw] lg:w-[55vw] lg:p-[3rem]">    
@@ -57,6 +76,7 @@
                 <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
                 <textarea  v-model="postDescription" class="textarea textarea-bordered h-[20vh] w-[90%] resize-none lg:w-[40%] " placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."></textarea>    
             </div>
+        
         </form>
         <div class="flex flex justify-between w-[90vw] pb-[1rem]">
             <ButtonComponent type="submit"  textButton="Précédent" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
@@ -76,9 +96,14 @@ import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue'
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { Post } from '@/domain/artist/model/PostModel.js';
-import { ref,computed, toRaw, onMounted } from 'vue';
+import { ref,computed, toRaw, onMounted, onMounted } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
+
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+
+import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js'
+import { Asset } from '@/model/AssetModel';
+
 
 
 // Store initialisation
