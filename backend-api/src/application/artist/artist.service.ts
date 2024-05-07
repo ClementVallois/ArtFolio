@@ -134,7 +134,7 @@ export class ArtistService {
 
     for (const artist of lastRegisteredArtists) {
       const pinnedPost = await this.postRepository.findOne({
-        where: { user: artist, isPinned: true },
+        where: { user: { id: artist.id }, isPinned: true },
         order: { createdAt: 'DESC' },
       });
 
@@ -188,7 +188,7 @@ export class ArtistService {
       const randomArtist = randomArtists[randomIndex];
 
       const pinnedPost = await this.postRepository.findOne({
-        where: { user: randomArtist, isPinned: true },
+        where: { user: { id: randomArtist.id }, isPinned: true },
       });
 
       if (!pinnedPost) {
