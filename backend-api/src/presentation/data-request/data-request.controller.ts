@@ -21,17 +21,4 @@ export class DataRequestController {
   async createDataRequest(@Body() dataRequestData: CreateDataRequestDto) {
     return this.dataRequestService.createDataRequest(dataRequestData);
   }
-
-  // @Patch(':id')
-  // async update(
-  //   @Param() { id }: FindIdParams,
-  //   @Body() dataRequestData: UpdateDataRequestDto,
-  // ) {
-  //   return this.dataRequestService.update(id, dataRequestData);
-  // }
-
-  // @Delete(':id')
-  // async remove(@Param() { id }: FindIdParams) {
-  //   return this.dataRequestService.remove(id);
-  // }
 }

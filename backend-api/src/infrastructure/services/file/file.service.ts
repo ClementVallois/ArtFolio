@@ -77,18 +77,45 @@ export class FileService {
     return { filePath, fileType };
   }
 
-  async deletePostPicture(artistId): Promise<void> {
-    const postProfilePicture = await this.assetRepository.findOne({
+  async deletePostsPictures(postId): Promise<void> {
+    const postPictures = await this.assetRepository.find({
       where: {
-        userId: { id: artistId },
-        type: 'profile_picture',
+        postId: { id: postId },
+        type: 'post_picture',
       },
     });
-    if (!postProfilePicture) {
+
+    if (!postPictures) {
       return;
     }
     try {
-      await fs.promises.unlink(postProfilePicture.url);
+      for (const postPicture of postPictures) {
+        await fs.promises.unlink(postPicture.url);
+      }
+    } catch (error) {
+      throw new HttpException(
+        'Error deleting profile picture',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async deleteUserPostsPictures(userId): Promise<void> {
+    const postPictures = await this.assetRepository.find({
+      where: {
+        userId: { id: userId },
+        type: 'post_picture',
+      },
+    });
+
+    if (!postPictures) {
+      return;
+    }
+    try {
+      for (const postPicture of postPictures) {
+        console.log('url: ', postPicture.url);
+        await fs.promises.unlink(postPicture.url);
+      }
     } catch (error) {
       throw new HttpException(
         'Error deleting profile picture',

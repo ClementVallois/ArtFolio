@@ -64,6 +64,7 @@ export class AssetService {
 
   async addPostPictureMetadataInDatabase(
     postId: string,
+    userId: string,
     fileData: FileData,
   ): Promise<Asset> {
     const post = await this.postRepository.findOneBy({
@@ -78,19 +79,8 @@ export class AssetService {
       mimetype: fileData.fileType,
       type: 'post_picture',
       postId: post,
+      userId: { id: userId },
     });
     return await this.assetRepository.save(assetToCreate);
   }
-
-  // create(createAssetDto: CreateAssetDto) {
-  //   return 'This action adds a new asset';
-  // }
-
-  // update(id: number, updateAssetDto: UpdateAssetDto) {
-  //   return `This action updates a #${id} asset`;
-  // }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} asset`;
-  // }
 }
