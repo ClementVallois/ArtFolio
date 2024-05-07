@@ -12,6 +12,8 @@ import ArtistRegistrationPage from '@/domain/artist/pages/ArtistRegistrationPage
 import ArtistPreRegistrationPage from '@/domain/artist/pages/ArtistPreRegistrationPage.vue'
 import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
 import LegalNotionPage from '@/pages/LegalNotionPage.vue';
+import CallBackPage from '@/domain/authentification/pages/CallBackPage.vue';
+import UserPreRegistrationPage from '@/domain/user/pages/UserPreRegistrationPage.vue';
 
 const routes = [
     {
@@ -52,6 +54,11 @@ const routes = [
         component: UserRegistrationPage
     },
     {
+        path: '/preregistration-user',
+        name: 'UserPreRegistrationPage',
+        component: UserPreRegistrationPage
+    },
+    {
         path: '/search',
         name: 'search',
         component: SearchPage
@@ -81,6 +88,14 @@ const routes = [
         name: 'legalNotion',
         component: LegalNotionPage
     },
+    {
+        path: '/callback',
+        name: 'callback',
+        component: CallBackPage
+    },
+
+
+
 ]
 
 const router = createRouter({

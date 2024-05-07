@@ -10,7 +10,6 @@
         <router-link :to="{ name: 'artist', params: { artistId: artist.id } }">Voir l'artiste</router-link>
     </div>
   </div>  
-
 </template>
 
 <script setup>
@@ -19,7 +18,8 @@ import HeroBannerComponent from '@/components/toolBox/HeroBannerComponent.vue';
 import TextScrollingComponent from '@/components/toolBox/TextScrollingComponent.vue';
 import CarousselComponent from '@/components/toolBox/CarousselComponent.vue';
 import { onMounted} from 'vue';
-import { useStoreArtist }  from '@/domain/artist/store/ArtistStore';
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+
 
 const props = defineProps({
     carousselData: Array
@@ -31,7 +31,12 @@ onMounted(async () => {
   await artistStore.getAllArtists();
   await artistStore.getLastRegisteredArtist(15);
   await artistStore.getRandomArtist(15);
-
 });
+
+
+
+// ////
+// // Find last artist Registered
+// ////
 
 </script>

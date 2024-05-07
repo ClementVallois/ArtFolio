@@ -9,7 +9,7 @@ RUN npm install
 
 COPY frontend-main .
 
-RUN npm run format
+# RUN npm run format
 
 EXPOSE 5174
 

@@ -8,7 +8,7 @@
 </template>
 
 <script setup>
-import LoaderComponent from '@/components/state/loading/LoaderComponent.vue'
+import LoaderComponent from '@/components/states/loading/LoaderComponent.vue'
 
 </script>
 

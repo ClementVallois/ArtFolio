@@ -96,17 +96,16 @@ import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue'
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { Post } from '@/domain/artist/model/PostModel.js';
-import { ref,computed, toRaw, onMounted, onMounted } from 'vue';
+import { ref,computed, toRaw, onMounted, watch } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
 
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js'
-import { Asset } from '@/model/AssetModel';
+import { Asset } from '@/model/AssetModel.js';
+import { useAuth0 } from '@auth0/auth0-vue';
 
-
-
-// Store initialisation
+const { error, isAuthenticated, isLoading, user} = useAuth0();// Store initialisation
 const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
 
@@ -160,9 +159,28 @@ const handleCloseErrorAlert = () => {
 // Category
 ////
 onMounted(async () => {
+    assignUserRoleIfNeeded()
+
     await categoryStore.getAllCategories();
     categories.value = categoryStore.allCategoriesData;
 });
+
+//Assign Artist Role
+const assignUserRoleIfNeeded = () => {
+    if (isAuthenticated.value) {
+        authenticationService().assignUserRole(user.value.sub, 'Artist');
+    }
+};
+// Add a watch whenever there is a bit of lag in auth0
+watch(isAuthenticated, (newValue) => {
+    if (newValue) {
+        setTimeout(()=> {
+            authenticationService().assignUserRole(user.value.sub, 'Artist')
+        }, 500)
+    }
+})
+
+// Put in array clicked categories 
 const handleCategoryClicked = (category) => {
     if (!selectedCategories.value.includes(category)) {
         selectedCategories.value.push(category);
