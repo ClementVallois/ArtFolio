@@ -39,7 +39,9 @@ function artistService() {
             return response;
         } catch (error) {
             console.error("Erreur lors de l'enregistrement d'un artiste' :", error.message);
-            throw new Error(error.message);
+            throw new Error(error.message
+
+            );
         }
     }
 
