@@ -96,7 +96,7 @@ import CategoryTagComponent from '@/components/toolBox/CategoryTagComponent.vue'
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { Post } from '@/domain/artist/model/PostModel.js';
-import { ref,computed, toRaw, onMounted, onMounted } from 'vue';
+import { ref,computed, toRaw, onMounted} from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
 
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';

@@ -34,7 +34,7 @@ class User {
 
     // Méthode pour valider le prénom et le nom avec des Regex
     validateName(name, fieldName) {
-        const nameRegex = /^[a-zA-Z-]+$/;
+        const nameRegex = /^[a-zA-Z-éèïù]+$/;
         if (!nameRegex.test(name)) {
             throw new Error(`Model Le champ ${fieldName} ne doit contenir que des lettres et des tirets.`);
         }
@@ -42,7 +42,7 @@ class User {
 
     // Méthode pour valider le nom d'utilisateur avec un Regex
     validateUsername(username) {
-        const usernameRegex = /^[a-zA-Z0-9._\-éèïù]+$/;
+        const usernameRegex = /^[a-zA-Z0-9._\-]+$/;
         if (!usernameRegex.test(username)) {
             throw new Error('Model Le nom d\'utilisateur ne doit contenir que des lettres, des chiffres, des points, des tirets et des tirets bas.');
         }

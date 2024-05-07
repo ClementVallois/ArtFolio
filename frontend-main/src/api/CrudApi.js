@@ -27,6 +27,7 @@ function CRUDapi(verb, endpoint, data) {
                     throw new Error('Wrong operation');
             }
         } catch (error) {
+            console.log(error);
             reject(new Error(error.response.data.message));
         }
     });
