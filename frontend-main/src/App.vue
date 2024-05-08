@@ -16,10 +16,10 @@ import NavComponent from '@/components/layout/NavComponent.vue';
 import FooterComponent from '@/components/layout/FooterComponent.vue';
 import NavArtistComponent from '@/domain/artist/components/layout/NavArtistComponent.vue';
 import NavUserComponent from '@/domain/user/components/layout/NavUserComponent.vue';
-import { globalStore } from '@/store/GlobalStore.js';
+import { useGlobalStore } from '@/store/GlobalStore.js';
 
 // Récupérez l'artist demandé
-const storeGlobal = globalStore();
+const storeGlobal = useGlobalStore();
 const activeRole = ref([]);
 onMounted(async () => {
     activeRole.value = storeGlobal.activeRole;

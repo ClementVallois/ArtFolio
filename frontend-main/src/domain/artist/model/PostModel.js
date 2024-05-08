@@ -1,9 +1,9 @@
 class Post {
-    constructor(id, isPinned, description, createdAt) {
+    constructor(id, isPinned, description, userId, createdAt) {
         this.id = id;
         this.isPinned = isPinned;
         this.description = description;
-        //  this.user_id = user_id;
+        this.userId = userId;
         this.createdAt = createdAt;
     }
 
@@ -12,14 +12,14 @@ class Post {
             id: this.id,
             isPinned: this.isPinned,
             description: this.description,
-            // userId: this.userId
+            userId: this.userId
         };
     }
 
     // pour transformer le json en object grâce au Model
     static fromJson(json) {
-        const { id, isPinned, description, createdAt } = json;
-        return new Post(id, isPinned, description, createdAt);
+        const { id, isPinned, description, userId, createdAt } = json;
+        return new Post(id, isPinned, description, userId, createdAt);
     }
 
 

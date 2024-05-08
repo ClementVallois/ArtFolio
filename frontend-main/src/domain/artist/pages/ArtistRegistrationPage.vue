@@ -1,7 +1,5 @@
 <template>
     <div v-if="firstSection"  class="flex flex-col items-center">
-        <!-- <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent> -->
-
         <ul class="steps mt-10 mb-2">
             <li class="step step-secondary">Créer un compte</li>
             <li class="step step-secondary">Compléter son profil </li>
@@ -98,16 +96,15 @@ import { User } from '@/model/UserModel';
 import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref,computed, toRaw, onMounted, watch } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
-
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
-
-import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js'
+import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { Asset } from '@/model/AssetModel.js';
 import { useAuth0 } from '@auth0/auth0-vue';
-
+import { useGlobalStore } from '@/store/GlobalStore.js';
 const { error, isAuthenticated, isLoading, user} = useAuth0();// Store initialisation
 const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
+const storeGlobal = useGlobalStore();
 
 ///
 // Ref
@@ -124,6 +121,7 @@ const firstName = ref('');
 const lastName = ref('');
 const birthDate = ref('');
 const profilDescription = ref('');
+const newUser = ref(null);
 
 //Asset
 const filePostPicture = ref(null);
@@ -133,14 +131,11 @@ const typeUserPicture = ref(null);
 
 // Post
 const postDescription = ref('');
+const newPost = ref(null);
 
 // Category
 const selectedCategories = ref([]);
 const categories = ref(null);
-
-// New Object
-const newUser = ref(null);
-const newPost = ref(null);
 
 
 
@@ -237,6 +232,7 @@ const toggleSections = () => {
             defaultTextAlert.value = errorMessageWithoutModel;
             showErrorAlert.value = true;
         }
+        storeGlobal.logError(error, 6);
     }
 };
 
@@ -272,6 +268,7 @@ const isFormValid = computed(() => {
             defaultTextAlert.value = errorMessageWithoutModel;
             showErrorAlert.value = true;
         }
+        storeGlobal.logError(error, 6);
     }
 });
 
@@ -316,12 +313,20 @@ const submitForm = async () => {
             data.append('postPicture',filePostPicture.value);
             data.append('profilePicture',fileUserPicture.value);
 
-            return await artistStore.createArtist(data);
+            let response =  await artistStore.createArtist(data);
+            if (response.status == 201 ) {
+               //TODO: redirect vers ArtistInfoPage
+                router.push('/artist-info'); 
+            }else{
+                defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
+                showErrorAlert.value = true; 
+            }
         } catch (error) {
             if (error.message.includes("username") && error.message.includes("already exists")) {
                 defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
                 showErrorAlert.value = true;
             }
+            storeGlobal.logError(error, 6);
         }
     } else {
         // Sinon, affichez la popup

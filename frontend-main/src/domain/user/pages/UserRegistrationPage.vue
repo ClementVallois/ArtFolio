@@ -39,7 +39,7 @@
         <ButtonComponent type="submit"  textButton="S'inscrire" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="submitForm" ></ButtonComponent>
     </div>
     </div>
-    <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
+    <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" v-model:textAlert="defaultTextAlert"></ErrorAlertComponent>
 
 </template>
 
@@ -47,15 +47,35 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref, computed, onMounted, watch } from 'vue';
+import { User } from '@/model/UserModel';
+import { useGlobalStore } from '@/store/GlobalStore.js';
+import { useStoreUser } from '@/domain/user/store/UserStore';
+import { ref,  computed, onMounted, watch, toRaw } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 
+
+// Store initialisation
+const storeGlobal = useGlobalStore();
+const userStore = useStoreUser();
+
+
+
+///
+// Ref
+///
+// Global
+const showErrorAlert = ref(false); 
+const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+
+// User
+const newUser = ref(null);
 const username = ref('');
 const firstName = ref('');
 const lastName = ref('');
 const birthDate = ref('');
-const showErrorAlert = ref(false); 
+
+//Asset
 const fileUserPicture = ref(null);
 
 
@@ -78,44 +98,94 @@ watch(isAuthenticated, (newValue) => {
         }, 500)
     }
 })
+const typeUserPicture = ref(null);
 
+
+
+
+////
+// Global
+//// 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {
     showErrorAlert.value = false;
 };
 
+////
+// Asset
+//
 const handleFileChange = (event) => {
-    fileUserPicture.value = event.target.files[0].name;
+    fileUserPicture.value = event.target.files[0];
+    typeUserPicture.value = event.target.files[0].type;
 };
 
-// Calcul de la validité du formulaire
-const isFormValid = computed(() => {
-    // Vérifiez si tous les champs obligatoires sont remplis
-    const isFieldsFilled = username.value && firstName.value && lastName.value && birthDate.value && fileUserPicture.value;
 
-    // Retourne vrai si tous les champs sont remplis et au moins une catégorie est sélectionnée
-    return isFieldsFilled;
+/////
+// Calcul de la validité du formulaire
+/////
+const isFormValid = computed(() => {
+    try {
+        if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value) {
+            if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
+                const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "user", "Jbbgzel-nkedfneznk-ezgze");
+                user.validateUsername(username.value);  
+                user.validateName(firstName.value, 'prénom');
+                console.log(lastName.value);
+                user.validateName(lastName.value, 'nom'); 
+                user.validateBirthDate(birthDate.value);
+                newUser.value = user;
+                return true;
+            }else{  
+                defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg";
+                showErrorAlert.value = true;
+            }
+        }else{
+            showErrorAlert.value = true;
+        }
+    } catch (error) {
+        if (error.message.includes("Model")) {
+            const errorMessageWithoutModel = error.message.replace("Model", "");
+            defaultTextAlert.value = errorMessageWithoutModel;
+            showErrorAlert.value = true;
+        }
+        storeGlobal.logError(error, 6);
+    }
 });
 
+/////
 // Méthode pour soumettre le formulaire avec validation
-const submitForm = () => {
+/////
+const submitForm = async () => {
     // Vérifiez si le formulaire est valide
     if (isFormValid.value) {
+        try {
+            let data = new FormData();
+            // User
+            const { firstName, lastName, birthDate, username, status, role, auth0Id } = toRaw(newUser.value);
+            const randomString = Math.random().toString(36).substring(2, 12);
+            data.append('firstName', firstName);
+            data.append('lastName', lastName);
+            data.append('birthDate', birthDate);
+            data.append('username', username);
+            data.append('status', status);
+            data.append('role', role);
+            data.append('auth0Id', randomString)
 
-        const formData = {
-                profilePicture: fileUserPicture.value,
-                username: username.value,
-                firstName: firstName.value,
-                lastName: lastName.value,
-                birthDate: birthDate.value,
-        };
-        
-        // TODO: Envoyez l'object
-        console.log(formData);
+            /// Asset
+            data.append('profilePicture',fileUserPicture.value);
+
+            return await userStore.createUser(data);
+
+        } catch (error) {
+            if (error.message.includes("username") && error.message.includes("already exists")) {
+                defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
+                showErrorAlert.value = true;
+            }
+            storeGlobal.logError(error, 6);
+        }
     } else {
         // Sinon, affichez la popup
         showErrorAlert.value = true;
     }
 };
 </script>
-

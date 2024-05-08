@@ -11,8 +11,8 @@ function postApi() {
         return await CRUDapi('GET', `posts/${id}/assets`);
     }
 
-    async function createPost(id) {
-        return await CRUDapi('POST', `posts`);
+    async function createPost(data) {
+        return await CRUDapi('POST', `posts`, data);
     }
 
     async function deletePost(id) {
@@ -22,7 +22,8 @@ function postApi() {
 
     return {
         getAssetForPost,
-        createPost
+        createPost,
+        deletePost
     };
 }
 
