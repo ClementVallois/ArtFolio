@@ -68,9 +68,11 @@
                                 <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
                                 <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
-                                <!-- TODO: faire la méthode pour se déconnecter -->
-                                <CustomLinkComponent :to="{ name: 'ArtistRegistrationPage' }" text="Se deconnecter"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
+                                <p  type="button"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                                    @click="logout">
+                                    Se déconnecter
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -86,7 +88,9 @@
 import { ref } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
+import { useAuth0 } from '@auth0/auth0-vue';
 
+const { logout } = useAuth0();
 
 // opens the menu in mobile mode
 const isOpen = ref(false);

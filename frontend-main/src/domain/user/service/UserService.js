@@ -1,5 +1,6 @@
 import { userApi } from '@/domain/user/api/UserRemoteDataSource';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { User } from '@/model/UserModel';
 
 function userService() {
     const storeGlobal = useGlobalStore();
@@ -18,9 +19,20 @@ function userService() {
         }
     }
 
+    async function getUserWithAuth0Id(auth0Id) {
+        try {
+            const response = await apiUser.getUserWithAuth0Id(auth0Id);   
+            console.log('response from userService', response)
+            return User.fromJson(response)         
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la récupération des artistes: " + error, 6);
+        }
+    }
+
 
     return {
-        createUser
+        createUser,
+        getUserWithAuth0Id,
     };
 }
 

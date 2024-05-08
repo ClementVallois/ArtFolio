@@ -1,7 +1,13 @@
+import { CRUDapi } from '@/api/CrudApi';
 import { getAccessTokenManagementAPI } from '../api/Auth0ManagementAPI'
 import auth0ManagementApi from '../api/Auth0ManagementAPI'
+import { useGlobalStore } from '@/store/GlobalStore';
+
+
 
 function authenticationService() {
+
+    const storeGlobal=useGlobalStore()
 
     //Roles: Admin, Artist, Moderator, User
     async function assignUserRole(auth0Id, role) {
@@ -34,8 +40,6 @@ function authenticationService() {
             console.error('Error fetching roles:', error);
             }
         };
-
-
 
 
 

@@ -60,8 +60,11 @@
                                 <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
-                                <CustomLinkComponent :to="{ name: 'about' }" text="Se deconnecter"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
+                                <p  type="button"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
+                                    @click="logout">
+                                    Se déconnecter
+                                </p>
                             </div>
                         </div>
                     </div>

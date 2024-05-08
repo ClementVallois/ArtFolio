@@ -1,11 +1,12 @@
 import { defineStore } from 'pinia';
+import { ref } from 'vue'
 
 /////////
 ///// Global Store
 /////////
 export const useGlobalStore = defineStore('globalStore', () => {
     // user, artist, none
-    const activeRole = "none";
+    const activeRole = ref("none");
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;
@@ -22,11 +23,6 @@ export const useGlobalStore = defineStore('globalStore', () => {
         }
     }
 
-    //When the user is connected we should get his profile in user
-    const user = null
-    function getMyProfile(id) {
-
-    }
 
     return {
         activeRole,
