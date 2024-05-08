@@ -14,30 +14,33 @@ export const useStoreArtist = defineStore('artistStore', () => {
     const lastRegisteredArtist = ref([]);
     const randomArtist = ref([]);
 
+    const serviceArtist = artistService();
+
+
     ////
     // basique CRUD for artists
     ////
     async function getAllArtists() {
-        allArtistData.value = await artistService().getAllArtists();
+        allArtistData.value = await serviceArtist.getAllArtists();
     };
 
     async function getArtistById(id) {
-        artist.value = await artistService().getArtistById(id);
+        artist.value = await serviceArtist.getArtistById(id);
     };
 
     async function createArtist(data) {
-        return await artistService().createArtist(data);
+        return await serviceArtist.createArtist(data);
     };
 
     ////
     // Recover artist's pinned post for home page
     ////
     async function getLastRegisteredArtist(number) {
-        lastRegisteredArtist.value = await artistService().getLastRegisteredArtist(number);
+        lastRegisteredArtist.value = await serviceArtist.getLastRegisteredArtist(number);
     };
 
     async function getRandomArtist(number) {
-        randomArtist.value = await artistService().getRandomArtist(number);
+        randomArtist.value = await serviceArtist.getRandomArtist(number);
     };
 
 
@@ -45,7 +48,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
     // Artist post
     ////
     async function getArtistPosts(id) {
-        artistPosts.value = await artistService().getArtistPosts(id);
+        artistPosts.value = await serviceArtist.getArtistPosts(id);
     };
 
     return {

@@ -25,13 +25,19 @@ import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref, computed, toRaw } from 'vue';
+import { useGlobalStore } from '@/store/GlobalStore.js';
 
+
+const storeGlobal = useGlobalStore();
 const filePostPicture = ref(null);
 const typePostPicture = ref(null);
 const postDescription = ref(null);
 const showErrorAlert = ref(false); 
 const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
 const newPost = ref(null)
+
+
+
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {
     showErrorAlert.value = false;
@@ -84,7 +90,7 @@ const submitForm = () => {
                 console.log(pair[0]+ ', '+ pair[1]); 
             }
         } catch (error) {
-            console.log(error);
+            storeGlobal.logError(error, 6);
         }
     } else {
         // Sinon, affichez la popup

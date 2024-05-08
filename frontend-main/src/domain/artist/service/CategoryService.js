@@ -1,39 +1,37 @@
 import { Category } from '@/domain/artist/model/CategoryModel';
 import { categoryApi } from '@/domain/artist/api/CategoryRemoteDataSource';
-
+import { useGlobalStore } from '@/store/GlobalStore.js';
 
 
 function categoryService() {
+    const storeGlobal = useGlobalStore();
+    const apiCategory = categoryApi();
+
     ////
     // basique CRUD for artists
     ////
     async function getAllCategories() {
-        // const categoryApi = await categoryApi();
         try {
-            const response = await categoryApi().getAllCategories();
+            const response = await apiCategory.getAllCategories();
             if (Array.isArray(response)) {
                 return response.map(jsonCategory => Category.fromJson(jsonCategory));
             } else {
-                console.error("La réponse n'est pas un tableau d'objets JSON :", response);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
                 return [];
             }
         } catch (error) {
-            console.log(error);
-            console.error("Erreur lors de la récupération des categories:", error);
+            storeGlobal.logError("Erreur lors de la récupération des categories: " + error, 6);
         }
     };
 
     async function getCategoryById(id) {
         try {
-            const response = await categoryApi.getCategoryById(id);
+            const response = await apiCategory.getCategoryById(id);
             return Category.fromJson(response);
         } catch (error) {
-            console.log(error);
-            console.error("Erreur lors de la récupération d'une catégorie' :", error);
+            storeGlobal.logError("Erreur lors de la récupération d'une catégorie: " + error, 6);
         }
     };
-
-
 
 
     return {

@@ -99,12 +99,13 @@ import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { Asset } from '@/model/AssetModel';
-
+import { useGlobalStore } from '@/store/GlobalStore.js';
 
 
 // Store initialisation
 const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
+const storeGlobal = useGlobalStore();
 
 ///
 // Ref
@@ -217,6 +218,7 @@ const toggleSections = () => {
             defaultTextAlert.value = errorMessageWithoutModel;
             showErrorAlert.value = true;
         }
+        storeGlobal.logError(error, 6);
     }
 };
 
@@ -252,6 +254,7 @@ const isFormValid = computed(() => {
             defaultTextAlert.value = errorMessageWithoutModel;
             showErrorAlert.value = true;
         }
+        storeGlobal.logError(error, 6);
     }
 });
 
@@ -302,6 +305,7 @@ const submitForm = async () => {
                 defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
                 showErrorAlert.value = true;
             }
+            storeGlobal.logError(error, 6);
         }
     } else {
         // Sinon, affichez la popup
