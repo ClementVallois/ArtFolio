@@ -26,9 +26,16 @@ import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref, computed, toRaw } from 'vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { useStorePost } from '@/domain/artist/store/PostStore';
 
-
+// Store initialisation
 const storeGlobal = useGlobalStore();
+const postStore = useStorePost();
+
+
+///
+// Ref
+///
 const filePostPicture = ref(null);
 const typePostPicture = ref(null);
 const postDescription = ref(null);
@@ -76,19 +83,25 @@ const isFormValid = computed(() => {
 });
 
 // Méthode pour soumettre le formulaire avec validation
-const submitForm = () => {
+const submitForm = async () => {
     // Vérifiez si le formulaire est valide
     if (isFormValid.value) {
         try {
             let data = new FormData();
             const { isPinned, description: postDescription, userId } = toRaw(newPost.value);
-            console.log(userId);
-            data.append('post[isPinned]', isPinned);
-            data.append('post[description]', postDescription);
-            data.append('post[userId]', userId);
+
+            /// Post
+            data.append('isPinned', isPinned);
+            data.append('description', postDescription);
+            data.append('userId', userId);
+
+             /// Asset
+            data.append('postPicture',filePostPicture.value);
             for(var pair of data.entries()) {
                 console.log(pair[0]+ ', '+ pair[1]); 
             }
+
+            return await postStore.createPost(data);
         } catch (error) {
             storeGlobal.logError(error, 6);
         }

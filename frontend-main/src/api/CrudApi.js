@@ -1,7 +1,9 @@
 import api from '@/api/Api.js'
 const apiURL = "http://127.0.0.1:3000";
+import { useGlobalStore } from '@/store/GlobalStore.js';
 
 function CRUDapi(verb, endpoint, data) {
+    const storeGlobal = useGlobalStore();
     return new Promise(async (resolve, reject) => {
         const url = `${apiURL}/${endpoint}`
         try {
@@ -27,7 +29,7 @@ function CRUDapi(verb, endpoint, data) {
                     throw new Error('Wrong operation');
             }
         } catch (error) {
-            console.log(error);
+            storeGlobal.logError(error, 6);
             reject(new Error(error.response.data.message));
         }
     });

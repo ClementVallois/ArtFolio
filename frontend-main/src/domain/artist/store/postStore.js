@@ -1,13 +1,12 @@
 import { defineStore } from 'pinia';
-import { postService } from '@/domain/artist/service/PostService.js';
+import { postService } from '@/domain/artist/service/PostService';
 import { ref } from 'vue';
 
 /////////
 ///// Posts Store
 /////////
-export const postStore = defineStore('postStore', () => {
+export const useStorePost = defineStore('postStore', () => {
     const servicePost = postService();
-
     const assetForPost = ref([])
 
     async function getAssetForPost(id) {

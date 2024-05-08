@@ -43,3 +43,5 @@ function postService() {
         createPost
     }
 }
+
+export { postService };
