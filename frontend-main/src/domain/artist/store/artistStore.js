@@ -10,6 +10,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
     const allArtistData = ref([]);
     const artist = ref([]);
+    const artistId = ref(null);
     const artistPosts = ref([]);
     const lastRegisteredArtist = ref([]);
     const randomArtist = ref([]);
@@ -29,7 +30,13 @@ export const useStoreArtist = defineStore('artistStore', () => {
     };
 
     async function createArtist(data) {
-        return await serviceArtist.createArtist(data);
+        // return await serviceArtist.createArtist(data);
+        const response = await serviceArtist.createArtist(data);
+        if (response.status === 201) {
+            artistId.value = response.data.artistId;
+            console.log(artistId.value);
+        }
+        return response;
     };
 
     ////

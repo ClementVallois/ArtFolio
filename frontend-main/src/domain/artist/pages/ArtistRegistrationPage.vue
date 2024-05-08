@@ -140,10 +140,6 @@ const categories = ref(null);
 
 
 
-
-
-
-
 ////
 // Global
 //// 
@@ -299,7 +295,14 @@ const submitForm = async () => {
             data.append('postPicture',filePostPicture.value);
             data.append('profilePicture',fileUserPicture.value);
 
-            return await artistStore.createArtist(data);
+            let response =  await artistStore.createArtist(data);
+            if (response.status == 201 ) {
+               //TODO: redirect vers ArtistInfoPage
+                router.push('/artist-info'); 
+            }else{
+                defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
+                showErrorAlert.value = true; 
+            }
         } catch (error) {
             if (error.message.includes("username") && error.message.includes("already exists")) {
                 defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
