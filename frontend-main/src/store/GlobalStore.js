@@ -7,6 +7,8 @@ import { ref } from 'vue'
 export const useGlobalStore = defineStore('globalStore', () => {
     // user, artist, none
     const activeRole = ref("none");
+    // Role kept in store when registration is ongoing
+    const signinRole = ref("");
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;
@@ -23,9 +25,16 @@ export const useGlobalStore = defineStore('globalStore', () => {
         }
     }
 
+    function modifySigninRole(role) {
+        signinRole.value = role
+        console.log(signinRole)
+    }
+
 
     return {
         activeRole,
+        signinRole,
+        modifySigninRole,
         logError,
         log
     }

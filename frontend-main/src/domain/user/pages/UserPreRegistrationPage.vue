@@ -4,6 +4,7 @@
 
         <ul class="steps mt-10 mb-20">
             <li class="step step-secondary">Créer un compte</li>
+            <li class="step">Se connecter </li>
             <li class="step">Compléter son profil </li>
         </ul>
 
@@ -26,12 +27,12 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 const showErrorAlert = ref(false); 
 const { loginWithRedirect } = useAuth0()
-const redirectUri = import.meta.env.AUTH0_REDIRECT_AFTER_SIGNUP || 'http://localhost:5174/registration-user'
+const redirectUri = `${window.location.origin}/success-signup-user`
 
 //permet de rediriger vers la page auth0 register
 const registerAuth0 = () => {
@@ -40,7 +41,6 @@ const registerAuth0 = () => {
                         redirect_uri: redirectUri
                     }})
 }
-
 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {

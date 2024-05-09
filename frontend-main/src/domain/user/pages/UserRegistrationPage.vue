@@ -4,10 +4,11 @@
 
     <ul class="steps mt-10 mb-2">
         <li class="step step-secondary">Créer un compte</li>
+        <li class="step step-secondary">Se connecter</li>
         <li class="step step-secondary">Compléter son profil </li>
     </ul>
 
-    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
+    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
     <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
 
@@ -50,10 +51,12 @@ import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useStoreUser } from '@/domain/user/store/UserStore';
+import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { ref,  computed, onMounted, watch, toRaw } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 
+const { error, isAuthenticated, isLoading, user} = useAuth0();
 
 // Store initialisation
 const storeGlobal = useGlobalStore();
