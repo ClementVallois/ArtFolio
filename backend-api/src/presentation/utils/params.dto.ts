@@ -5,6 +5,13 @@ export class FindIdParams {
   @IsNotEmpty({ message: '$property must not be empty' })
   id: string;
 }
+
+export class FindAuth0IdParams {
+  @IsUUID('4', { message: '$property must be an UUID' })
+  @IsNotEmpty({ message: '$property must not be empty' })
+  auth0Id: string;
+}
+
 export class FindUserPostParams {
   @IsUUID('4', { message: '$property must be an UUID' })
   @IsNotEmpty({ message: '$property must not be empty' })

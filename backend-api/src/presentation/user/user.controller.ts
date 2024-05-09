@@ -8,14 +8,19 @@ import {
   Delete,
   Res,
   StreamableFile,
+  UseInterceptors,
+  BadRequestException,
+  UploadedFiles,
 } from '@nestjs/common';
 import { UserService } from '../../application/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindIdParams } from '../utils/params.dto';
+import { FindAuth0IdParams, FindIdParams } from '../utils/params.dto';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FastifyReply } from 'fastify';
+import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/file-type.interceptor';
+import { File } from '@nest-lab/fastify-multer';
 
 @Controller('users')
 export class UserController {
@@ -45,14 +50,44 @@ export class UserController {
     return new StreamableFile(stream);
   }
 
+  @Get('auth0Id/:auth0Id')
+  async getUserByAuth0Id(@Param() { auth0Id }: FindAuth0IdParams) {
+    return this.userService.getUserByAuth0Id(auth0Id);
+  }
+
   @Get(':id/data-requests')
   async getUserDataRequests(@Param() { id }: FindIdParams) {
     return this.userService.getUserDataRequests(id);
   }
 
   @Post()
-  async createUser(@Body() userData: CreateUserDto) {
-    return this.userService.createUser(userData);
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldNames: [{ name: 'profilePicture', maxCount: 1 }],
+      limits: { fileSize: 10 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        if (file.mimetype.startsWith('image/')) {
+          callback(null, true);
+        } else {
+          callback(
+            new BadRequestException('Only image files are allowed!'),
+            false,
+          );
+        }
+      },
+    }),
+  )
+  @Post()
+  async createUser(
+    @UploadedFiles() files: { profilePicture: File },
+    @Body() userData: CreateUserDto,
+  ) {
+    const user = await this.userService.handleCreateUser(userData, files);
+
+    return {
+      message: 'Success',
+      userId: user.id,
+    };
   }
 
   @Patch(':id')
