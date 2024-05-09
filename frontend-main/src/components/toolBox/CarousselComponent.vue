@@ -45,4 +45,10 @@ const slides = computed(() => {
   }
   return chunks;
 });
+
+const svgElement = document.querySelector('.carousel__icon');
+if (svgElement) {
+  svgElement.setAttribute('viewBox', '0 0 15 15'); 
+}
+
 </script>

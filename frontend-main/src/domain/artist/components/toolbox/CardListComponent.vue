@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-full grid grid-cols-1 md:grid-cols-2 gap-4 lg:grid lg:grid-cols-2 justify-center">
         <CardPostComponent :postId="post.id" v-for="(post, index) in artistStore.artistPosts" :key="index"
-            :postDescription="post.description" :postDate="formatDate(post.createdAt)"  :postIsPinned="post.isPinned"/>
+            :postDescription="post.description" :postDate="formatDate(post.createdAt)"  :postIsPinned="post.isPinned" :artistId="artistId" :myProfile="myProfile"/>
     </div>
 </template>
 
@@ -17,19 +17,27 @@ const props = defineProps({
     postPictureUrl: String,
     postIsPinned: Boolean,
     artistId: String,
-    postId: String
+    postId: String,
 });
 
-
+const myProfile = ref(false);
 
 // Récupérez les posts demandés 
 const artistStore = useStoreArtist();
 
+const storeArtistId = artistStore.artistId;
+
+
 onMounted(async () => {
     await artistStore.getArtistPosts(props.artistId);
+
+
 });
 
-
+// Vérifie si l'artiste consulte son profil ou celui d'un autre artist
+if (storeArtistId == props.artistId) {
+    myProfile.value = true;
+}
 
 // permet de formater la date 
 function formatDate(dateString) {
