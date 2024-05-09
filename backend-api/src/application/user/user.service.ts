@@ -41,6 +41,14 @@ export class UserService {
     return user;
   }
 
+  async getUserByAuth0Id(auth0Id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ auth0Id: auth0Id });
+    if (!user) {
+      throw new NotFoundException(`User not found with Auth0 ID: ${auth0Id}`);
+    }
+    return user;
+  }
+
   async getUserAssets(userId: string): Promise<Asset[]> {
     const userAssets = await this.assetRepository.find({
       where: { userId: { id: userId }, type: 'profile_picture' },

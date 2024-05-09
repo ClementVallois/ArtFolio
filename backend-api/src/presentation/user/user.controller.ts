@@ -12,7 +12,7 @@ import {
 import { UserService } from '../../application/user/user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { FindIdParams } from '../utils/params.dto';
+import { FindAuth0IdParams, FindIdParams } from '../utils/params.dto';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FastifyReply } from 'fastify';
@@ -43,6 +43,11 @@ export class UserController {
       'Content-Type': `${file[0].mimetype}`,
     });
     return new StreamableFile(stream);
+  }
+
+  @Get('auth0Id/:auth0Id')
+  async getUserByAuth0Id(@Param() { auth0Id }: FindAuth0IdParams) {
+    return this.userService.getUserByAuth0Id(auth0Id);
   }
 
   @Get(':id/data-requests')
