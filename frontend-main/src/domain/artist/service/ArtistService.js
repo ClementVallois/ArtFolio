@@ -53,7 +53,8 @@ function artistService() {
         try {
             const response = await apiArtist.getLastRegisteredArtist(number);
             if (Array.isArray(response)) {
-                return response.map(jsonUser => User.fromJson(jsonUser));
+                return response;
+                //  return response.map(jsonUser => User.fromJson(jsonUser));
             } else {
                 storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
                 return [];
@@ -67,7 +68,8 @@ function artistService() {
         try {
             const response = await apiArtist.getRandomArtist(number);
             if (Array.isArray(response)) {
-                return response.map(jsonUser => User.fromJson(jsonUser));
+                //  return response.map(jsonUser => User.fromJson(jsonUser));
+                return response;
             } else {
                 storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
                 return [];

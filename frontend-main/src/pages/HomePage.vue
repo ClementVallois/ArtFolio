@@ -31,6 +31,7 @@ onMounted(async () => {
   await artistStore.getAllArtists();
   await artistStore.getLastRegisteredArtist(15);
   await artistStore.getRandomArtist(15);
+  console.log(artistStore.randomArtist);
 });
 
 
