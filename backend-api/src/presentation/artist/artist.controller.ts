@@ -87,7 +87,7 @@ export class ArtistController {
   async createArtist(
     @UploadedFiles() files: { profilePicture: File[]; postPicture: File[] },
     @Body() artistData: CreateArtistDto,
-  ): Promise<{ message: string; artistId: string }> {
+  ) {
     const artist = await this.artistService.handleCreateArtist(
       artistData,
       files,
@@ -103,7 +103,7 @@ export class ArtistController {
   async updateArtist(
     @Param() { id }: FindIdParams,
     @Body() artistData: UpdateArtistDto,
-  ): Promise<User> {
+  ) {
     return this.artistService.updateArtist(id, artistData);
   }
 

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -11,6 +12,10 @@ import { User } from 'src/infrastructure/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
+import { File } from '@nest-lab/fastify-multer';
+import { ErrorService } from 'src/infrastructure/common/filter/error.service';
+import { FileService } from 'src/infrastructure/services/file/file.service';
+import { AssetService } from '../asset/asset.service';
 
 @Injectable()
 export class UserService {
@@ -21,6 +26,9 @@ export class UserService {
     private readonly assetRepository: Repository<Asset>,
     @InjectRepository(DataRequest)
     private readonly dataRequestRepository: Repository<DataRequest>,
+    private readonly errorService: ErrorService,
+    private readonly fileService: FileService,
+    private readonly assetService: AssetService,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -74,37 +82,88 @@ export class UserService {
     return dataRequests;
   }
 
-  async createUser(userData: CreateUserDto): Promise<User> {
-    try {
-      const userToCreate = this.userRepository.create(userData);
-      return await this.userRepository.save(userToCreate);
-    } catch (error) {
-      if (error.code === '23505') {
-        let errorMessage: string;
-        if (error.detail.includes('username')) {
-          errorMessage = `Artist with username ${userData.username} already exists`;
-        } else if (error.detail.includes('auth0_id')) {
-          errorMessage = `Artist with Auth0 ID ${userData.auth0Id} already exists`;
-        } else {
-          errorMessage = 'Error creating artist';
-        }
-        throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
-      }
+  async handleCreateUser(
+    userData: CreateUserDto,
+    files: { profilePicture: File },
+  ): Promise<User> {
+    this.validateFiles(files);
+    const profilePicture = files.profilePicture[0];
+
+    const user = await this.createUser(userData, profilePicture);
+    return user;
+  }
+
+  private validateFiles(files: { profilePicture: File }) {
+    if (!files.profilePicture) {
+      throw new BadRequestException('Profile picture file is required.');
     }
-    throw new HttpException(
-      'Error creating user',
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+  }
+
+  async createUser(
+    userData: CreateUserDto,
+    profilePicture: File,
+  ): Promise<User> {
+    let user: User;
+    try {
+      user = this.userRepository.create(userData);
+      await this.userRepository.save(user);
+    } catch (error) {
+      this.handleDatabaseErrors(error, userData);
+    }
+
+    await this.handleProfilePicture(user, profilePicture);
+    return user;
+  }
+
+  private handleDatabaseErrors(error: any, userData: CreateUserDto) {
+    const errorMessage = this.errorService.parseDatabaseError(error, userData);
+    throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
+  }
+  private async handleProfilePicture(user: User, profilePicture: File) {
+    try {
+      const fileData = await this.fileService.saveProfilePicture(
+        profilePicture,
+        user.id,
+      );
+      await this.assetService.addProfilePictureMetadataInDatabase(
+        user.id,
+        fileData,
+      );
+    } catch (error) {
+      throw new HttpException(
+        'Failed to save profile picture',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async updateUser(id: string, userData: UpdateUserDto): Promise<User> {
-    const existingUser = await this.getUserById(id);
-    this.userRepository.merge(existingUser, userData);
-    return this.userRepository.save(existingUser);
+    const user = await this.getUserById(id);
+    this.userRepository.merge(user, userData);
+    return this.userRepository.save(user);
   }
 
   async removeUser(id: string): Promise<User> {
     const user = await this.getUserById(id);
-    return this.userRepository.remove(user);
+
+    try {
+      await this.fileService.deleteProfilePicture(id);
+      await this.fileService.deleteUserPostsPictures(id);
+    } catch (error) {
+      throw new HttpException(
+        "Failed to remove the user's profile picture",
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+
+    try {
+      return await this.userRepository.remove(user);
+    } catch (error) {
+      console.error(`Failed to remove user from database: ${error}`);
+      throw new HttpException(
+        'Failed to remove user',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 }
