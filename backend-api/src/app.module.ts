@@ -10,13 +10,9 @@ import { configValidationSchema } from './infrastructure/config/env-config.valid
 import { DataRequestModule } from './presentation/data-request/data-request.module';
 import { EnvConfigModule } from './infrastructure/config/env-config.module';
 import { SeederModule } from './infrastructure/services/faker/seeder/seeder.module';
-import { PostSeederService } from './infrastructure/services/faker/seeder/post.seeder.service';
-import { UserSeederService } from './infrastructure/services/faker/seeder/user.seeder.service';
-import { AssetSeederService } from './infrastructure/services/faker/seeder/asset.seeder.service';
-import { DataRequestSeederService } from './infrastructure/services/faker/seeder/data-request.seeder.service';
-import { CategorySeederService } from './infrastructure/services/faker/seeder/category.seeder.service';
 import { ArtistModule } from './presentation/artist/artist.module';
 import { FastifyMulterModule } from '@nest-lab/fastify-multer';
+import { SeederService } from './infrastructure/services/faker/seeder/seeder.service';
 
 @Module({
   imports: [
@@ -42,16 +38,12 @@ import { FastifyMulterModule } from '@nest-lab/fastify-multer';
     FastifyMulterModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [SeederService],
 })
 export class AppModule implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
-    private readonly userSeederService: UserSeederService,
-    private readonly assetSeederService: AssetSeederService,
-    private readonly dataRequestSeederService: DataRequestSeederService,
-    private readonly postSeederService: PostSeederService,
-    private readonly categorySeederService: CategorySeederService,
+    private readonly seederService: SeederService,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -71,19 +63,10 @@ export class AppModule implements OnModuleInit {
     ) {
       console.log('Env file is configured for production environment');
     }
-
-    // Uncomment to generate fake data
-    // await this.userSeederService.seed();
-    // await this.postSeederService.seed();
-    // await this.assetSeederService.seed();
-    // await this.dataRequestSeederService.seed();
-    // await this.categorySeederService.seed();
+    // Uncomment to seed fake data
+    await this.seederService.seedAll();
 
     //Uncomment to clear fake data
-    // await this.userSeederService.clear();
-    // await this.postSeederService.clear();
-    // await this.assetSeederService.clear();
-    // await this.dataRequestSeederService.clear();
-    // await this.categorySeederService.clear();
+    // await this.seederService.clearAll();
   }
 }

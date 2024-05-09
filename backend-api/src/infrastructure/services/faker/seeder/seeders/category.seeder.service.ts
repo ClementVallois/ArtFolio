@@ -32,10 +32,6 @@ export class CategorySeederService {
       where: { role: 'artist' },
     });
 
-    const categories = await this.categoryRepository.find({
-      relations: ['user', 'post'],
-    });
-
     const existingPosts = await this.postRepository.find();
 
     const fakeCategoryNames = [
@@ -69,6 +65,10 @@ export class CategorySeederService {
       fakeEntity.updatedAt = faker.date.recent();
       await this.categoryRepository.save(fakeEntity);
     }
+
+    const categories = await this.categoryRepository.find({
+      relations: ['user', 'post'],
+    });
 
     // Add categories to artists
     for (const artist of artists) {
@@ -110,20 +110,4 @@ export class CategorySeederService {
       await this.categoryRepository.save(randomCategory);
     }
   }
-
-  // Add categories to posts
-  // const fakeData = Array.from({ length: 10 }, () => {
-  //   const artist = faker.helpers.arrayElement(artists);
-  //   const post = faker.helpers.arrayElement(posts);
-  //   const fakeEntity = new Category();
-  //   fakeEntity.id = faker.string.uuid();
-  //   fakeEntity.post = [post];
-  //   fakeEntity.user = [artist];
-  //   fakeEntity.createdAt = faker.date.recent();
-  //   fakeEntity.updatedAt = faker.date.recent();
-
-  //   return fakeEntity;
-  // });
-
-  // await this.categoryRepository.save(fakeData);
 }
