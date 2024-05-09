@@ -28,24 +28,102 @@ export class CategorySeederService {
   }
 
   async seed(): Promise<void> {
-    const users = await this.userRepository.find({ where: { role: 'artist' } });
-    const posts = await this.postRepository.find();
-
-    const fakeData = Array.from({ length: 10 }, () => {
-      const user = faker.helpers.arrayElement(users);
-      const post = faker.helpers.arrayElement(posts);
-      const fakeEntity = new Category();
-      fakeEntity.id = faker.string.uuid();
-      fakeEntity.name = faker.string.alpha(30);
-      fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
-      fakeEntity.post = [post];
-      fakeEntity.user = [user];
-      fakeEntity.createdAt = faker.date.recent();
-      fakeEntity.updatedAt = faker.date.recent();
-
-      return fakeEntity;
+    const artists = await this.userRepository.find({
+      where: { role: 'artist' },
     });
 
-    await this.categoryRepository.save(fakeData);
+    const categories = await this.categoryRepository.find({
+      relations: ['user', 'post'],
+    });
+
+    const existingPosts = await this.postRepository.find();
+
+    const fakeCategoryNames = [
+      'Peinture',
+      'Sculpture',
+      'Photographie',
+      'Dessin',
+      'Art numérique',
+      'Art abstrait',
+      'Art figuratif',
+      'Art contemporain',
+      'Art conceptuel',
+      'Graffiti',
+      'Art graphique',
+      'Art cinétique',
+      'Céramique',
+      'Mosaïque',
+      'Vitrail',
+    ];
+
+    // Create categories
+    for (const name of fakeCategoryNames) {
+      if (await this.categoryRepository.findOne({ where: { name } })) {
+        continue;
+      }
+      const fakeEntity = new Category();
+      fakeEntity.id = faker.string.uuid();
+      fakeEntity.name = name;
+      fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
+      fakeEntity.createdAt = faker.date.recent();
+      fakeEntity.updatedAt = faker.date.recent();
+      await this.categoryRepository.save(fakeEntity);
+    }
+
+    // Add categories to artists
+    for (const artist of artists) {
+      let alreadyHasCategory = false;
+      for (const category of categories) {
+        if (category.user.some((user) => user.id === artist.id)) {
+          alreadyHasCategory = true;
+        }
+      }
+
+      if (alreadyHasCategory) {
+        continue;
+      }
+
+      const randomCategory =
+        categories[Math.floor(Math.random() * categories.length)];
+      randomCategory.user.push(artist);
+
+      await this.categoryRepository.save(randomCategory);
+    }
+
+    // Add categories to posts
+    for (const existingPost of existingPosts) {
+      let alreadyHasCategory = false;
+      for (const category of categories) {
+        if (category.post.some((post) => post.id === existingPost.id)) {
+          alreadyHasCategory = true;
+        }
+      }
+
+      if (alreadyHasCategory) {
+        continue;
+      }
+
+      const randomCategory =
+        categories[Math.floor(Math.random() * categories.length)];
+      randomCategory.post.push(existingPost);
+
+      await this.categoryRepository.save(randomCategory);
+    }
   }
+
+  // Add categories to posts
+  // const fakeData = Array.from({ length: 10 }, () => {
+  //   const artist = faker.helpers.arrayElement(artists);
+  //   const post = faker.helpers.arrayElement(posts);
+  //   const fakeEntity = new Category();
+  //   fakeEntity.id = faker.string.uuid();
+  //   fakeEntity.post = [post];
+  //   fakeEntity.user = [artist];
+  //   fakeEntity.createdAt = faker.date.recent();
+  //   fakeEntity.updatedAt = faker.date.recent();
+
+  //   return fakeEntity;
+  // });
+
+  // await this.categoryRepository.save(fakeData);
 }

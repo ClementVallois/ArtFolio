@@ -44,10 +44,8 @@ export class PostSeederService {
       }
     }
 
-
     const fakeData = Array.from({ length: 50 }, () => {
       const user = faker.helpers.arrayElement(artists);
-
 
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();
