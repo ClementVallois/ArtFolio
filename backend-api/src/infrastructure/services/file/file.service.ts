@@ -94,7 +94,7 @@ export class FileService {
       }
     } catch (error) {
       throw new HttpException(
-        'Error deleting profile picture',
+        'Error deleting post pictures',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -118,7 +118,7 @@ export class FileService {
       }
     } catch (error) {
       throw new HttpException(
-        'Error deleting profile picture',
+        'Error deleting posts pictures',
         HttpStatus.BAD_REQUEST,
       );
     }
