@@ -9,7 +9,7 @@
                 <div class="text-center p-[2rem]">{{ textModal }}</div>
                 <div class="w-[100%] flex justify-around">
                     <ButtonComponent  @click="closeModal"   textButton="Annuler" class="w-[30vw] lg:self-end lg:w-[10vw]" ></ButtonComponent>
-                    <ButtonComponent type="submit"  textButton="Supprimer" class="w-[30vw] lg:self-end lg:w-[10vw]" ></ButtonComponent>
+                    <ButtonComponent @click="deleteData" textButton="Supprimer" class="w-[30vw] lg:self-end lg:w-[10vw]" ></ButtonComponent>
                 </div>
 
                 <button @click="closeModal" class="absolute top-3 right-3 p-2 bg-white rounded-full text-red-700 hover:text-red-500">
@@ -25,14 +25,20 @@
 <script setup>
 import { defineProps, defineEmits, ref } from 'vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
+
   // Définir les props et l'émetteur d'événements
-const emit = defineEmits(['closeModals']);
+const emit = defineEmits(['closeModals', 'deleteData']);
 const props = defineProps({
     textModal: String
 });
 
-  // Fonction pour fermer la modal
+// Fonction pour fermer la modal
 const closeModal = () => {
     emit('closeModals');
+}
+
+// Fonction pour envoyer delete=true au composant parent
+const deleteData = () => {
+    emit('deleteData', true);
 }
 </script>

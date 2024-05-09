@@ -38,9 +38,20 @@ function postService() {
         }
     }
 
+    async function deletePost(id) {
+        try {
+            const response = await apiPost.deletePost(id);
+            return response;
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la suppression du post' : " + error.message, 6);
+            throw new Error(error.message);
+        }
+    }
+
     return {
         getAssetForPost,
-        createPost
+        createPost,
+        deletePost
     }
 }
 

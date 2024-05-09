@@ -50,7 +50,7 @@ services:
 
     # Main Database 
     postgres-api:
-        image: postgres:15.3
+        image: postgres:16.2
         ports:
             - "${DB_API_PORT}:5432"
         volumes:

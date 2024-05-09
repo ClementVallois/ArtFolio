@@ -27,11 +27,12 @@ import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref, computed, toRaw } from 'vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useStorePost } from '@/domain/artist/store/PostStore';
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 
 // Store initialisation
 const storeGlobal = useGlobalStore();
 const postStore = useStorePost();
-
+const artistStore = useStoreArtist();
 
 ///
 // Ref
@@ -43,7 +44,7 @@ const showErrorAlert = ref(false);
 const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
 const newPost = ref(null)
 
-
+const artistId = artistStore.artistId;
 
 // permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
 const handleCloseErrorAlert = () => {
@@ -60,7 +61,7 @@ const isFormValid = computed(() => {
     try {
         if (filePostPicture.value && postDescription.value) {
             if (filePostPicture.value && (typePostPicture.value == "image/png" || typePostPicture.value == "image/jpg" || typePostPicture.value == "image/jpeg")) {
-                const post = new Post( null, false , postDescription.value, 'eb72589a-e880-4492-9c70-961312f07a51');
+                const post = new Post( null, false , postDescription.value, artistId);
                 post.validateDescription(postDescription.value);
                 newPost.value = post;
                 return true;

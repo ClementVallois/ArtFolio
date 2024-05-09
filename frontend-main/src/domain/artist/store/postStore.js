@@ -7,6 +7,7 @@ import { ref } from 'vue';
 /////////
 export const useStorePost = defineStore('postStore', () => {
     const servicePost = postService();
+
     const assetForPost = ref([])
 
     async function getAssetForPost(id) {
@@ -17,10 +18,15 @@ export const useStorePost = defineStore('postStore', () => {
         return await servicePost.createPost(data);
     };
 
+    async function deletePost(id) {
+        return await servicePost.deletePost(id);
+    }
+
     return {
         assetForPost,
         getAssetForPost,
-        createPost
+        createPost,
+        deletePost
     }
 });
 
