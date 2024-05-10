@@ -1,4 +1,4 @@
-import { IsDecimal, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsDecimal, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
 export class FindIdParams {
   @IsUUID('4', { message: '$property must be an UUID' })
@@ -7,7 +7,7 @@ export class FindIdParams {
 }
 
 export class FindAuth0IdParams {
-  @IsUUID('4', { message: '$property must be an UUID' })
+  @IsString({ message: '$property must be a string' })
   @IsNotEmpty({ message: '$property must not be empty' })
   auth0Id: string;
 }
