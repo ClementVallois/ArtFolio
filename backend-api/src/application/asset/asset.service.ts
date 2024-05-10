@@ -48,29 +48,25 @@ export class AssetService {
     });
 
     if (!artistAsset) {
-      throw new NotFoundException(
-        `Profile picture not found for Artist with ID: ${userId}`,
-      );
+      return null;
     }
     return artistAsset;
   }
 
-  async updateProfilePictureMetadata(
-    userId: string,
+  async addOrUpdateProfilePictureMetadata(
+    artistData: User,
     fileData: FileData,
   ): Promise<Asset> {
-    const user = await this.userRepository.findOneBy({ id: userId });
+    const user = await this.userRepository.findOneBy({ id: artistData.id });
     if (!user) {
-      throw new NotFoundException(`User not found with ID: ${userId}`);
+      throw new NotFoundException(`User not found with ID: ${artistData.id}`);
     }
 
     const existingProfilePicture = await this.assetRepository.findOne({
-      where: { userId: user, type: 'profile_picture' },
+      where: { userId: { id: user.id }, type: 'profile_picture' },
     });
 
     if (existingProfilePicture) {
-      console.log('existingProfilePicture', existingProfilePicture.url);
-
       existingProfilePicture.url = fileData.filePath;
       existingProfilePicture.mimetype = fileData.fileType;
       return await this.assetRepository.save(existingProfilePicture);

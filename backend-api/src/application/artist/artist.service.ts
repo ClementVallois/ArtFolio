@@ -207,68 +207,23 @@ export class ArtistService {
     throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
   }
 
-  private async handleProfilePicture(artist: User, profilePicture: File) {
-    try {
-      const fileData = await this.fileService.saveProfilePicture(
-        artist.id,
-        profilePicture,
-      );
-      await this.assetService.addProfilePictureMetadataInDatabase(
-        artist.id,
-        fileData,
-      );
-    } catch (error) {
-      throw new HttpException(
-        'Failed to save profile picture',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+  private async handleProfilePicture(artistData: User, profilePicture: File) {
+    const artistProfilePicture =
+      await this.assetService.getArtistProfilePicture(artistData.id);
+    if (artistProfilePicture && profilePicture) {
+      await this.fileService.deleteProfilePicture(artistData.id);
     }
-  }
 
-  async handleUpdateArtist(
-    artistId: string,
-    artistData: UpdateArtistDto,
-    files: { profilePicture?: File },
-  ): Promise<User> {
-    const artist = await this.updateArtist(
-      artistId,
-      artistData,
-      files as { profilePicture?: File },
-    );
-
-    return artist;
-  }
-
-  async updateArtist(
-    id: string,
-    artistData: UpdateArtistDto,
-    files: { profilePicture?: File },
-  ): Promise<User> {
-    const artist = await this.getArtistById(id);
-
-    this.userRepository.merge(artist, artistData);
-    const updatedArtist = await this.userRepository.save(artist);
-
-    if (files.profilePicture) {
+    if (profilePicture) {
       try {
-        await this.fileService.deleteProfilePicture(artist.id);
-      } catch (error) {
-        throw new HttpException(
-          "Failed to remove the artist's profile picture",
-          HttpStatus.INTERNAL_SERVER_ERROR,
+        const fileData = await this.fileService.saveProfilePicture(
+          artistData.id,
+          profilePicture,
         );
-      }
 
-      try {
-        console.log('Profile Picture Artist Service', files.profilePicture);
-
-        const profilePictureData = await this.fileService.saveProfilePicture(
-          artist.id,
-          files.profilePicture,
-        );
-        await this.assetService.updateProfilePictureMetadata(
-          artist.id,
-          profilePictureData,
+        await this.assetService.addOrUpdateProfilePictureMetadata(
+          artistData,
+          fileData,
         );
       } catch (error) {
         throw new HttpException(
@@ -277,8 +232,35 @@ export class ArtistService {
         );
       }
     }
+  }
 
-    return updatedArtist;
+  async handleUpdateArtist(
+    artistId: string,
+    artistData: UpdateArtistDto,
+    files: { profilePicture: File },
+  ): Promise<User> {
+    const profilePicture = files.profilePicture[0];
+    const artist = await this.updateArtist(
+      artistId,
+      artistData,
+      profilePicture,
+    );
+
+    return artist;
+  }
+
+  async updateArtist(
+    id: string,
+    artistData: UpdateArtistDto,
+    profilePicture: File,
+  ): Promise<User> {
+    const artist = await this.getArtistById(id);
+
+    this.userRepository.merge(artist, artistData);
+    const updatedArtist = await this.userRepository.save(artist);
+
+    await this.handleProfilePicture(updatedArtist, profilePicture);
+    return artist;
   }
 
   async removeArtist(id: string): Promise<User> {

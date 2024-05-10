@@ -143,8 +143,8 @@ export class PostService {
     if (postPicture) {
       try {
         const fileData = await this.fileService.savePostPicture(
-          postPicture,
           post.id,
+          postPicture,
         );
         await this.assetService.addPostPictureMetadataInDatabase(
           post.id,

@@ -19,8 +19,8 @@ import { FindAuth0IdParams, FindIdParams } from '../utils/params.dto';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FastifyReply } from 'fastify';
-import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/file-type.interceptor';
 import { File } from '@nest-lab/fastify-multer';
+import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
 
 @Controller('users')
 export class UserController {

@@ -20,17 +20,14 @@ export class FileService {
     filePath: string;
     fileType: string;
   }> {
-    console.log('File', file);
+    const profilePicture = file;
 
-    const cleanFilename = file.originalname.replace(/\s+/g, '_');
-    console.log('cleanFilename', cleanFilename);
+    const cleanFilename = profilePicture.originalname.replace(/\s+/g, '_');
 
     const fileName = `${artistId}-${Date.now()}-${cleanFilename}`;
-    console.log('fileName', fileName);
 
     const fileType = file.mimetype;
     const filePath = `${this.configService.get<string>('DEV_PROFILE_ASSETS_LOCATION')}/${fileName}`;
-    console.log('File url', filePath);
     try {
       await fs.promises.writeFile(filePath, file.buffer);
     } catch (error) {
@@ -49,8 +46,6 @@ export class FileService {
         type: 'profile_picture',
       },
     });
-
-    console.log('userProfilePicture url', userProfilePicture.url);
 
     if (!userProfilePicture) {
       return;
@@ -72,8 +67,8 @@ export class FileService {
   }
 
   async savePostPicture(
-    file: File,
     postId: string,
+    file: File,
   ): Promise<{
     filePath: string;
     fileType: string;
