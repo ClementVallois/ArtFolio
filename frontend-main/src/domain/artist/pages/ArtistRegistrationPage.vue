@@ -107,6 +107,10 @@ const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
 const storeGlobal = useGlobalStore();
 
+
+
+
+
 ///
 // Ref
 ///
@@ -156,7 +160,6 @@ const handleCloseErrorAlert = () => {
 ////
 onMounted(async () => {
     assignUserRoleIfNeeded()
-
     await categoryStore.getAllCategories();
     categories.value = categoryStore.allCategoriesData;
 });
@@ -172,6 +175,7 @@ watch(isAuthenticated, (newValue) => {
     if (newValue) {
         setTimeout(()=> {
             authenticationService().assignUserRole(user.value.sub, 'Artist')
+            
         }, 500)
     }
 })

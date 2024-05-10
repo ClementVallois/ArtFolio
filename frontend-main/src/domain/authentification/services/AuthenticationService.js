@@ -17,8 +17,7 @@ function authenticationService() {
             auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${token}`
             auth0ManagementApi.post(`/roles/${roleId}/users`, {  "users": [auth0Id] })
         } catch (error) {
-            console.log(error);
-            console.error("Erreur lors de l'affectation des roles':", error);
+            storeGlobal.logError(error, 6);
         }
     }
 
@@ -27,24 +26,35 @@ function authenticationService() {
             auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
             const response = await auth0ManagementApi.get('/roles')
             const roles = response.data
-            console.log(roles)
             const role = roles.find(role => role.name === roleName);
         
             if (role) {
-                console.log(`ID of the role '${roleName}': ${role.id}`);
                 return(role.id)
             } else {
-                console.log(`Role '${roleName}' not found.`);
+                storeGlobal.logError(`Role '${roleName}' not found.`, 6);
             }
             } catch (error) {
-            console.error('Error fetching roles:', error);
+                storeGlobal.logError('Error fetching roles:' + error , 6);
             }
         };
+
+    async function getRoleUser(auth0Id) {
+        try {
+            const accessToken = await getAccessTokenManagementAPI();
+            auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+            const response = await auth0ManagementApi.get(`/users/${auth0Id}/roles`)
+            const roles = response.data
+            return roles
+        } catch (error) {
+            storeGlobal.logError(error, 6)
+        }
+    }
 
 
 
     return {
-        assignUserRole
+        assignUserRole,
+        getRoleUser
     }
 
 }

@@ -15,6 +15,8 @@ import { onMounted, ref } from "vue";
 import { useRouter } from 'vue-router'
 import LoaderPage from "@/components/states/loading/LoaderPage.vue";
 import { useStoreUser } from "@/domain/user/store/UserStore";
+import { userService } from "@/domain/user/service/UserService";
+import { authenticationService } from "../services/AuthenticationService";
 
 const router = useRouter()
 const { error, isAuthenticated, isLoading, user} = useAuth0();
@@ -22,14 +24,34 @@ const loading = ref(true)
 const storeUser = useStoreUser()
 
 onMounted(() => {
-    setTimeout(() => {
+    //Wait a bit auth0 instance get generated
+    setTimeout(async() => {
         if(!isLoading.value && isAuthenticated.value){
         loading.value=false
-        //TODO : Modify with Auth0Id
-        storeUser.storeUserProfileFromAuth0IdAndUserRole('e446e0c6-357d-4a7f-91e2-380ac7b9646f')
+        
+            try{
+            //Get user from database and store it in User Domain. 
+            const response = await userService().getUserWithAuth0Id(user.value.sub)
+            console.log(response)
 
-        router.push('/')
-    }
+            //TODO : Modify with Auth0Id
+            storeUser.storeUserProfileFromAuth0IdAndUserRole('e446e0c6-357d-4a7f-91e2-380ac7b9646f')
+            router.push('/')
+            } catch (error) {
+                // User is not found on our database
+                if(error.status == 404){
+                    //get role from auth0
+                    const role = await authenticationService().getRoleUser(user.value.sub)
+                    console.log(role)
+                    //According to role Artist or User redirect to correct page
+                    if (role[0].name == 'Artist'){
+                        router.push('/registration-artist')
+                    } else {
+                        router.push('/registration-user')
+                    }
+                }
+            } 
+        }
     }, 1000)    
 })
 
