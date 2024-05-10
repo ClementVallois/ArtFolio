@@ -21,7 +21,6 @@ import {
 } from '../utils/params.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { File } from '@nest-lab/fastify-multer';
-import { User } from 'src/infrastructure/entities/user.entity';
 import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/file-type.interceptor';
 
 @UseGuards(AuthGuard('jwt'))

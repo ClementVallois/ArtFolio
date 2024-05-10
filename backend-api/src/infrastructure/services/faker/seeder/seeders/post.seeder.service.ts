@@ -22,6 +22,11 @@ export class PostSeederService {
   }
 
   async seed(): Promise<void> {
+    await this.addPinnedPostToArtists();
+    await this.seedPosts();
+  }
+
+  private async addPinnedPostToArtists(): Promise<void> {
     const artists = await this.userRepository.find({
       where: { role: 'artist' },
     });
@@ -43,11 +48,15 @@ export class PostSeederService {
         await this.postRepository.save(fakeEntity);
       }
     }
+  }
 
+  private async seedPosts(): Promise<void> {
+    const artists = await this.userRepository.find({
+      where: { role: 'artist' },
+    });
 
     const fakeData = Array.from({ length: 50 }, () => {
       const user = faker.helpers.arrayElement(artists);
-
 
       const fakeEntity = new Post();
       fakeEntity.id = faker.string.uuid();

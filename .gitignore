@@ -110,8 +110,10 @@ dist
 # Serverless directories
 .serverless/
 
-# Assets
-assets/
+# PNG files
+*.png
+*.jpg 
+*.jpeg
 
 # FuseBox cache
 .fusebox/

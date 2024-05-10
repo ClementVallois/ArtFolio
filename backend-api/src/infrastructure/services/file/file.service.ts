@@ -94,7 +94,7 @@ export class FileService {
       }
     } catch (error) {
       throw new HttpException(
-        'Error deleting profile picture',
+        'Error deleting post pictures',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -113,12 +113,11 @@ export class FileService {
     }
     try {
       for (const postPicture of postPictures) {
-        console.log('url: ', postPicture.url);
         await fs.promises.unlink(postPicture.url);
       }
     } catch (error) {
       throw new HttpException(
-        'Error deleting profile picture',
+        'Error deleting posts pictures',
         HttpStatus.BAD_REQUEST,
       );
     }

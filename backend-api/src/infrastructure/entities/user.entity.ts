@@ -42,7 +42,7 @@ export class User {
   })
   role: string;
 
-  @Column({ unique: true, nullable: false, length: 50 })
+  @Column({ unique: true, nullable: false, length: 31 })
   auth0Id: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

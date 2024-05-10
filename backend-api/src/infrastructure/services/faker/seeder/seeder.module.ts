@@ -5,11 +5,11 @@ import { Category } from 'src/infrastructure/entities/category.entity';
 import { Post } from 'src/infrastructure/entities/post.entity';
 import { Asset } from 'src/infrastructure/entities/asset.entity';
 import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
-import { PostSeederService } from './post.seeder.service';
-import { UserSeederService } from './user.seeder.service';
-import { AssetSeederService } from './asset.seeder.service';
-import { CategorySeederService } from './category.seeder.service';
-import { DataRequestSeederService } from './data-request.seeder.service';
+import { PostSeederService } from './seeders/post.seeder.service';
+import { UserSeederService } from './seeders/user.seeder.service';
+import { AssetSeederService } from './seeders/asset.seeder.service';
+import { CategorySeederService } from './seeders/category.seeder.service';
+import { DataRequestSeederService } from './seeders/data-request.seeder.service';
 
 @Module({
   imports: [
