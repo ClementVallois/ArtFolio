@@ -27,33 +27,33 @@ export class CategorySeederService {
     );
   }
 
+  private fakeCategoryNames = [
+    'Peinture',
+    'Sculpture',
+    'Photographie',
+    'Dessin',
+    'Art numérique',
+    'Art abstrait',
+    'Art figuratif',
+    'Art contemporain',
+    'Art conceptuel',
+    'Graffiti',
+    'Art graphique',
+    'Art cinétique',
+    'Céramique',
+    'Mosaïque',
+    'Vitrail',
+  ];
+
   async seed(): Promise<void> {
-    const artists = await this.userRepository.find({
-      where: { role: 'artist' },
-    });
+    await this.seedCategories();
+    await this.seedCategoriesToArtists();
+    await this.seedCategoriesToPosts();
+  }
 
-    const existingPosts = await this.postRepository.find();
-
-    const fakeCategoryNames = [
-      'Peinture',
-      'Sculpture',
-      'Photographie',
-      'Dessin',
-      'Art numérique',
-      'Art abstrait',
-      'Art figuratif',
-      'Art contemporain',
-      'Art conceptuel',
-      'Graffiti',
-      'Art graphique',
-      'Art cinétique',
-      'Céramique',
-      'Mosaïque',
-      'Vitrail',
-    ];
-
+  private async seedCategories() {
     // Create categories
-    for (const name of fakeCategoryNames) {
+    for (const name of this.fakeCategoryNames) {
       if (await this.categoryRepository.findOne({ where: { name } })) {
         continue;
       }
@@ -65,12 +65,18 @@ export class CategorySeederService {
       fakeEntity.updatedAt = faker.date.recent();
       await this.categoryRepository.save(fakeEntity);
     }
+  }
 
-    const categories = await this.categoryRepository.find({
-      relations: ['user', 'post'],
+  private async seedCategoriesToArtists() {
+    const artists = await this.userRepository.find({
+      where: { role: 'artist' },
     });
 
-    // Add categories to artists
+    const categories = await this.categoryRepository.find({
+      relations: ['user'],
+    });
+
+    //Add categories to existing artists
     for (const artist of artists) {
       let alreadyHasCategory = false;
       for (const category of categories) {
@@ -89,8 +95,16 @@ export class CategorySeederService {
 
       await this.categoryRepository.save(randomCategory);
     }
+  }
 
-    // Add categories to posts
+  private async seedCategoriesToPosts() {
+    const existingPosts = await this.postRepository.find();
+
+    const categories = await this.categoryRepository.find({
+      relations: ['post'],
+    });
+
+    //Add categories to existing posts
     for (const existingPost of existingPosts) {
       let alreadyHasCategory = false;
       for (const category of categories) {

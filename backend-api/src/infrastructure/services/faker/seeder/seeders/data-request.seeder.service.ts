@@ -20,6 +20,10 @@ export class DataRequestSeederService {
   }
 
   async seed(): Promise<void> {
+    await this.seedDataRequests();
+  }
+
+  private async seedDataRequests(): Promise<void> {
     const users = await this.userRepository.find();
     const fakeData = Array.from({ length: 10 }, () => {
       const user = faker.helpers.arrayElement(users);

@@ -113,7 +113,6 @@ export class FileService {
     }
     try {
       for (const postPicture of postPictures) {
-        console.log('url: ', postPicture.url);
         await fs.promises.unlink(postPicture.url);
       }
     } catch (error) {
