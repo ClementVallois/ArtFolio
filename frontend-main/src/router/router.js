@@ -14,6 +14,8 @@ import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
 import LegalNotionPage from '@/pages/LegalNotionPage.vue';
 import CallBackPage from '@/domain/authentification/pages/CallBackPage.vue';
 import UserPreRegistrationPage from '@/domain/user/pages/UserPreRegistrationPage.vue';
+import UserSuccessSignUpPage from '@/domain/user/pages/UserSuccessSignUpPage.vue';
+import ArtistSuccessSignUpPage from '@/domain/artist/pages/ArtistSuccessSignUpPage.vue';
 
 const routes = [
     {
@@ -37,6 +39,16 @@ const routes = [
         path: '/form-post',
         name: 'PostFormPage',
         component: PostFormPage
+    },
+    {
+        path: '/success-signup-user',
+        name: 'UserSuccessSignUp',
+        component: UserSuccessSignUpPage
+    },
+    {
+        path: '/success-signup-artist',
+        name: 'ArtistSuccessSignUp',
+        component: ArtistSuccessSignUpPage
     },
     {
         path: '/registration-artist',

@@ -36,7 +36,6 @@ import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
 // user, artist, none
-const activeRole = "none";
 const { loginWithRedirect } = useAuth0()
 
 // opens the menu in mobile mode

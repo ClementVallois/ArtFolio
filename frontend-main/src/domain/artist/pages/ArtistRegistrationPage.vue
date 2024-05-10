@@ -2,11 +2,12 @@
     <div v-if="firstSection"  class="flex flex-col items-center">
         <ul class="steps mt-10 mb-2">
             <li class="step step-secondary">Créer un compte</li>
+            <li class="step step-secondary">Se connecter</li>
             <li class="step step-secondary">Compléter son profil </li>
             <li class="step">Epingle ton post</li>
         </ul>
 
-        <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
+        <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
         <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
         <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]"  method="post"  enctype="multipart/form-data">

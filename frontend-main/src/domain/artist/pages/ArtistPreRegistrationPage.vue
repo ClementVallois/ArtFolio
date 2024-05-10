@@ -4,6 +4,7 @@
 
         <ul class="steps mt-10 mb-20">
             <li class="step step-secondary">Créer un compte</li>
+            <li class="step">Se connecter </li>
             <li class="step">Compléter son profil </li>
             <li class="step">Epingle ton post</li>
         </ul>
@@ -32,7 +33,7 @@ import { useAuth0 } from '@auth0/auth0-vue';
 
 const showErrorAlert = ref(false); 
 const { loginWithRedirect } = useAuth0()
-const redirectUri = import.meta.env.AUTH0_REDIRECT_AFTER_SIGNUP || 'http://localhost:5174/registration-artist'
+const redirectUri = `${window.location.origin}/success-signup-artist`
 
 //permet de rediriger vers la page auth0 register
 const registerAuth0 = () => {
