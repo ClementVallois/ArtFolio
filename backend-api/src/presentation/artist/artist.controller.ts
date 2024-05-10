@@ -84,7 +84,7 @@ export class ArtistController {
     }),
   )
   async createArtist(
-    @UploadedFiles() files: { profilePicture: File[]; postPicture: File[] },
+    @UploadedFiles() files: { profilePicture: File; postPicture: File[] },
     @Body() artistData: CreateArtistDto,
   ) {
     const artist = await this.artistService.handleCreateArtist(
@@ -99,11 +99,28 @@ export class ArtistController {
   }
 
   @Patch(':id')
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldNames: [{ name: 'profilePicture', maxCount: 1 }],
+      limits: { fileSize: 10 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        if (file.mimetype.startsWith('image/')) {
+          callback(null, true);
+        } else {
+          callback(
+            new BadRequestException('Only image files are allowed!'),
+            false,
+          );
+        }
+      },
+    }),
+  )
   async updateArtist(
     @Param() { id }: FindIdParams,
+    @UploadedFiles() files: { profilePicture: File },
     @Body() artistData: UpdateArtistDto,
   ) {
-    return this.artistService.updateArtist(id, artistData);
+    return this.artistService.handleUpdateArtist(id, artistData, files);
   }
 
   @Delete(':id')

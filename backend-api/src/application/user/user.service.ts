@@ -122,8 +122,8 @@ export class UserService {
   private async handleProfilePicture(user: User, profilePicture: File) {
     try {
       const fileData = await this.fileService.saveProfilePicture(
-        profilePicture,
         user.id,
+        profilePicture,
       );
       await this.assetService.addProfilePictureMetadataInDatabase(
         user.id,

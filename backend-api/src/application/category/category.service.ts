@@ -39,6 +39,18 @@ export class CategoryService {
     return category;
   }
 
+  async getArtistCategories(userId: string): Promise<Category[]> {
+    const categories = await this.categoryRepository.find({
+      where: { user: { id: userId } },
+    });
+    if (!categories || categories.length === 0) {
+      throw new NotFoundException(
+        `Categories not found for User with ID: ${userId}`,
+      );
+    }
+    return categories;
+  }
+
   async assignCategoriesToArtist(
     userId: string,
     categoriesIds: string[],
