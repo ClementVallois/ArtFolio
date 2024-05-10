@@ -1,4 +1,5 @@
 import { CRUDapi } from "@/api/CrudApi";
+import { useGlobalStore } from "@/store/GlobalStore";
 
 
 ////////////
@@ -8,6 +9,7 @@ import { CRUDapi } from "@/api/CrudApi";
 ////////////
 function userApi() {
 
+    const storeGlobal = useGlobalStore();
     ////
     // basique CRUD for users
     ////
@@ -17,13 +19,11 @@ function userApi() {
 
     async function getUserWithAuth0Id(auth0Id) {
         try {
-            //TODO : Change with Clement endpoint
-            const response = await CRUDapi('GET', `users/auth0id/${auth0Id}`)
-            // const response = await CRUDapi('GET', `/users/auth0Id/${auth0Id}`)
-            console.log(response)
+            const response = await CRUDapi('GET', `users/auth0Id/${auth0Id}`)
             return response
         } catch (error) {
             storeGlobal.logError(error, 6);
+            return error
         }
     }
 

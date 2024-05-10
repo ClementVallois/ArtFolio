@@ -1,12 +1,15 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue'
+import { ref, toRaw } from 'vue'
+import { profileService } from '@/service/ProfileService.js';
 
 /////////
 ///// Global Store
 /////////
 export const useGlobalStore = defineStore('globalStore', () => {
     // user, artist, none
-    const activeRole = ref("none");
+    // On évite utiliser activeRole et on utilise profile.role à la place 
+    // const activeRole = ref("none");
+    const profile = ref(null)
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;
@@ -23,11 +26,37 @@ export const useGlobalStore = defineStore('globalStore', () => {
         }
     }
 
+    async function storeProfileFromAuth0Id(auth0id) {
+        try {
+            const user = await profileService().getProfileWithAuth0Id(auth0id)
+            profile.value = toRaw(user)
+            console.log('profile.value', profile.value)
+        } catch (error) {
+            console.log('error in the globalStore', error)
+            throw error
+        }
+    }
+
+    // function storeRole() {
+    //     if (profile.value != null) {
+    //         activeRole.value = profile.value.role
+    //     }
+    // }
+
+    // async function storeProfileFromAuth0IdAndRole(auth0id) {
+    //     try {
+    //         await storeProfileFromAuth0Id(auth0id)
+    //         storeRole()
+    //     } catch(error) {
+    //         throw error
+    //     }
+    // }
 
     return {
-        activeRole,
+        profile,
         logError,
-        log
+        log,
+        storeProfileFromAuth0Id,
     }
 });
 

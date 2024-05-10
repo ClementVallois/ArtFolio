@@ -30,7 +30,7 @@ function CRUDapi(verb, endpoint, data) {
             }
         } catch (error) {
             storeGlobal.logError(error, 6);
-            reject(new Error(error.response.data.message));
+            reject(error.response);
         }
     });
 }

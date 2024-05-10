@@ -20,9 +20,12 @@
 
 <script setup>
 import { useAuth0 } from '@auth0/auth0-vue';
+import { onMounted, watch } from 'vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
+import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 
-const { loginWithRedirect } = useAuth0()
+
+const { loginWithRedirect, isAuthenticated, user } = useAuth0()
 
 const loginAuth0 = () => {
     const redirectUri = `${window.location.origin}/registration-user`    
@@ -30,6 +33,28 @@ const loginAuth0 = () => {
                         redirect_uri: redirectUri
                     }})
 }
+
+// We need to asign Role(Artist) in Auth0 Dashboard and get Categories. 
+onMounted(async () => {
+    assignUserRoleIfNeeded()
+    await categoryStore.getAllCategories();
+    categories.value = categoryStore.allCategoriesData;
+});
+
+//Assign Artist Role
+const assignUserRoleIfNeeded = () => {
+    if (isAuthenticated.value) {
+        authenticationService().assignUserRole(user.value.sub, 'User');
+    }
+};
+// Add a watch whenever there is a bit of lag in auth0
+watch(isAuthenticated, (newValue) => {
+    if (newValue) {
+        setTimeout(()=> {
+            authenticationService().assignUserRole(user.value.sub, 'User')
+        }, 500)
+    }
+})
 
 </script>
 

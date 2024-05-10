@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuth0 } from '@auth0/auth0-vue';
-import { useStoreUser } from '@/domain/user/store/UserStore.js'
+import { useGlobalStore } from '@/store/GlobalStore';
 import HomePage from '@/pages/HomePage.vue';
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
 import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
@@ -20,6 +20,7 @@ import UserSuccessSignUpPage from '@/domain/user/pages/UserSuccessSignUpPage.vue
 import ArtistSuccessSignUpPage from '@/domain/artist/pages/ArtistSuccessSignUpPage.vue';
 import RedirectToAuthenticationPage from '@/domain/authentification/pages/RedirectToAuthenticationPage.vue';
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService';
+import UnauthorizedPage from '@/pages/UnauthorizedPage.vue';
 
 const routes = [
     {
@@ -38,14 +39,14 @@ const routes = [
         path: '/artist-info',
         name: 'ArtistInfoPage',
         component: ArtistInfoPage,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresArtist: true }
 
     },
     {
         path: '/form-post',
         name: 'PostFormPage',
         component: PostFormPage,
-        meta: { requiresAuth: true }
+        meta: { requiresAuth: true, requiresArtist: true }
 
     },
     {
@@ -103,7 +104,7 @@ const routes = [
     },
     {
         path: '/registration',
-        name: 'RegistrationPage',
+        name: 'registration',
         component: RegistrationPage
     },
     {
@@ -121,9 +122,11 @@ const routes = [
         name: 'RedirectToAuthenticationPage',
         component: RedirectToAuthenticationPage
     },
-
-
-
+    {
+        path: '/unauthorized',
+        name: 'Unauthorized',
+        component: UnauthorizedPage
+    },
 ]
 
 const router = createRouter({
@@ -137,21 +140,19 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const { isAuthenticated, isLoading, user } = useAuth0();
-    const storeUser = useStoreUser();
+    const globalStore = useGlobalStore()
 
     // Wait for Auth0 to finish loading
-    if (isLoading.value) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-    }
+    // if (isLoading.value) {
+    //     await new Promise(resolve => setTimeout(resolve, 100));
+    // }
     
     // Redirect to login page if not authenticated and route requires authentication
-    if (to.meta.requiresAuth && !isAuthenticated.value) {
+    if (to.meta.requiresArtist && globalStore.profile?.role != 'artist' ) {
+        next('/unauthorized')
+    }
+    else if (to.meta.requiresAuth && !isAuthenticated.value) {
         next('/register-login');
-    } else if (to.meta.requiresAuth && isAuthenticated.value && storeUser.userProfile == null ) {
-        //GetRole from auth0
-        const response = await authenticationService().getRoleUser(user.value.sub)
-        console.log(response)
-        next()
     } else {
         next();
     }
