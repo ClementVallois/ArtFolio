@@ -6,7 +6,7 @@ import { ref } from 'vue'
 /////////
 export const useGlobalStore = defineStore('globalStore', () => {
     // user, artist, none
-    const activeRole = ref("none");
+    const activeRole = ref("artist");
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;

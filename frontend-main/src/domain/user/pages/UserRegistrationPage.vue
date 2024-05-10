@@ -40,14 +40,14 @@
         <ButtonComponent type="submit"  textButton="S'inscrire" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="submitForm" ></ButtonComponent>
     </div>
     </div>
-    <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" v-model:textAlert="defaultTextAlert"></ErrorAlertComponent>
+    <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" v-model:textAlert="defaultTextAlert"></AlertComponent>
 
 </template>
 
 <script setup>
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
-import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
+import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useStoreUser } from '@/domain/user/store/UserStore';
@@ -68,7 +68,8 @@ const userStore = useStoreUser();
 // Ref
 ///
 // Global
-const showErrorAlert = ref(false); 
+const showAlert = ref(false); 
+const alertError = ref(true);
 const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
 
 // User
@@ -109,9 +110,9 @@ const typeUserPicture = ref(null);
 ////
 // Global
 //// 
-// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
-const handleCloseErrorAlert = () => {
-    showErrorAlert.value = false;
+// permet de remettre à false "showAlert" lors de la fermeture de l'erreur d'alerte 
+const handleCloseAlert = () => {
+    showAlert.value = false;
 };
 
 ////
@@ -140,16 +141,19 @@ const isFormValid = computed(() => {
                 return true;
             }else{  
                 defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg";
-                showErrorAlert.value = true;
+                alertError.value = true;
+                showAlert.value = true;
             }
         }else{
-            showErrorAlert.value = true;
+            alertError.value = true;
+            showAlert.value = true;
         }
     } catch (error) {
         if (error.message.includes("Model")) {
             const errorMessageWithoutModel = error.message.replace("Model", "");
             defaultTextAlert.value = errorMessageWithoutModel;
-            showErrorAlert.value = true;
+            alertError.value = true;
+            showAlert.value = true;
         }
         storeGlobal.logError(error, 6);
     }
@@ -182,13 +186,15 @@ const submitForm = async () => {
         } catch (error) {
             if (error.message.includes("username") && error.message.includes("already exists")) {
                 defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
-                showErrorAlert.value = true;
+                alertError.value = true;
+                showAlert.value = true;
             }
             storeGlobal.logError(error, 6);
         }
     } else {
         // Sinon, affichez la popup
-        showErrorAlert.value = true;
+        alertError.value = true;
+        showAlert.value = true;
     }
 };
 </script>

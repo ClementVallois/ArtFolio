@@ -10,7 +10,7 @@ export const useStoreUser = defineStore('userStore', () => {
     const serviceUser = userService();
 
     const userProfile = ref(null)
-    const activeRole = ref('none')
+    const activeRole = ref('artist')
 
     ////
     // basique CRUD for user
@@ -19,7 +19,7 @@ export const useStoreUser = defineStore('userStore', () => {
         return await serviceUser.createUser(data);
     };
 
-    
+
     async function storeUserProfileFromAuth0Id(auth0id) {
         const user = await userService().getUserWithAuth0Id(auth0id)
         userProfile.value = toRaw(user)

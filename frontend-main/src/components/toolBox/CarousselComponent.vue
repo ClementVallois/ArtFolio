@@ -1,10 +1,8 @@
 <template>
   <Carousel :items-to-show="itemsToShow" :wrap-around="true">
-    <template v-for="(slide, index) in slides" :key="index">
+    <template v-for="(item, index) in carousselData" :key="index">
       <Slide>
-        <template v-for="(post, postIndex) in slide" :key="postIndex">
-          <CardArtistComponent class="carousel__item" :postId="post.id" :postDescription="post.description" />
-        </template>
+        <CardArtistComponent class="carousel__item" :postId="item.pinnedPost.id" :postDescription="item.pinnedPost.description" :artistFirstName="item.artist.firstName"  :artistLastName="item.artist.lastName" :artistUsername="item.artist.username" :artistId="item.artist.id"/>
       </Slide>
     </template>
     <template #addons>
@@ -47,4 +45,10 @@ const slides = computed(() => {
   }
   return chunks;
 });
+
+const svgElement = document.querySelector('.carousel__icon');
+if (svgElement) {
+  svgElement.setAttribute('viewBox', '0 0 15 15'); 
+}
+
 </script>

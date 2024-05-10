@@ -12,7 +12,7 @@ const api = axios.create({
 
 // Optionally, you can add request interceptors
 api.interceptors.request.use(
-    async(config) => {
+    async (config) => {
         // Modify request config before sending
         // Add Auth0 token 
         if(auth0) {
