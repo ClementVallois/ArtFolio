@@ -25,11 +25,11 @@ function artistApi() {
     }
 
     async function modifyArtist(id, data) {
-        return await CRUDapi('PATCH', 'artist', id, data)
+        return await CRUDapi('PATCH', `artists/${id}`, data)
     }
 
     async function deleteArtist(id) {
-        return await CRUDapi('DELETE', 'artists', id)
+        return await CRUDapi('DELETE', `artists/${id}`)
     }
 
 
