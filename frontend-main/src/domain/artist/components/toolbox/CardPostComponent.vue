@@ -25,16 +25,17 @@
         </div>
     </div>
 <ModalComponent v-if="showModal" @closeModals="closeModal" @deleteData="handleDelete" textModal="Voulez-vous vraiment supprimer cette publication ?"></ModalComponent>
-<ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Votre post vient d'être supprimer"></ErrorAlertComponent>
+<AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" textAlert="Votre post vient d'être supprimer"></AlertComponent>
+
 
 </template>
 
 <script setup>
-import { defineProps, ref} from 'vue';
+import { defineProps, ref, defineEmits} from 'vue';
 import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useStorePost } from '@/domain/artist/store/PostStore';
 import { useGlobalStore } from '@/store/GlobalStore.js';
-import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
+import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 
 const postStore = useStorePost();
 const storeGlobal = useGlobalStore();
@@ -45,14 +46,16 @@ const props = defineProps({
     postPictureUrl: String,
     postId: String,
     postIsPinned: Boolean,
+    artistId: String,
     myProfile: Boolean
 });
-
+const emit  = defineEmits(['postDeleted']);
 
 const dropdownOpen = ref(false);
 const showModal = ref(false);
 const isPostDeleted = ref(false);
-const showErrorAlert = ref(false); 
+const showAlert = ref(false); 
+const alertError = ref(true);
 
 function toggleDropdown() {
     dropdownOpen.value = !dropdownOpen.value;
@@ -72,8 +75,8 @@ const closeModal = () => {
 }
 
 
-const handleCloseErrorAlert = () => {
-    showErrorAlert.value = false;
+const handleCloseAlert = () => {
+    showAlert.value = false;
 };
 
 
@@ -83,10 +86,10 @@ async function handleDelete(deleteStatus) {
         try {
             showModal.value = false;
             document.body.style.overflow = '';
-            showErrorAlert.value = true;
+            alertError.value = true;
+            showAlert.value = true;
             let response =  await postStore.deletePost(props.postId);
-            console.log(response);
-            window.location.reload();
+            emit('postDeleted');
         } catch (error) {
             storeGlobal.logError(error, 6);
         }

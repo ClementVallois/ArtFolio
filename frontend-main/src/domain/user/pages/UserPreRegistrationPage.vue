@@ -18,18 +18,19 @@
     </div>
 
     
-<ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
+    <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" textAlert="Vous devez remplir tous les champs présents."></AlertComponent>
 
 </template>
 
 <script setup>
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
-import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
+import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 import { ref } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
-const showErrorAlert = ref(false); 
+const showAlert = ref(false); 
+const alertError = ref(true);
 const { loginWithRedirect } = useAuth0()
 const redirectUri = import.meta.env.AUTH0_REDIRECT_AFTER_SIGNUP || 'http://localhost:5174/registration-user'
 
@@ -42,9 +43,10 @@ const registerAuth0 = () => {
 }
 
 
-// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
-const handleCloseErrorAlert = () => {
-    showErrorAlert.value = false;
+// permet de remettre à false "showAlert" lors de la fermeture de l'erreur d'alerte 
+const handleCloseAlert = () => {
+    alertError.value = true;
+    showAlert.value = false;
 };
 
 </script>

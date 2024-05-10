@@ -38,7 +38,7 @@
     </div>
  
    </form>
-   <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" textAlert="Vous devez remplir tous les champs présents."></ErrorAlertComponent>
+   <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" v-model:textAlert="defaultTextAlert"></AlertComponent>
 
 </template>
 
@@ -46,18 +46,20 @@
 import { ref } from 'vue';
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
-import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue'; // Importez le composant ErrorAlertComponent
+import AlertComponent from '@/components/toolBox/AlertComponent.vue'; 
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 import { onMounted } from 'vue';
 
 const artistStore = useStoreArtist();
 const originalData = ref({}); 
-const showErrorAlert = ref(false);
+const showAlert = ref(false);
+const alertError = ref(true);
+const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
 
 /// TODO: faire en sorte de comparer l'artist original et les new data
 // Fonction pour masquer l'alerte d'erreur
-const handleCloseErrorAlert = () => {
-    showErrorAlert.value = false;
+const handleCloseAlert = () => {
+    showAlert.value = false;
 };
 
 onMounted(async () => {
@@ -82,7 +84,8 @@ const submitForm = () => {
     if (isModified) {
         console.log('Champs modifiés :', modifiedData);
     } else {
-        showErrorAlert.value = true;
+        alertError.value = true;
+        showAlert.value = true;
     }
 };
 

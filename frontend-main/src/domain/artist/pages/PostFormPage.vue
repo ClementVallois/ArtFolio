@@ -16,11 +16,11 @@
             </div>
         </form>
     </div>
-    <ErrorAlertComponent v-if="showErrorAlert" @closeErrorAlert="handleCloseErrorAlert" v-model:textAlert="defaultTextAlert"></ErrorAlertComponent>
+    <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" v-model:textAlert="defaultTextAlert"></AlertComponent>
 </template>
 
 <script setup>
-import ErrorAlertComponent from '@/components/toolBox/ErrorAlertComponent.vue';
+import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import { Post } from '@/domain/artist/model/PostModel.js';
@@ -40,15 +40,15 @@ const artistStore = useStoreArtist();
 const filePostPicture = ref(null);
 const typePostPicture = ref(null);
 const postDescription = ref(null);
-const showErrorAlert = ref(false); 
+const showAlert = ref(false); 
 const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
 const newPost = ref(null)
-
+const alertError = ref(true);
 const artistId = artistStore.artistId;
 
-// permet de remettre à false "showErrorAlert" lors de la fermeture de l'erreur d'alerte 
-const handleCloseErrorAlert = () => {
-    showErrorAlert.value = false;
+// permet de remettre à false "showAlert" lors de la fermeture de l'erreur d'alerte 
+const handleCloseAlert = () => {
+    showAlert.value = false;
 };
 
 const handleFileChange = (event) => {
@@ -68,17 +68,20 @@ const isFormValid = computed(() => {
             }else{
                 // Vérifier si les images sont autorisées
                 defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg";
-                showErrorAlert.value = true;
+                alertError.value = true;
+                showAlert.value = true;
             }
         } else {
-                showErrorAlert.value = true;
+            alertError.value = true;
+            showAlert.value = true;
         }
 
     } catch (error) {
         if (error.message.includes("Model")) {
             const errorMessageWithoutModel = error.message.replace("Model", "");
             defaultTextAlert.value = errorMessageWithoutModel;
-            showErrorAlert.value = true;
+            alertError.value = true;
+            showAlert.value = true;
         }
     }
 });
@@ -102,13 +105,19 @@ const submitForm = async () => {
                 console.log(pair[0]+ ', '+ pair[1]); 
             }
 
-            return await postStore.createPost(data);
+            let response = await postStore.createPost(data);
+            if (response.status == 201) {
+                defaultTextAlert.value = "Votre post à bien été posté";
+                alertError.value = false;
+                showAlert.value = true;
+            }
         } catch (error) {
             storeGlobal.logError(error, 6);
         }
     } else {
         // Sinon, affichez la popup
-        showErrorAlert.value = true;
+        alertError.value = true;
+        showAlert.value = true;
     }
 };
 </script>
