@@ -101,11 +101,13 @@ import { authenticationService } from '@/domain/authentification/services/Authen
 import { Asset } from '@/model/AssetModel.js';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { useRouter } from 'vue-router';
 const { error, isAuthenticated, isLoading, user} = useAuth0();// Store initialisation
+
 const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
 const storeGlobal = useGlobalStore();
-
+const router = useRouter();
 ///
 // Ref
 ///
@@ -324,8 +326,7 @@ const submitForm = async () => {
 
             let response =  await artistStore.createArtist(data);
             if (response.status == 201 ) {
-               //TODO: redirect vers ArtistInfoPage
-                router.push('/artist-info'); 
+              router.push({ name: 'ArtistInfoPage' });
             }else{
                 defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
                 alertError.value = true;

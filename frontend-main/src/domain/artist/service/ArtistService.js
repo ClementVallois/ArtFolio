@@ -46,6 +46,26 @@ function artistService() {
         }
     }
 
+    async function modifyArtist(id, data) {
+        try {
+            const response = await apiArtist.modifyArtist(id, data);
+            return response;
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la modification des informations d'un artiste : " + error.message, 6);
+            throw new Error(error.message);
+        }
+    }
+
+    async function deleteArtist(id) {
+        try {
+            const response = await apiArtist.deleteArtist(id);
+            return response;
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la suppression d'un artiste : " + error.message, 6);
+            throw new Error(error.message);
+        }
+    }
+
     ////
     // Recover artist's pinned post for home page
     ////
@@ -103,6 +123,8 @@ function artistService() {
         getAllArtists,
         getArtistById,
         createArtist,
+        modifyArtist,
+        deleteArtist,
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,

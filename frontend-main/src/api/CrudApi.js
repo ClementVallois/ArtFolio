@@ -5,7 +5,7 @@ import { useGlobalStore } from '@/store/GlobalStore.js';
 function CRUDapi(verb, endpoint, data) {
     const storeGlobal = useGlobalStore();
     return new Promise(async (resolve, reject) => {
-        const url = `${apiURL}/${endpoint}`
+        const url = `${apiURL}/${endpoint}`;
         try {
             let response;
             switch (verb) {
@@ -14,7 +14,7 @@ function CRUDapi(verb, endpoint, data) {
                     resolve(response);
                     break;
                 case 'PATCH':
-                    response = await api.put(url, data);
+                    response = await api.patch(url, data);
                     resolve(response);
                     break;
                 case 'POST':

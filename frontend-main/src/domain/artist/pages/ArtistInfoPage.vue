@@ -39,22 +39,40 @@
  
    </form>
    <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" v-model:textAlert="defaultTextAlert"></AlertComponent>
+   
+
+
+   <div class="flex flex-col justify-center mb-[2rem]">
+        <SecondTitleComponent title="Je souhaite supprimer mon compte" class="mt-[1.5rem] self-center"></SecondTitleComponent>
+        <div class="pt-[2rem] flex justify-center w-full ">
+            <ButtonComponent @click="openModal" textButton="Supprimer" class=" lg:self-end"></ButtonComponent>
+        </div>
+   </div>
+   <ModalComponent v-if="showModal" @closeModals="closeModal" @deleteData="handleDelete" textModal="Voulez-vous vraiment supprimer cette publication ?"></ModalComponent>
 
 </template>
 
 <script setup>
-import { ref } from 'vue';
+
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue'; 
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
-import { onMounted } from 'vue';
+import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue';
+import ModalComponent from '@/components/toolBox/ModalComponent.vue';
+import { useGlobalStore } from '@/store/GlobalStore.js';
+import { onMounted, toRaw, ref} from 'vue';
 
 const artistStore = useStoreArtist();
-const originalData = ref({}); 
+const storeGlobal = useGlobalStore();
+let originalData; 
 const showAlert = ref(false);
 const alertError = ref(true);
 const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+const showModal = ref(false);
+const isProfilDeleted = ref(false);
+
+
 
 /// TODO: faire en sorte de comparer l'artist original et les new data
 // Fonction pour masquer l'alerte d'erreur
@@ -63,26 +81,60 @@ const handleCloseAlert = () => {
 };
 
 onMounted(async () => {
-    const artistData = await artistStore.getArtistById("4a16705f-f810-42b9-9da8-0b1e157db8ee");
-    originalData.value = { ...artistData }; // Créez une copie profonde des données de l'artiste
-    console.log(originalData.value);
+    const artistData = await artistStore.getArtistById(artistStore.artistId);
+    originalData = {... artistData} ; 
 });
 
+// Fonctionnement modal delete
+function openModal() {
+    showModal.value = true;
+    document.body.style.overflow = 'hidden';
+}
+
+const closeModal = () => {
+    showModal.value = false;
+    document.body.style.overflow = '';
+}
+
+
+async function handleDelete(deleteStatus) {
+    isProfilDeleted.value = deleteStatus;
+    if (isProfilDeleted.value) {
+        try {
+            showModal.value = false;
+            document.body.style.overflow = '';
+            console.log('yes');
+             let response =  await artistStore.deleteArtist(artistStore.artistId);
+            if (response.status == 200) {
+                alertError.value = false;
+                showAlert.value = true;
+            }
+           
+        } catch (error) {
+            storeGlobal.logError(error, 6);
+        }
+    } 
+}
+
 // Fonction pour comparer les champs modifiés et envoyer uniquement les modifications
-const submitForm = () => {
+const submitForm = async () => {
     const modifiedData = {};
     let isModified = false; 
     console.log(artistStore.artist);
     for (const key in artistStore.artist) {
-        console.log(key);
-        console.log(artistStore.artist[key], originalData.value[key]);
-        if (artistStore.artist[key] !== originalData.value[key]) {
+    //     console.log(key);
+    //    console.log(artistStore.artist[key], originalData[key]);
+        if (artistStore.artist[key] !== originalData[key]) {
             modifiedData[key] = artistStore.artist[key];
             isModified = true; 
         }
     }
     if (isModified) {
+        console.log(toRaw(artistStore.artistId));
         console.log('Champs modifiés :', modifiedData);
+        let response = await artistStore.modifyArtist(artistStore.artistId, JSON.stringify(modifiedData));
+        // TODO: fonctionnel mais reste à déconnecter de Auth0 et suppression d'auth0 
+    
     } else {
         alertError.value = true;
         showAlert.value = true;

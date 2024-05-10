@@ -60,21 +60,20 @@ const alertError = ref(true);
 function toggleDropdown() {
     dropdownOpen.value = !dropdownOpen.value;
 }
-console.log(props.myProfile);
 
 
+
+// Fonctionnement modal delete
 function openModal() {
     showModal.value = true;
     document.body.style.overflow = 'hidden';
 }
-
-
 const closeModal = () => {
     showModal.value = false;
     document.body.style.overflow = '';
 }
 
-
+// Affichage Alert
 const handleCloseAlert = () => {
     showAlert.value = false;
 };
@@ -86,10 +85,14 @@ async function handleDelete(deleteStatus) {
         try {
             showModal.value = false;
             document.body.style.overflow = '';
-            alertError.value = true;
-            showAlert.value = true;
             let response =  await postStore.deletePost(props.postId);
-            emit('postDeleted');
+            if (response.status == 200) {
+                alertError.value = false;
+                showAlert.value = true;
+                emit('postDeleted');
+
+            }
+           
         } catch (error) {
             storeGlobal.logError(error, 6);
         }

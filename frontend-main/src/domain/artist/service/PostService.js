@@ -1,5 +1,4 @@
 import { postApi } from '@/domain/artist/api/PostRemoteDataSource';
-import { Post } from '@/domain/artist/model/PostModel';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { Asset } from '@/model/AssetModel';
 
