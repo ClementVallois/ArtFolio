@@ -10,7 +10,7 @@
             <p class="my-5"> Choisis l'action qui te convient :</p>
             <div class="flex flex-row items-center">
             <ButtonComponent textButton="Se connecter" class="w-[40vw] lg:w-[15vw] mx-5" @click="loginApp" ></ButtonComponent>
-            <router-link :to=" {name: 'RegistrationPage'}"> 
+            <router-link :to=" {name: 'registration'}"> 
                 <ButtonComponent textButton="S'inscrire" class="w-[40vw] lg:w-[15vw]" @click="submitForm" ></ButtonComponent>
             </router-link >
             </div>

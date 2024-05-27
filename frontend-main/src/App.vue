@@ -1,7 +1,8 @@
 <template>
-    <NavComponent v-if="storeUser.activeRole === 'none'" />
-    <NavArtistComponent v-if="storeUser.activeRole === 'artist'" />
-    <NavUserComponent v-if="storeUser.activeRole === 'user'" />
+
+    <NavArtistComponent v-if="globalStore.profile?.role === 'artist'" />
+    <NavUserComponent v-if="globalStore.profile?.role === 'user'" />
+    <NavComponent v-else />
 
     <div class="w-screen flex flex-col ">
 
@@ -12,15 +13,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watchEffect } from 'vue';
 import NavComponent from '@/components/layout/NavComponent.vue';
 import FooterComponent from '@/components/layout/FooterComponent.vue';
 import NavArtistComponent from '@/domain/artist/components/layout/NavArtistComponent.vue';
 import NavUserComponent from '@/domain/user/components/layout/NavUserComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
-import { useStoreUser } from './domain/user/store/UserStore';
+import { watch } from 'vue'
 
 // Récupérez l'artist demandé
-const storeUser = useStoreUser();
+const globalStore = useGlobalStore();
+
+watch(globalStore.profile?.value, (newValue) => {
+    console.log('globalstore.profile?.Value.role', globalStore.profile?.Value.role)
+})
 
 </script>

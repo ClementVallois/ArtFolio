@@ -44,7 +44,7 @@ export class AppModule implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly seederService: SeederService,
-  ) {}
+  ) { }
 
   async onModuleInit(): Promise<void> {
     if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
@@ -64,9 +64,10 @@ export class AppModule implements OnModuleInit {
       console.log('Env file is configured for production environment');
     }
     // Uncomment to seed fake data
-    await this.seederService.seedAll();
+    // await this.seederService.seedAll();
 
     //Uncomment to clear fake data
     // await this.seederService.clearAll();
   }
 }
+

@@ -10,7 +10,8 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
     const allArtistData = ref([]);
     const artist = ref([]);
-    const artistId = ref(null);
+    // const artistId = ref("67064a47-f195-4f62-8e03-022f5baa4440");
+    const artistId = "93ecbae3-c73c-4ada-9925-0a1a6eb769f0";
     const artistPosts = ref([]);
     const lastRegisteredArtist = ref([]);
     const randomArtist = ref([]);
@@ -27,17 +28,37 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
     async function getArtistById(id) {
         artist.value = await serviceArtist.getArtistById(id);
+        return artist.value;
     };
 
     async function createArtist(data) {
         // return await serviceArtist.createArtist(data);
         const response = await serviceArtist.createArtist(data);
         if (response.status === 201) {
-            artistId.value = response.data.artistId;
-            console.log(artistId.value);
+            //TODO: Verifier l'ajout de l'artistId après la connexion
+            console.log(response.data.artistId);
+            //  artistId.value = response.data.artistId;
+            // console.log(artistId.value);
         }
         return response;
     };
+
+
+    async function modifyArtist(id, data) {
+        const response = await serviceArtist.modifyArtist(id, data);
+        if (response.status) {
+            console.log(response.status);
+        }
+        return response;
+    }
+
+    async function deleteArtist(id) {
+        const response = await serviceArtist.deleteArtist(id);
+        if (response.status) {
+            console.log(response.status);
+        }
+        return response;
+    }
 
     ////
     // Recover artist's pinned post for home page
@@ -61,12 +82,15 @@ export const useStoreArtist = defineStore('artistStore', () => {
     return {
         allArtistData,
         artist,
+        artistId,
         artistPosts,
         lastRegisteredArtist,
         randomArtist,
         getAllArtists,
         getArtistById,
         createArtist,
+        modifyArtist,
+        deleteArtist,
         getArtistPosts,
         getLastRegisteredArtist,
         getRandomArtist

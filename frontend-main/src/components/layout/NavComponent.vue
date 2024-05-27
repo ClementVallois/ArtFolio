@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
                     <p class="md:mx-4 text-sm cursor-pointer" @click="loginApp" role="button">Se connecter</p> 
-                    <CustomLinkComponent :to="{ name: 'RegistrationPage' }" text="S'inscrire" class="md:mx-4" />
+                    <CustomLinkComponent :to="{ name: 'registration' }" text="S'inscrire" class="md:mx-4" />
                 </div>
             </div>
         </div>

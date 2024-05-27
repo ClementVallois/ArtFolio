@@ -25,7 +25,9 @@ function userService() {
             console.log('response from userService', response)
             return User.fromJson(response)         
         } catch (error) {
+            console.log('erreur niveau Remote DataSource')
             storeGlobal.logError("Erreur lors de la récupération des artistes: " + error, 6);
+            return error
         }
     }
 
