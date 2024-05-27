@@ -11,6 +11,7 @@ import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CategoryService } from 'src/application/category/category.service';
 import { PostService } from 'src/application/post/post.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
+import { ValidationService } from '../utils/validators/validation.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
@@ -22,6 +23,7 @@ import { ErrorService } from 'src/infrastructure/common/filter/error.service';
     CategoryService,
     PostService,
     ErrorService,
+    ValidationService,
   ],
 })
 export class ArtistModule {}

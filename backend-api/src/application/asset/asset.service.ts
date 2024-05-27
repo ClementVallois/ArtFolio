@@ -42,6 +42,45 @@ export class AssetService {
     return userAssets;
   }
 
+  async getArtistProfilePicture(userId: string): Promise<Asset> {
+    const artistAsset = await this.assetRepository.findOne({
+      where: { type: 'profile_picture', userId: { id: userId } },
+    });
+
+    if (!artistAsset) {
+      return null;
+    }
+    return artistAsset;
+  }
+
+  async addOrUpdateProfilePictureMetadata(
+    artistData: User,
+    fileData: FileData,
+  ): Promise<Asset> {
+    const user = await this.userRepository.findOneBy({ id: artistData.id });
+    if (!user) {
+      throw new NotFoundException(`User not found with ID: ${artistData.id}`);
+    }
+
+    const existingProfilePicture = await this.assetRepository.findOne({
+      where: { userId: { id: user.id }, type: 'profile_picture' },
+    });
+
+    if (existingProfilePicture) {
+      existingProfilePicture.url = fileData.filePath;
+      existingProfilePicture.mimetype = fileData.fileType;
+      return await this.assetRepository.save(existingProfilePicture);
+    } else {
+      const newProfilePicture = this.assetRepository.create({
+        url: fileData.filePath,
+        mimetype: fileData.fileType,
+        type: 'profile_picture',
+        userId: user,
+      });
+      return await this.assetRepository.save(newProfilePicture);
+    }
+  }
+
   async addProfilePictureMetadataInDatabase(
     userId: string,
     fileData: FileData,

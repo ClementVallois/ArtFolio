@@ -14,14 +14,18 @@ export class FileService {
     private readonly configService: ConfigService,
   ) {}
   async saveProfilePicture(
-    file: File,
     artistId: string,
+    file: File,
   ): Promise<{
     filePath: string;
     fileType: string;
   }> {
-    const cleanFilename = file.originalname.replace(/\s+/g, '_');
+    const profilePicture = file;
+
+    const cleanFilename = profilePicture.originalname.replace(/\s+/g, '_');
+
     const fileName = `${artistId}-${Date.now()}-${cleanFilename}`;
+
     const fileType = file.mimetype;
     const filePath = `${this.configService.get<string>('DEV_PROFILE_ASSETS_LOCATION')}/${fileName}`;
     try {
@@ -42,12 +46,19 @@ export class FileService {
         type: 'profile_picture',
       },
     });
+
     if (!userProfilePicture) {
       return;
     }
     try {
       await fs.promises.unlink(userProfilePicture.url);
     } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new HttpException(
+          'Error deleting profile picture : No such file or directory',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       throw new HttpException(
         'Error deleting profile picture',
         HttpStatus.BAD_REQUEST,
@@ -56,8 +67,8 @@ export class FileService {
   }
 
   async savePostPicture(
-    file: File,
     postId: string,
+    file: File,
   ): Promise<{
     filePath: string;
     fileType: string;
@@ -93,8 +104,14 @@ export class FileService {
         await fs.promises.unlink(postPicture.url);
       }
     } catch (error) {
+      if (error.code === 'ENOENT') {
+        throw new HttpException(
+          'Error deleting post picture : No such file or directory',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
       throw new HttpException(
-        'Error deleting post pictures',
+        'Error deleting post picture',
         HttpStatus.BAD_REQUEST,
       );
     }

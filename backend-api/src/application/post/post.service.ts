@@ -51,6 +51,20 @@ export class PostService {
     return post;
   }
 
+  async getArtistPinnedPost(artistId: string): Promise<Post> {
+    const pinnedPost = await this.postRepository.findOne({
+      where: { user: { id: artistId }, isPinned: true },
+    });
+
+    if (!pinnedPost) {
+      throw new NotFoundException(
+        `Pinned post not found for artist with ID: ${artistId}`,
+      );
+    }
+
+    return pinnedPost;
+  }
+
   async getPostAssets(postId: string): Promise<Asset[]> {
     const postAssets = await this.assetRepository.find({
       where: { postId: { id: postId }, type: 'post_picture' },
@@ -62,6 +76,41 @@ export class PostService {
       );
     }
     return postAssets;
+  }
+
+  async getOneArtistPost(userId: string, postId: string): Promise<Post> {
+    const artistPost = await this.postRepository.findOne({
+      where: { user: { id: userId }, id: postId },
+    });
+    if (!artistPost) {
+      throw new NotFoundException(
+        `Post not found for Artist with ID: ${userId} and Post ID: ${postId}`,
+      );
+    }
+    return artistPost;
+  }
+
+  async getArtistPosts(id: string): Promise<Post[]> {
+    const user = await this.userRepository.findOneBy({ id: id });
+    if (!user) {
+      throw new NotFoundException(`Artist not found with ID: ${id}`);
+    }
+    const pinnedPosts = await this.postRepository.find({
+      where: { user: { id: id }, isPinned: true },
+      order: { createdAt: 'DESC' },
+    });
+
+    const nonPinnedPosts = await this.postRepository.find({
+      where: { user: { id: id }, isPinned: false },
+      order: { createdAt: 'DESC' },
+    });
+
+    const artistPosts = [...pinnedPosts, ...nonPinnedPosts];
+
+    if (!artistPosts || artistPosts.length === 0) {
+      throw new NotFoundException(`Posts not found for Artist with ID: ${id}`);
+    }
+    return artistPosts;
   }
 
   async createPost(postData: CreatePostDto, postPicture: File): Promise<Post> {
@@ -94,8 +143,8 @@ export class PostService {
     if (postPicture) {
       try {
         const fileData = await this.fileService.savePostPicture(
-          postPicture,
           post.id,
+          postPicture,
         );
         await this.assetService.addPostPictureMetadataInDatabase(
           post.id,
