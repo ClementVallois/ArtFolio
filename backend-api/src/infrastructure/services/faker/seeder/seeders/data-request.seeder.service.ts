@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
-import { User } from 'src/infrastructure/entities/user.entity';
+import { DataRequest } from 'src/domain/entities/data-request.entity';
+import { User } from 'src/domain/entities/user.entity';
 
 @Injectable()
 export class DataRequestSeederService {

@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { Asset } from 'src/infrastructure/entities/asset.entity';
-import { User } from 'src/infrastructure/entities/user.entity';
-import { Post } from 'src/infrastructure/entities/post.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { User } from 'src/domain/entities/user.entity';
+import { Post } from 'src/domain/entities/post.entity';
 
 @Injectable()
 export class AssetSeederService {

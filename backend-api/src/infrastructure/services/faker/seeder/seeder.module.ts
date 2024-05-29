@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/infrastructure/entities/user.entity';
-import { Category } from 'src/infrastructure/entities/category.entity';
-import { Post } from 'src/infrastructure/entities/post.entity';
-import { Asset } from 'src/infrastructure/entities/asset.entity';
-import { DataRequest } from 'src/infrastructure/entities/data-request.entity';
+import { User } from 'src/domain/entities/user.entity';
+import { Category } from 'src/domain/entities/category.entity';
+import { Post } from 'src/domain/entities/post.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { DataRequest } from 'src/domain/entities/data-request.entity';
 import { PostSeederService } from './seeders/post.seeder.service';
 import { UserSeederService } from './seeders/user.seeder.service';
 import { AssetSeederService } from './seeders/asset.seeder.service';

@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
-import { Asset } from 'src/infrastructure/entities/asset.entity';
-import { Post } from 'src/infrastructure/entities/post.entity';
-import { User } from 'src/infrastructure/entities/user.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { Post } from 'src/domain/entities/post.entity';
+import { User } from 'src/domain/entities/user.entity';
 
 import { Repository } from 'typeorm';
 

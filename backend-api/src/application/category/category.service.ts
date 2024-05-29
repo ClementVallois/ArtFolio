@@ -7,9 +7,9 @@ import {
 import { CreateCategoryDto } from '../../presentation/category/dto/create-category.dto';
 import { UpdateCategoryDto } from '../../presentation/category/dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from 'src/infrastructure/entities/category.entity';
+import { Category } from 'src/domain/entities/category.entity';
 import { Repository } from 'typeorm';
-import { User } from 'src/infrastructure/entities/user.entity';
+import { User } from 'src/domain/entities/user.entity';
 
 @Injectable()
 export class CategoryService {

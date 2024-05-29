@@ -3,7 +3,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
-import { Asset } from 'src/infrastructure/entities/asset.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()

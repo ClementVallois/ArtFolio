@@ -6,10 +6,10 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Asset } from 'src/infrastructure/entities/asset.entity';
-import { Category } from 'src/infrastructure/entities/category.entity';
-import { Post } from 'src/infrastructure/entities/post.entity';
-import { User } from 'src/infrastructure/entities/user.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { Category } from 'src/domain/entities/category.entity';
+import { Post } from 'src/domain/entities/post.entity';
+import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
 import { UpdateArtistDto } from 'src/presentation/artist/dto/update-artist.dto';
@@ -207,7 +207,7 @@ export class ArtistService {
     throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
   }
 
-  private async handleProfilePicture(artistData: User, profilePicture: File) {
+  async handleProfilePicture(artistData: User, profilePicture: File) {
     const artistProfilePicture =
       await this.assetService.getArtistProfilePicture(artistData.id);
     if (artistProfilePicture && profilePicture) {
