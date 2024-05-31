@@ -16,8 +16,8 @@ import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
 import LegalNotionPage from '@/pages/LegalNotionPage.vue';
 import CallBackPage from '@/domain/authentification/pages/CallBackPage.vue';
 import UserPreRegistrationPage from '@/domain/user/pages/UserPreRegistrationPage.vue';
-import UserSuccessSignUpPage from '@/domain/user/pages/UserSuccessSignUpPage.vue';
-import ArtistSuccessSignUpPage from '@/domain/artist/pages/ArtistSuccessSignUpPage.vue';
+// import UserSuccessSignUpPage from '@/domain/user/pages/UserSuccessSignUpPage.vue';
+// import ArtistSuccessSignUpPage from '@/domain/artist/pages/ArtistSuccessSignUpPage.vue';
 import RedirectToAuthenticationPage from '@/domain/authentification/pages/RedirectToAuthenticationPage.vue';
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService';
 import UnauthorizedPage from '@/pages/UnauthorizedPage.vue';
@@ -39,26 +39,26 @@ const routes = [
         path: '/artist-info',
         name: 'ArtistInfoPage',
         component: ArtistInfoPage,
-        meta: { requiresAuth: true, requiresArtist: true }
+        meta: { requiresAuth: true, roles: ['artist'] }
 
     },
     {
         path: '/form-post',
         name: 'PostFormPage',
         component: PostFormPage,
-        meta: { requiresAuth: true, requiresArtist: true }
+        meta: { requiresAuth: true, roles: ['artist'] }
 
     },
-    {
-        path: '/success-signup-user',
-        name: 'UserSuccessSignUp',
-        component: UserSuccessSignUpPage,
-    },
-    {
-        path: '/success-signup-artist',
-        name: 'ArtistSuccessSignUp',
-        component: ArtistSuccessSignUpPage,
-    },
+    // {
+    //     path: '/success-signup-user',
+    //     name: 'UserSuccessSignUp',
+    //     component: UserSuccessSignUpPage,
+    // },
+    // {
+    //     path: '/success-signup-artist',
+    //     name: 'ArtistSuccessSignUp',
+    //     component: ArtistSuccessSignUpPage,
+    // },
     {
         path: '/registration-artist',
         name: 'ArtistRegistrationPage',
@@ -141,6 +141,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const { isAuthenticated, isLoading, user } = useAuth0();
     const globalStore = useGlobalStore()
+    const { roles } = to.meta;
 
     // Wait for Auth0 to finish loading
     // if (isLoading.value) {
@@ -148,7 +149,7 @@ router.beforeEach(async (to, from, next) => {
     // }
     
     // Redirect to login page if not authenticated and route requires authentication
-    if (to.meta.requiresArtist && globalStore.profile?.role != 'artist' ) {
+    if (roles && !roles.includes(globalStore.profile?.role)) {
         next('/unauthorized')
     }
     else if (to.meta.requiresAuth && !isAuthenticated.value) {

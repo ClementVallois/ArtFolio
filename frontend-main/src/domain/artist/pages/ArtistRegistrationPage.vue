@@ -2,12 +2,12 @@
     <div v-if="firstSection"  class="flex flex-col items-center">
         <ul class="steps mt-10 mb-2">
             <li class="step step-secondary">Créer un compte</li>
-            <li class="step step-secondary">Se connecter</li>
+            <!-- <li class="step step-secondary">Se connecter</li> -->
             <li class="step step-secondary">Compléter son profil </li>
             <li class="step">Epingle ton post</li>
         </ul>
 
-        <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
+        <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
         <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
         <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]"  method="post"  enctype="multipart/form-data">
@@ -173,8 +173,8 @@ const assignUserRoleIfNeeded = () => {
 watch(isAuthenticated, (newValue) => {
     if (newValue) {
         setTimeout(()=> {
+            console.log('I am not authenticated from the begining')
             authenticationService().assignUserRole(user.value.sub, 'Artist')
-            
         }, 500)
     }
 })
@@ -211,7 +211,7 @@ const toggleSections = () => {
     try {
         if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
             if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
-            const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"active", "artist", "Jbbgzel-nkedfneznk-ezgze");
+            const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"active", "artist", user.value.sub);
             user.validateUsername(username.value);  
             user.validateName(firstName.value, 'prénom');
             user.validateName(lastName.value, 'nom'); 
@@ -299,7 +299,6 @@ const submitForm = async () => {
             // TODO: mettre le vrai auth0id
             /// Artist
             const { firstName, lastName, birthDate, username, description: userDescription, status, role, auth0Id } = toRaw(newUser.value);
-            const randomString = Math.random().toString(36).substring(2, 12);
             data.append('firstName', firstName);
             data.append('lastName', lastName);
             data.append('birthDate', birthDate);
@@ -307,7 +306,7 @@ const submitForm = async () => {
             data.append('description', userDescription);
             data.append('status', status);
             data.append('role', role);
-            data.append('auth0Id', randomString)
+            data.append('auth0Id', auth0Id)
 
             /// Post 
             const { isPinned, description: postDescription} = toRaw(newPost.value);
@@ -327,7 +326,8 @@ const submitForm = async () => {
 
             let response =  await artistStore.createArtist(data);
             if (response.status == 201 ) {
-              router.push({ name: 'ArtistInfoPage' });
+                await storeGlobal.storeProfileFromAuth0Id(user.value.sub)
+                router.push({ name: 'ArtistInfoPage' });
             }else{
                 defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
                 alertError.value = true;

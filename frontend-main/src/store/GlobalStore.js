@@ -30,11 +30,14 @@ export const useGlobalStore = defineStore('globalStore', () => {
         try {
             const user = await profileService().getProfileWithAuth0Id(auth0id)
             profile.value = toRaw(user)
-            console.log('profile.value', profile.value)
         } catch (error) {
             console.log('error in the globalStore', error)
             throw error
         }
+    }
+
+    function resetProfile() {
+        profile.value=null
     }
 
     // function storeRole() {
@@ -57,6 +60,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
         logError,
         log,
         storeProfileFromAuth0Id,
+        resetProfile
     }
 });
 

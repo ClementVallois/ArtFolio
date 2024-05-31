@@ -14,8 +14,10 @@ function userService() {
             const response = await apiUser.createUser(data);
             return response;
         } catch (error) {
-            storeGlobal.logError("Erreur lors de l'enregistrement d'un utilisateur : " + error.message, 6);
-            throw new Error(error.message);
+            storeGlobal.logError("Erreur lors de l'enregistrement d'un utilisateur : " + error.data.message, 6);
+            const newError = new Error(error.data.message)
+            newError.code = 409 // Conflict 
+            throw newError
         }
     }
 

@@ -36,6 +36,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
         const response = await serviceArtist.createArtist(data);
         if (response.status === 201) {
             //TODO: Verifier l'ajout de l'artistId après la connexion
+            console.log(response.data)
             console.log(response.data.artistId);
             //  artistId.value = response.data.artistId;
             // console.log(artistId.value);

@@ -62,7 +62,7 @@
                                 <!-- TODO: faire la méthode pour se déconnecter -->
                                 <p  type="button"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                                    @click="logout">
+                                    @click="logoutApp">
                                     Se déconnecter
                                 </p>
                             </div>
@@ -80,7 +80,11 @@
 import { ref, watchEffect, onUnmounted } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
+import { useAuth0 } from '@auth0/auth0-vue';
+import { useGlobalStore } from '@/store/GlobalStore';
 
+const { logout } = useAuth0();
+const globalStore = useGlobalStore()
 
 // opens the menu in mobile mode
 const isOpen = ref(false);
@@ -90,7 +94,12 @@ const toggleOpen = () => { isOpen.value = !isOpen.value }
 const isProfileMenuOpen = ref(false);
 const toggleProfileMenu = () => {
     isProfileMenuOpen.value = !isProfileMenuOpen.value;
-};
+}
+
+const logoutApp = () => {
+    globalStore.resetProfile()
+    logout()
+}
 
 // TODO: ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors
 </script>

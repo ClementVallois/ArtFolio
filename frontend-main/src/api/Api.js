@@ -15,8 +15,8 @@ api.interceptors.request.use(
     async (config) => {
         // Modify request config before sending
         
-        // Add Auth0 token 
-        if(auth0) {
+        // Add Auth0 token
+        if(auth0.isAuthenticated.value) {
             const token = await auth0.getAccessTokenSilently()
             config.headers.Authorization = `Bearer ${token}`;
         }
