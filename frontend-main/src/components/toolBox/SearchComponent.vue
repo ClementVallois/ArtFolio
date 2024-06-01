@@ -19,9 +19,7 @@ import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 const artistStore = useStoreArtist()
 
 const searchFor = async (event) => {
-    console.log(event.target.value)
     await artistStore.searchArtists(event.target.value)
-    console.log(artistStore.resultSearchArtist)
 }
 
 
