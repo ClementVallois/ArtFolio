@@ -15,6 +15,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
     const artistPosts = ref([]);
     const lastRegisteredArtist = ref([]);
     const randomArtist = ref([]);
+    const resultSearchArtist = ref([])
 
     const serviceArtist = artistService();
 
@@ -72,13 +73,22 @@ export const useStoreArtist = defineStore('artistStore', () => {
         randomArtist.value = await serviceArtist.getRandomArtist(number);
     };
 
-
     ////
     // Artist post
     ////
     async function getArtistPosts(id) {
         artistPosts.value = await serviceArtist.getArtistPosts(id);
     };
+
+    //Search function 
+    async function searchArtists(searchString) {
+        if(searchString == ''){
+            resultSearchArtist.value=[]
+        }else{
+            resultSearchArtist.value = await serviceArtist.searchArtists(searchString)
+        }
+    }
+
 
     return {
         allArtistData,
@@ -87,6 +97,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
         artistPosts,
         lastRegisteredArtist,
         randomArtist,
+        resultSearchArtist,
         getAllArtists,
         getArtistById,
         createArtist,
@@ -94,7 +105,9 @@ export const useStoreArtist = defineStore('artistStore', () => {
         deleteArtist,
         getArtistPosts,
         getLastRegisteredArtist,
-        getRandomArtist
+        getRandomArtist,
+        searchArtists,
+
     }
 });
 

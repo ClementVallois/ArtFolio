@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
                     <!-- menu desktop + mobile-->
-                    <router-link :to="{ name: 'login' }" class="text-gray-800 text-sm  md:mx-4">
+                    <router-link :to="{ name: 'search' }" class="text-gray-800 text-sm  md:mx-4">
                         <SearchComponent></SearchComponent>
                     </router-link>
                     <router-link :to="{ name: 'chat' }" class="text-sm  md:mx-4 md:flex md:justify-center

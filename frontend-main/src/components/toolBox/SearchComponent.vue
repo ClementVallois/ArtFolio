@@ -1,7 +1,7 @@
 <template>
     <div class="relative mx-auto text-gray-600 w-full md:w-3/4 lg:w-4/6 xl:w-5/6">
         <input class="border-2 border-gray-300 bg-white h-10 pl-2 pr-8 rounded-lg text-sm w-full" type="search"
-            name="search" placeholder="Search">
+            name="search" placeholder="Search" @input="searchFor">
         <button type="submit" class="absolute right-0 top-0 mt-3 mr-2">
             <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg" version="1.1" id="Capa_1"
                 x="0px" y="0px" viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
@@ -14,5 +14,15 @@
 </template>
 
 <script setup>
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+
+const artistStore = useStoreArtist()
+
+const searchFor = async (event) => {
+    console.log(event.target.value)
+    await artistStore.searchArtists(event.target.value)
+    console.log(artistStore.resultSearchArtist)
+}
+
 
 </script>

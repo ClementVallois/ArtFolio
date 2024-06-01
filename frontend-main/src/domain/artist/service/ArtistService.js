@@ -2,11 +2,13 @@ import { Post } from '@/domain/artist/model/PostModel';
 import { User } from '@/model/UserModel';
 import { artistApi } from '@/domain/artist/api/ArtistRemoteDataSource';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { useStoreArtist } from '@/domain/artist/store/ArtistStore.js';
+import { toRaw } from 'vue';
 
 function artistService() {
     const storeGlobal = useGlobalStore();
     const apiArtist = artistApi();
-
+    const artistStore = useStoreArtist()
     ////
     // basique CRUD for artists
     ////
@@ -118,6 +120,26 @@ function artistService() {
         }
     };
 
+    async function searchArtists(searchString) {
+        try{
+            let allArtist=toRaw(artistStore.allArtistData)
+            if (allArtist.length === 0) {
+                await artistStore.getAllArtists()
+                allArtist=toRaw(artistStore.allArtistData)
+            }
+            return allArtist.filter(user => isStringInUser(searchString, user));
+        } catch (error) {
+            storeGlobal.logError('error in Search Artist Service'+ error, 6)
+        }
+    }
+
+    // Set the regex for the search 
+    function isStringInUser(searchString, user) {
+        // Échappe les caractères spéciaux dans la chaîne de recherche pour éviter les erreurs de syntaxe regex
+        const escapedSearchString = searchString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(escapedSearchString, 'i'); // 'i' pour insensible à la casse
+        return ['firstname', 'lastname', 'username'].some((key) => regex.test(user[key]));
+    }
 
     return {
         getAllArtists,
@@ -128,6 +150,7 @@ function artistService() {
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,
+        searchArtists
     };
 }
 

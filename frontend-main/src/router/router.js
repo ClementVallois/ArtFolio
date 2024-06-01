@@ -5,7 +5,7 @@ import HomePage from '@/pages/HomePage.vue';
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
 import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
 import ArtistInfoPage from '@/domain/artist/pages/ArtistInfoPage.vue';
-import SearchPage from '@/pages/SearchPage.vue';
+import ArtistSearchPage from '@/domain/artist/pages/ArtistSearchPage.vue';
 import ChatPage from '@/domain/chat/pages/ChatPage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
 import LoginPage from '@/domain/authentification/pages/LoginPage.vue';
@@ -16,11 +16,10 @@ import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
 import LegalNotionPage from '@/pages/LegalNotionPage.vue';
 import CallBackPage from '@/domain/authentification/pages/CallBackPage.vue';
 import UserPreRegistrationPage from '@/domain/user/pages/UserPreRegistrationPage.vue';
-// import UserSuccessSignUpPage from '@/domain/user/pages/UserSuccessSignUpPage.vue';
-// import ArtistSuccessSignUpPage from '@/domain/artist/pages/ArtistSuccessSignUpPage.vue';
 import RedirectToAuthenticationPage from '@/domain/authentification/pages/RedirectToAuthenticationPage.vue';
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService';
 import UnauthorizedPage from '@/pages/UnauthorizedPage.vue';
+import NotFound404 from '@/pages/NotFound404.vue';
 
 const routes = [
     {
@@ -49,16 +48,6 @@ const routes = [
         meta: { requiresAuth: true, roles: ['artist'] }
 
     },
-    // {
-    //     path: '/success-signup-user',
-    //     name: 'UserSuccessSignUp',
-    //     component: UserSuccessSignUpPage,
-    // },
-    // {
-    //     path: '/success-signup-artist',
-    //     name: 'ArtistSuccessSignUp',
-    //     component: ArtistSuccessSignUpPage,
-    // },
     {
         path: '/registration-artist',
         name: 'ArtistRegistrationPage',
@@ -82,7 +71,7 @@ const routes = [
     {
         path: '/search',
         name: 'search',
-        component: SearchPage,
+        component: ArtistSearchPage,
         meta: { requiresAuth: true }
 
     },
@@ -127,6 +116,12 @@ const routes = [
         name: 'Unauthorized',
         component: UnauthorizedPage
     },
+    // Catch-all route for 404 - must be last
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'NotFound',
+        component: NotFound404
+    }
 ]
 
 const router = createRouter({
