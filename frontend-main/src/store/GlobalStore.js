@@ -5,8 +5,6 @@ import { ref } from 'vue'
 ///// Global Store
 /////////
 export const useGlobalStore = defineStore('globalStore', () => {
-    // user, artist, none
-    const activeRole = ref("artist");
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;
@@ -25,7 +23,6 @@ export const useGlobalStore = defineStore('globalStore', () => {
 
 
     return {
-        activeRole,
         logError,
         log
     }

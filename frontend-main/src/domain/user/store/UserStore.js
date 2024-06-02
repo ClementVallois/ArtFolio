@@ -10,7 +10,7 @@ export const useStoreUser = defineStore('userStore', () => {
     const serviceUser = userService();
 
     const userProfile = ref(null)
-    const activeRole = ref('artist')
+    const activeRole = ref('none')
 
     ////
     // basique CRUD for user
