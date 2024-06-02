@@ -37,7 +37,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
     }
 
     function resetProfile() {
-        profile.value=null
+        profile.value = null
     }
 
     // function storeRole() {

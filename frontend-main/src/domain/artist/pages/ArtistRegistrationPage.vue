@@ -105,6 +105,9 @@ import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useRouter } from 'vue-router';
 const { error, isAuthenticated, isLoading, user} = useAuth0();// Store initialisation
 
+
+
+//get id auth0
 const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
 const storeGlobal = useGlobalStore();
@@ -158,6 +161,7 @@ const handleCloseAlert = () => {
 // Category
 ////
 onMounted(async () => {
+
     assignUserRoleIfNeeded()
     await categoryStore.getAllCategories();
     categories.value = categoryStore.allCategoriesData;
@@ -211,17 +215,17 @@ const toggleSections = () => {
     try {
         if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value && profilDescription.value) {
             if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
-            const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"active", "artist", user.value.sub);
-            user.validateUsername(username.value);  
-            user.validateName(firstName.value, 'prénom');
-            user.validateName(lastName.value, 'nom'); 
-            user.validateBirthDate(birthDate.value);
-            user.validateDescription(profilDescription.value);
+            const userInstance = new User(null, firstName.value, lastName.value, birthDate.value, username.value, profilDescription.value ,"active", "artist", user.value.sub);
+            userInstance.validateUsername(username.value);  
+            userInstance.validateName(firstName.value, 'prénom');
+            userInstance.validateName(lastName.value, 'nom'); 
+            userInstance.validateBirthDate(birthDate.value);
+            userInstance.validateDescription(profilDescription.value);
             firstSection.value = !firstSection.value;         
             secondSection.value = !secondSection.value;
             alertError.value = true;
             showAlert.value = false; 
-            newUser.value = user;
+            newUser.value = userInstance;
         } else {
             // Vérifier si les images sont autorisées
             defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg";
