@@ -63,8 +63,9 @@ export class CategoryService {
   }
 
   async createCategory(categoryData: CreateCategoryDto): Promise<Category> {
+    //TODO : Add an error management here to return an error if the category is already in the DB
     const categoryToCreate = this.categoryRepository.create(categoryData);
-    return await this.categoryRepository.save(categoryToCreate);
+    return this.categoryRepository.save(categoryToCreate);
   }
 
   async updateCategory(
@@ -73,11 +74,11 @@ export class CategoryService {
   ): Promise<Category> {
     const existingCategory = await this.getOneCategory(id);
     this.categoryRepository.merge(existingCategory, categoryData);
-    return await this.categoryRepository.save(existingCategory);
+    return this.categoryRepository.save(existingCategory);
   }
 
   async removeCategory(id: string): Promise<Category> {
     const category = await this.getOneCategory(id);
-    return await this.categoryRepository.remove(category);
+    return this.categoryRepository.remove(category);
   }
 }

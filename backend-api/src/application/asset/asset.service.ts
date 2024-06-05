@@ -69,7 +69,7 @@ export class AssetService {
     if (existingProfilePicture) {
       existingProfilePicture.url = fileData.filePath;
       existingProfilePicture.mimetype = fileData.fileType;
-      return await this.assetRepository.save(existingProfilePicture);
+      return this.assetRepository.save(existingProfilePicture);
     } else {
       const newProfilePicture = this.assetRepository.create({
         url: fileData.filePath,
@@ -77,7 +77,7 @@ export class AssetService {
         type: 'profile_picture',
         userId: user,
       });
-      return await this.assetRepository.save(newProfilePicture);
+      return this.assetRepository.save(newProfilePicture);
     }
   }
 
@@ -98,7 +98,7 @@ export class AssetService {
       type: 'profile_picture',
       userId: user,
     });
-    return await this.assetRepository.save(assetToCreate);
+    return this.assetRepository.save(assetToCreate);
   }
 
   async addPostPictureMetadataInDatabase(
@@ -120,6 +120,6 @@ export class AssetService {
       postId: post,
       userId: { id: userId },
     });
-    return await this.assetRepository.save(assetToCreate);
+    return this.assetRepository.save(assetToCreate);
   }
 }

@@ -58,15 +58,15 @@ export class ArtistService {
   }
 
   async getOneArtistPost(userId: string, postId: string): Promise<Post> {
-    return await this.postService.getOneArtistPost(userId, postId);
+    return this.postService.getOneArtistPost(userId, postId);
   }
 
   async getArtistPosts(id: string): Promise<Post[]> {
-    return await this.postService.getArtistPosts(id);
+    return this.postService.getArtistPosts(id);
   }
 
   async getArtistCategories(userId: string): Promise<Category[]> {
-    return await this.categoryService.getArtistCategories(userId);
+    return this.categoryService.getArtistCategories(userId);
   }
 
   async getLastRegisteredArtistsPosts(numberOfPosts: number): Promise<
