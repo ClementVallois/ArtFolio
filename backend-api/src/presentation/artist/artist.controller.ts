@@ -77,7 +77,8 @@ export class ArtistController {
       ],
       limits: { fileSize: 10 * 1024 * 1024 },
       fileFilter: (req, file, callback) => {
-        if (file.mimetype.startsWith('image/')) {
+        const acceptedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
+        if (acceptedMimeTypes.includes(file.mimetype)) {
           callback(null, true);
         } else {
           callback(
@@ -110,7 +111,7 @@ export class ArtistController {
       fieldNames: [{ name: 'profilePicture', maxCount: 1 }],
       limits: { fileSize: 10 * 1024 * 1024 },
       fileFilter: (req, file, callback) => {
-        const acceptedMimeTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+        const acceptedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
         if (acceptedMimeTypes.includes(file.mimetype)) {
           callback(null, true);
         } else {
