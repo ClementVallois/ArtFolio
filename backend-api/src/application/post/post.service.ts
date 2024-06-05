@@ -90,7 +90,7 @@ export class PostService {
     return artistPost;
   }
 
-  async getArtistPosts(id: string): Promise<Post[]> {
+  async getAllArtistPosts(id: string): Promise<Post[]> {
     const user = await this.userRepository.findOneBy({ id: id });
     if (!user) {
       throw new NotFoundException(`Artist not found with ID: ${id}`);

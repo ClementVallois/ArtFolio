@@ -42,7 +42,7 @@ export class ArtistController {
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/posts')
   async getArtistPosts(@Param() { id }: FindIdParams) {
-    return this.artistService.getArtistPosts(id);
+    return this.artistService.getAllArtistPosts(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
