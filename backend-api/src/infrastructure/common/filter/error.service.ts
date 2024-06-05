@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
-import { CreateUserDto } from 'src/presentation/user/dto/create-user.dto';
+import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
+import { CreateUserDto } from 'src/presentation/dto/amateur/create-user.dto';
 
 @Injectable()
 export class ErrorService {
