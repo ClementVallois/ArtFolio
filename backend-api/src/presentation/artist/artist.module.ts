@@ -9,9 +9,12 @@ import { CategoryService } from 'src/application/category/category.service';
 import { PostService } from 'src/application/post/post.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { ValidationService } from '../utils/validators/validation.service';
+import { Post } from 'src/domain/entities/post.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { Category } from 'src/domain/entities/category.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User])],
+  imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
   controllers: [ArtistController],
   providers: [
     ArtistService,
