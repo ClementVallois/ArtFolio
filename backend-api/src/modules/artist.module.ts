@@ -12,6 +12,8 @@ import { ValidationService } from '../application/validators/validation.service'
 import { Post } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Category } from 'src/domain/entities/category.entity';
+import { PostUseCaseProxy } from 'src/application/proxies/postUseCase.proxy';
+import { GetAllPostsUseCase } from 'src/application/useCases/post/getAllPosts.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
@@ -24,6 +26,8 @@ import { Category } from 'src/domain/entities/category.entity';
     PostService,
     ErrorService,
     ValidationService,
+    GetAllPostsUseCase,
+    PostUseCaseProxy,
   ],
 })
 export class ArtistModule {}

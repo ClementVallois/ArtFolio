@@ -1,4 +1,4 @@
-import { Module, OnModuleInit } from '@nestjs/common';
+import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './infrastructure/security/jwt.module';
 import { UserModule } from './modules/user.module';
@@ -48,20 +48,20 @@ export class AppModule implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
-      console.log('Env file is configured for development database');
+      Logger.log('Env file is configured for development database');
     } else if (
       this.configService.get<string>('DB_ENV').toLowerCase() === 'prod'
     ) {
-      console.log('Env file is configured for production database');
+      Logger.log('Env file is configured for production database');
     }
     if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'development'
     ) {
-      console.log('Env file is configured for development environment');
+      Logger.log('Env file is configured for development environment');
     } else if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'production'
     ) {
-      console.log('Env file is configured for production environment');
+      Logger.log('Env file is configured for production environment');
     }
     // Uncomment to seed fake data
     // await this.seederService.seedAll();

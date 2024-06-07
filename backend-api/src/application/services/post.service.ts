@@ -15,6 +15,8 @@ import { User } from 'src/domain/entities/user.entity';
 import { File } from '@nest-lab/fastify-multer';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from '../services/asset.service';
+import { PostId } from 'src/domain/value objects/postId';
+import { PostUseCaseProxy } from '../proxies/postUseCase.proxy';
 
 @Injectable()
 export class PostService {
@@ -27,22 +29,17 @@ export class PostService {
     private readonly userRepository: Repository<User>,
     private readonly fileService: FileService,
     private readonly assetService: AssetService,
+    private readonly postUseCaseProxy: PostUseCaseProxy,
   ) {}
 
-  async getAllPosts(): Promise<Post[]> {
-    try {
-      return await this.postRepository.find({ order: { createdAt: 'DESC' } });
-    } catch (error) {
-      throw new HttpException(
-        'Failed to fetch posts',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  getAllPosts(): Promise<Post[]> {
+    console.log('Service');
+    return this.postUseCaseProxy.getAllPosts();
   }
 
-  async getPostById(id: string): Promise<Post> {
+  async getPostById(id: PostId): Promise<Post> {
     const post = await this.postRepository.findOne({
-      where: { id: id },
+      where: { id: id.toString() },
       relations: ['user'],
     });
     if (!post) {
@@ -161,13 +158,13 @@ export class PostService {
     return post;
   }
 
-  async updatePost(id: string, postData: UpdatePostDto): Promise<Post> {
+  async updatePost(id: PostId, postData: UpdatePostDto): Promise<Post> {
     const existingPost = await this.getPostById(id);
     const postToUpdate = this.postRepository.merge(existingPost, postData);
     return this.postRepository.save(postToUpdate);
   }
 
-  async removePost(id: string): Promise<Post> {
+  async removePost(id: PostId): Promise<Post> {
     const existingPost = await this.getPostById(id);
     await this.fileService.deletePostsPictures(id);
     await this.postRepository.remove(existingPost);
