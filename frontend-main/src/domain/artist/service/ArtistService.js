@@ -14,12 +14,12 @@ function artistService() {
     ////
     async function getAllArtists() {
         try {
-            const response = await apiArtist.getAllArtists();
+            const { data } = await apiArtist.getAllArtists();
 
-            if (Array.isArray(response)) {
-                return response.map(jsonUser => User.fromJson(jsonUser));
+            if (Array.isArray(data)) {
+                return data.map(jsonUser => User.fromJson(jsonUser));
             } else {
-                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
             }
         } catch (error) {
@@ -30,8 +30,8 @@ function artistService() {
 
     async function getArtistById(id) {
         try {
-            const response = await apiArtist.getArtistById(id);
-            return User.fromJson(response);
+            const { data } = await apiArtist.getArtistById(id);
+            return User.fromJson(data);
         } catch (error) {
             storeGlobal.logError("Erreur lors de la récupération d'un artiste :" + error, 6);
         }
@@ -59,7 +59,6 @@ function artistService() {
     async function deleteArtist(id) {
         try {
             return apiArtist.deleteArtist(id);
-
         } catch (error) {
             storeGlobal.logError("Erreur lors de la suppression d'un artiste : " + error.message, 6);
             throw new Error(error.message);
@@ -72,12 +71,12 @@ function artistService() {
     //TODO: modifier le return await
     async function getLastRegisteredArtist(number) {
         try {
-            const response = await apiArtist.getLastRegisteredArtist(number);
-            if (Array.isArray(response)) {
-                return response;
+            const { data } = await apiArtist.getLastRegisteredArtist(number);
+            if (Array.isArray(data)) {
+                return data;
                 //  return response.map(jsonUser => User.fromJson(jsonUser));
             } else {
-                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
             }
         } catch (error) {
@@ -88,11 +87,11 @@ function artistService() {
     //TODO: modifier le return await
     async function getRandomArtist(number) {
         try {
-            const response = await apiArtist.getRandomArtist(number);
-            if (Array.isArray(response)) {
-                return response;
+            const { data } = await apiArtist.getRandomArtist(number);
+            if (Array.isArray(data)) {
+                return data;
             } else {
-                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
             }
         } catch (error) {
@@ -106,11 +105,11 @@ function artistService() {
     ////
     async function getArtistPosts(id) {
         try {
-            const response = await apiArtist.getArtistPosts(id);
-            if (Array.isArray(response)) {
-                return response.map(jsonPost => Post.fromJson(jsonPost));
+            const { data } = await apiArtist.getArtistPosts(id);
+            if (Array.isArray(data)) {
+                return data.map(jsonPost => Post.fromJson(jsonPost));
             } else {
-                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
             }
         } catch (error) {
@@ -119,6 +118,10 @@ function artistService() {
         }
     };
 
+
+    ////
+    // Search Artist
+    ////
     async function searchArtists(searchString) {
         try {
             let allArtist = toRaw(artistStore.allArtistData)

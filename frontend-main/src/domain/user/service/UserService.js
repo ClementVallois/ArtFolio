@@ -11,8 +11,7 @@ function userService() {
     ////
     async function createUser(data) {
         try {
-            const response = apiUser.createUser(data);
-            return response;
+            return apiUser.createUser(data);
         } catch (error) {
             storeGlobal.logError("Erreur lors de l'enregistrement d'un amateur : " + error.data.message, 6);
             const newError = new Error(error.data.message)
@@ -33,7 +32,6 @@ function userService() {
     async function deleteUser(id) {
         try {
             return apiUser.deleteUser(id);
-
         } catch (error) {
             storeGlobal.logError("Erreur lors de la suppression d'un amateur : " + error.message, 6);
             throw new Error(error.message);
