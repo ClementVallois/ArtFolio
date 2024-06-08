@@ -5,6 +5,7 @@ import HomePage from '@/pages/HomePage.vue';
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
 import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
 import ArtistInfoPage from '@/domain/artist/pages/ArtistInfoPage.vue';
+import UserInfoPage from '@/domain/user/pages/UserInfoPage.vue';
 import ArtistSearchPage from '@/domain/artist/pages/ArtistSearchPage.vue';
 import ChatPage from '@/domain/chat/pages/ChatPage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
@@ -39,6 +40,13 @@ const routes = [
         name: 'ArtistInfoPage',
         component: ArtistInfoPage,
         meta: { requiresAuth: true, roles: ['artist'] }
+
+    },
+    {
+        path: '/user-info',
+        name: 'UserInfoPage',
+        component: UserInfoPage,
+        meta: { requiresAuth: true, roles: ['user'] }
 
     },
     {
@@ -142,7 +150,7 @@ router.beforeEach(async (to, from, next) => {
     // if (isLoading.value) {
     //     await new Promise(resolve => setTimeout(resolve, 100));
     // }
-    
+
     // Redirect to login page if not authenticated and route requires authentication
     if (roles && !roles.includes(globalStore.profile?.role)) {
         next('/unauthorized')
@@ -155,8 +163,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 // router.beforeEach(async (to, from, next) => {
-    
-    
+
+
 //     if (to.meta.requiresAuth) {
 //       // If the route requires authentication and the user is not authorized,
 //       // redirect the user to the custom login page

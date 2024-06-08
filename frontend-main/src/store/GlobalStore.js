@@ -10,6 +10,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
     // On évite utiliser activeRole et on utilise profile.role à la place 
     // const activeRole = ref("none");
     const profile = ref(null)
+    const profileId = ref(null);
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;
@@ -36,6 +37,10 @@ export const useGlobalStore = defineStore('globalStore', () => {
         }
     }
 
+    function addProfileId(profileId) {
+        profileId.value = profileId;
+    }
+
     function resetProfile() {
         profile.value = null
     }
@@ -57,9 +62,11 @@ export const useGlobalStore = defineStore('globalStore', () => {
 
     return {
         profile,
+        profileId,
         logError,
         log,
         storeProfileFromAuth0Id,
+        addProfileId,
         resetProfile
     }
 });

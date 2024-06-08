@@ -12,11 +12,11 @@ function categoryApi() {
     ////
 
     async function getAllCategories() {
-        return await CRUDapi('GET', 'categories');
+        return CRUDapi('GET', 'categories');
     }
 
     async function getCategoryById(id) {
-        return await CRUDapi('GET', `categories/${id}`);
+        return CRUDapi('GET', `categories/${id}`);
     }
 
     return {

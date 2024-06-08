@@ -40,8 +40,7 @@ function artistService() {
 
     async function createArtist(data) {
         try {
-            const response = await apiArtist.createArtist(data);
-            return response;
+            return apiArtist.createArtist(data);
         } catch (error) {
             storeGlobal.logError("Erreur lors de l'enregistrement d'un artiste : " + error.message, 6);
             throw new Error(error.message);
@@ -50,8 +49,7 @@ function artistService() {
 
     async function modifyArtist(id, data) {
         try {
-            const response = await apiArtist.modifyArtist(id, data);
-            return response;
+            return apiArtist.modifyArtist(id, data);
         } catch (error) {
             storeGlobal.logError("Erreur lors de la modification des informations d'un artiste : " + error.message, 6);
             throw new Error(error.message);
@@ -60,8 +58,8 @@ function artistService() {
 
     async function deleteArtist(id) {
         try {
-            const response = await apiArtist.deleteArtist(id);
-            return response;
+            return apiArtist.deleteArtist(id);
+
         } catch (error) {
             storeGlobal.logError("Erreur lors de la suppression d'un artiste : " + error.message, 6);
             throw new Error(error.message);
@@ -71,6 +69,7 @@ function artistService() {
     ////
     // Recover artist's pinned post for home page
     ////
+    //TODO: modifier le return await
     async function getLastRegisteredArtist(number) {
         try {
             const response = await apiArtist.getLastRegisteredArtist(number);
@@ -86,11 +85,11 @@ function artistService() {
         }
     };
 
+    //TODO: modifier le return await
     async function getRandomArtist(number) {
         try {
             const response = await apiArtist.getRandomArtist(number);
             if (Array.isArray(response)) {
-                //  return response.map(jsonUser => User.fromJson(jsonUser));
                 return response;
             } else {
                 storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
@@ -121,15 +120,15 @@ function artistService() {
     };
 
     async function searchArtists(searchString) {
-        try{
-            let allArtist=toRaw(artistStore.allArtistData)
+        try {
+            let allArtist = toRaw(artistStore.allArtistData)
             if (allArtist.length === 0) {
                 await artistStore.getAllArtists()
-                allArtist=toRaw(artistStore.allArtistData)
+                allArtist = toRaw(artistStore.allArtistData)
             }
             return allArtist.filter(user => isStringInUser(searchString, user));
         } catch (error) {
-            storeGlobal.logError('error in Search Artist Service'+ error, 6)
+            storeGlobal.logError('error in Search Artist Service' + error, 6)
         }
     }
 
