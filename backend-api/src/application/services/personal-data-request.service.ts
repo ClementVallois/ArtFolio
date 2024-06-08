@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDataRequestDto } from '../../presentation/dto/personnal-data-request/create-data-request.dto';
 import { DataRequest } from 'src/domain/entities/data-request.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
+import { CreateDataRequestDto } from 'src/presentation/dto/personal-data-request/create-data-request.dto';
 
 @Injectable()
-export class PersonnalDataRequestService {
+export class PersonalDataRequestService {
   constructor(
     @InjectRepository(DataRequest)
     private readonly dataRequestRepository: Repository<DataRequest>,

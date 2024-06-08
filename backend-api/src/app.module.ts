@@ -1,18 +1,18 @@
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './infrastructure/security/jwt.module';
-import { UserModule } from './modules/user.module';
-import { PostModule } from './modules/post.module';
+import { UserModule } from './application/modules/amateur/user.module';
+import { PostModule } from './application/modules/post/post.module';
 import { DatabaseModule } from './infrastructure/database/datasource.module';
-import { AssetModule } from './modules/asset.module';
-import { CategoryModule } from './modules/category.module';
+import { AssetModule } from './application/modules/asset/asset.module';
+import { CategoryModule } from './application/modules/category/category.module';
 import { configValidationSchema } from './infrastructure/config/env-config.validation';
-import { PersonnalDataRequestModule } from './modules/personnal-data-request.module';
 import { EnvConfigModule } from './infrastructure/config/env-config.module';
 import { SeederModule } from './infrastructure/services/faker/seeder/seeder.module';
-import { ArtistModule } from './modules/artist.module';
+import { ArtistModule } from './application/modules/artist/artist.module';
 import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { SeederService } from './infrastructure/services/faker/seeder/seeder.service';
+import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { SeederService } from './infrastructure/services/faker/seeder/seeder.ser
     ArtistModule,
     PostModule,
     DatabaseModule,
-    PersonnalDataRequestModule,
+    PersonalDataRequestModule,
     EnvConfigModule,
     SeederModule,
     FastifyMulterModule,

@@ -44,10 +44,11 @@ export class PostController {
 
   @Get(':id/assets')
   async getPostAssets(
-    @Param() { id }: FindIdParams,
+    @Param() params: FindIdParams,
     @Res({ passthrough: true }) response: FastifyReply,
   ) {
-    const files = await this.postService.getPostAssets(id);
+    const postId = new PostId(params.id);
+    const files = await this.postService.getPostAssets(postId);
 
     const stream = createReadStream(join(process.cwd(), files[0].url));
     response.headers({

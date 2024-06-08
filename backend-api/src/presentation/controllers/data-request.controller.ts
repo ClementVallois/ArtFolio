@@ -1,12 +1,12 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
-import { PersonnalDataRequestService } from '../../application/services/personnal-data-request.service';
-import { CreateDataRequestDto } from '../dto/personnal-data-request/create-data-request.dto';
+import { PersonalDataRequestService } from '../../application/services/personal-data-request.service';
 import { FindIdParams } from '../utils/params.dto';
+import { CreateDataRequestDto } from '../dto/personal-data-request/create-data-request.dto';
 
 @Controller('data-requests')
-export class PersonnalDataRequestController {
+export class PersonalDataRequestController {
   constructor(
-    private readonly dataRequestService: PersonnalDataRequestService,
+    private readonly dataRequestService: PersonalDataRequestService,
   ) {}
 
   @Get()

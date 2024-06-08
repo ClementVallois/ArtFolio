@@ -1,173 +1,49 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreatePostDto } from '../../presentation/dto/post/create-post.dto';
 import { UpdatePostDto } from '../../presentation/dto/post/update-post.dto';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from 'src/domain/entities/post.entity';
-import { Repository } from 'typeorm';
 import { Asset } from 'src/domain/entities/asset.entity';
-import { User } from 'src/domain/entities/user.entity';
 import { File } from '@nest-lab/fastify-multer';
-import { FileService } from 'src/infrastructure/services/file/file.service';
-import { AssetService } from '../services/asset.service';
 import { PostId } from 'src/domain/value objects/postId';
 import { PostUseCaseProxy } from '../proxies/postUseCase.proxy';
 
 @Injectable()
 export class PostService {
-  constructor(
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
-    @InjectRepository(Asset)
-    private readonly assetRepository: Repository<Asset>,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-    private readonly fileService: FileService,
-    private readonly assetService: AssetService,
-    private readonly postUseCaseProxy: PostUseCaseProxy,
-  ) {}
+  constructor(private readonly postUseCaseProxy: PostUseCaseProxy) {}
 
-  getAllPosts(): Promise<Post[]> {
-    console.log('Service');
+  async getAllPosts(): Promise<Post[]> {
     return this.postUseCaseProxy.getAllPosts();
   }
 
-  async getPostById(id: PostId): Promise<Post> {
-    const post = await this.postRepository.findOne({
-      where: { id: id.toString() },
-      relations: ['user'],
-    });
-    if (!post) {
-      throw new NotFoundException(`Post not found with ID: ${id}`);
-    }
-    return post;
+  async getPostById(postId: PostId): Promise<Post> {
+    return this.postUseCaseProxy.getPostById(postId);
   }
 
   async getArtistPinnedPost(artistId: string): Promise<Post> {
-    const pinnedPost = await this.postRepository.findOne({
-      where: { user: { id: artistId }, isPinned: true },
-    });
-
-    if (!pinnedPost) {
-      throw new NotFoundException(
-        `Pinned post not found for artist with ID: ${artistId}`,
-      );
-    }
-
-    return pinnedPost;
+    return this.postUseCaseProxy.getArtistPinnedPost(artistId);
   }
 
-  async getPostAssets(postId: string): Promise<Asset[]> {
-    const postAssets = await this.assetRepository.find({
-      where: { postId: { id: postId }, type: 'post_picture' },
-    });
-
-    if (!postAssets || postAssets.length === 0) {
-      throw new NotFoundException(
-        `Assets not found for Post with ID: ${postId}`,
-      );
-    }
-    return postAssets;
+  async getPostAssets(postId: PostId): Promise<Asset[]> {
+    return this.postUseCaseProxy.getPostAssets(postId);
   }
 
   async getOneArtistPost(userId: string, postId: string): Promise<Post> {
-    const artistPost = await this.postRepository.findOne({
-      where: { user: { id: userId }, id: postId },
-    });
-    if (!artistPost) {
-      throw new NotFoundException(
-        `Post not found for Artist with ID: ${userId} and Post ID: ${postId}`,
-      );
-    }
-    return artistPost;
+    return this.postUseCaseProxy.getOneArtistPost(userId, postId);
   }
 
-  async getAllArtistPosts(id: string): Promise<Post[]> {
-    const user = await this.userRepository.findOneBy({ id: id });
-    if (!user) {
-      throw new NotFoundException(`Artist not found with ID: ${id}`);
-    }
-    const pinnedPosts = await this.postRepository.find({
-      where: { user: { id: id }, isPinned: true },
-      order: { createdAt: 'DESC' },
-    });
-
-    const nonPinnedPosts = await this.postRepository.find({
-      where: { user: { id: id }, isPinned: false },
-      order: { createdAt: 'DESC' },
-    });
-
-    const artistPosts = [...pinnedPosts, ...nonPinnedPosts];
-
-    if (!artistPosts || artistPosts.length === 0) {
-      throw new NotFoundException(`Posts not found for Artist with ID: ${id}`);
-    }
-    return artistPosts;
+  async getAllArtistPosts(artistId: string): Promise<Post[]> {
+    return this.postUseCaseProxy.getAllArtistPosts(artistId);
   }
 
   async createPost(postData: CreatePostDto, postPicture: File): Promise<Post> {
-    if (!postPicture) {
-      throw new BadRequestException('Post picture file is required.');
-    }
-
-    let post: Post;
-
-    const user = await this.userRepository.findOneBy({
-      id: postData.userId,
-    });
-    if (!user) {
-      throw new NotFoundException(`User not found with ID: ${postData.userId}`);
-    }
-
-    try {
-      post = this.postRepository.create({
-        ...postData,
-        user: user,
-      });
-      await this.postRepository.save(post);
-    } catch (error) {
-      throw new HttpException(
-        'Failed to create post',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-
-    if (postPicture) {
-      try {
-        const fileData = await this.fileService.savePostPicture(
-          post.id,
-          postPicture,
-        );
-        await this.assetService.addPostPictureMetadataInDatabase(
-          post.id,
-          post.user.id,
-          fileData,
-        );
-      } catch (error) {
-        throw new HttpException(
-          'Failed to upload post picture',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-    }
-    return post;
+    return this.postUseCaseProxy.createPost(postData, postPicture);
   }
 
-  async updatePost(id: PostId, postData: UpdatePostDto): Promise<Post> {
-    const existingPost = await this.getPostById(id);
-    const postToUpdate = this.postRepository.merge(existingPost, postData);
-    return this.postRepository.save(postToUpdate);
+  async updatePost(postId: PostId, postData: UpdatePostDto): Promise<Post> {
+    return this.postUseCaseProxy.updatePost(postId, postData);
   }
 
-  async removePost(id: PostId): Promise<Post> {
-    const existingPost = await this.getPostById(id);
-    await this.fileService.deletePostsPictures(id);
-    await this.postRepository.remove(existingPost);
-    return existingPost;
+  async removePost(postId: PostId): Promise<Post> {
+    return this.postUseCaseProxy.removePost(postId);
   }
 }
