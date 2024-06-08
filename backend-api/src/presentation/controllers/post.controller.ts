@@ -22,6 +22,7 @@ import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import { FastifyReply } from 'fastify';
 import { createReadStream } from 'fs';
 import { join } from 'path';
+import { PostId } from 'src/domain/value objects/postId';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
@@ -30,12 +31,15 @@ export class PostController {
 
   @Get()
   async getAllPosts() {
+    console.log('Controlleur');
+
     return this.postService.getAllPosts();
   }
 
   @Get(':id')
-  async getPostById(@Param() { id }: FindIdParams) {
-    return this.postService.getPostById(id);
+  async getPostById(@Param() params: FindIdParams) {
+    const postId = new PostId(params.id);
+    return this.postService.getPostById(postId);
   }
 
   @Get(':id/assets')
@@ -68,14 +72,16 @@ export class PostController {
 
   @Patch(':id')
   async updatePost(
-    @Param() { id }: FindIdParams,
+    @Param() params: FindIdParams,
     @Body() postData: UpdatePostDto,
   ) {
-    return this.postService.updatePost(id, postData);
+    const postId = new PostId(params.id);
+    return this.postService.updatePost(postId, postData);
   }
 
   @Delete(':id')
-  async removePost(@Param() { id }: FindIdParams) {
-    return this.postService.removePost(id);
+  async removePost(@Param() params: FindIdParams) {
+    const postId = new PostId(params.id);
+    return this.postService.removePost(postId);
   }
 }
