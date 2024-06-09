@@ -22,8 +22,9 @@ import { FastifyReply } from 'fastify';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { PostId } from 'src/domain/value objects/postId';
-import { PostUseCaseProxy } from 'src/application/proxies/postUseCase.proxy';
+
 import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
+import { PostUseCaseProxy } from 'src/application/modules/post/proxies/postUseCase.proxy';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')

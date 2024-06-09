@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { GetPostByIdUseCase } from '../useCases/post/getPostById.useCase';
-import { UpdatePostUseCase } from '../useCases/post/updatePost.useCase';
-import { RemovePostUseCase } from '../useCases/post/removePost.useCase';
-import { GetPostAssetsUseCase } from '../useCases/post/getPostAssets.useCase';
+import { GetPostByIdUseCase } from '../use-cases/getPostById.useCase';
+import { UpdatePostUseCase } from '../use-cases/updatePost.useCase';
+import { RemovePostUseCase } from '../use-cases/removePost.useCase';
+import { GetPostAssetsUseCase } from '../use-cases/getPostAssets.useCase';
 
 @Injectable()
 export class PostUseCaseProxy {
