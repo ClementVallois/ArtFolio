@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 
 @Injectable()
-export class ErrorService {
+export class DatabaseErrorHandler {
   parseDatabaseError(error: any, data: any): string {
     if (error.code === '23505') {
       if (error.detail.includes('username')) {
@@ -11,5 +11,10 @@ export class ErrorService {
       }
     }
     return 'Error creating artist';
+  }
+
+  handleDatabaseError(error: any, data: any): never {
+    const errorMessage = this.parseDatabaseError(error, data);
+    throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
   }
 }

@@ -6,6 +6,7 @@ import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 
 import { Repository } from 'typeorm';
+import { ArtistId } from 'src/domain/value objects/artistId';
 
 @Injectable()
 export class AssetService {
@@ -42,9 +43,10 @@ export class AssetService {
     return userAssets;
   }
 
-  async getArtistProfilePicture(userId: string): Promise<Asset> {
+  async getArtistProfilePicture(artistId: ArtistId): Promise<Asset> {
+    const artist = artistId.toString();
     const artistAsset = await this.assetRepository.findOne({
-      where: { type: 'profile_picture', userId: { id: userId } },
+      where: { type: 'profile_picture', userId: { id: artist } },
     });
 
     if (!artistAsset) {

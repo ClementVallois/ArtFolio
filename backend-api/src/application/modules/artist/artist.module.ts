@@ -12,15 +12,18 @@ import { Post } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Category } from 'src/domain/entities/category.entity';
 import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
+import { ArtistUseCaseProxy } from './proxies/artistUseCase.proxy';
+import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Post, Asset, Category]),
     SharedPostModule,
+    SharedArtistModule,
   ],
   controllers: [ArtistController],
   providers: [
-    ArtistService,
+    ArtistUseCaseProxy,
     AssetService,
     FileService,
     CategoryService,

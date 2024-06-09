@@ -4,9 +4,10 @@ import { CategoryController } from 'src/presentation/controllers/category.contro
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from 'src/domain/entities/category.entity';
 import { User } from 'src/domain/entities/user.entity';
+import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Category, User])],
+  imports: [TypeOrmModule.forFeature([Category, User]), SharedCategoryModule],
   controllers: [CategoryController],
   providers: [CategoryService],
 })

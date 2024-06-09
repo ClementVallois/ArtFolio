@@ -13,58 +13,75 @@ import {
 } from '@nestjs/common';
 import { CreateArtistDto } from '../dto/artist/create-artist.dto';
 import { UpdateArtistDto } from '../dto/artist/update-artist.dto';
-import { ArtistService } from 'src/application/services/artist.service';
 import {
+  FindArtistPostParams,
   FindIdParams,
   FindNumberParams,
-  FindUserPostParams,
 } from '../utils/params.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { File } from '@nest-lab/fastify-multer';
 import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
+import { ArtistUseCaseProxy } from 'src/application/modules/artist/proxies/artistUseCase.proxy';
+import { ArtistId } from 'src/domain/value objects/artistId';
+import { PostId } from 'src/domain/value objects/postId';
+import { SharedArtistUseCaseProxy } from 'src/application/shared/modules/artist/proxies/sharedArtistUseCase.proxy';
+import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
+import { SharedCategoryUseCaseProxy } from 'src/application/shared/modules/category/proxies/sharedCategoryUseCase.proxy';
 
 @Controller(['artists'])
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(
+    private readonly artistUseCaseProxy: ArtistUseCaseProxy,
+    private readonly sharedArtistUseCaseProxy: SharedArtistUseCaseProxy,
+    private readonly sharedPostUseCaseProxy: SharedPostUseCaseProxy,
+    private readonly sharedCategoryUseCaseProxy: SharedCategoryUseCaseProxy,
+  ) {}
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAllArtists() {
-    return this.artistService.getAllArtists();
+    return this.artistUseCaseProxy.getAllArtists();
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
-  async getArtistById(@Param() { id }: FindIdParams) {
-    return this.artistService.getArtistById(id);
+  async getArtistById(@Param() params: FindIdParams) {
+    const artistId = new ArtistId(params.id);
+    return this.artistUseCaseProxy.getArtistById(artistId);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/posts')
-  async getArtistPosts(@Param() { id }: FindIdParams) {
-    return this.artistService.getAllArtistPosts(id);
+  async getArtistPosts(@Param() params: FindIdParams) {
+    const artistId = new ArtistId(params.id);
+    return this.sharedPostUseCaseProxy.getAllArtistPosts(artistId);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id/categories')
-  async getArtistCategories(@Param() { id }: FindIdParams) {
-    return this.artistService.getArtistCategories(id);
+  async getArtistCategories(@Param() params: FindIdParams) {
+    const artistId = new ArtistId(params.id);
+    return this.sharedCategoryUseCaseProxy.getArtistCategories(artistId);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':userId/posts/:postId')
-  async getOneArtistPost(@Param() params: FindUserPostParams) {
-    return this.artistService.getOneArtistPost(params.userId, params.postId);
+  @Get(':artistId/posts/:postId')
+  async getOneArtistPost(@Param() params: FindArtistPostParams) {
+    const artistId = new ArtistId(params.artistId);
+    const postId = new PostId(params.postId);
+    return this.sharedPostUseCaseProxy.getOneArtistPost(artistId, postId);
   }
 
   @Get('last/:nb')
   async getLastRegisteredArtistsPosts(@Param() params: FindNumberParams) {
-    return this.artistService.getLastRegisteredArtistsPosts(params.nb);
+    return this.sharedArtistUseCaseProxy.getLastRegisteredArtistsPosts(
+      params.nb,
+    );
   }
 
   @Get('random/:nb')
   async getRandomArtistsPost(@Param() params: FindNumberParams) {
-    return this.artistService.getRandomArtistsPost(params.nb);
+    return this.sharedArtistUseCaseProxy.getRandomArtistsPost(params.nb);
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -93,7 +110,7 @@ export class ArtistController {
     @UploadedFiles() files: { profilePicture: File; postPicture: File[] },
     @Body() artistData: CreateArtistDto,
   ) {
-    const artist = await this.artistService.handleCreateArtist(
+    const artist = await this.sharedArtistUseCaseProxy.handleCreateArtist(
       artistData,
       files,
     );
@@ -124,16 +141,22 @@ export class ArtistController {
     }),
   )
   async updateArtist(
-    @Param() { id }: FindIdParams,
+    @Param() params: FindIdParams,
     @UploadedFiles() file: { profilePicture: File },
     @Body() artistData: UpdateArtistDto,
   ) {
-    return this.artistService.handleUpdateArtist(id, artistData, file);
+    const artistId = new ArtistId(params.id);
+    return this.sharedArtistUseCaseProxy.handleUpdateArtist(
+      artistId,
+      artistData,
+      file,
+    );
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  async removeArtist(@Param() { id }: FindIdParams) {
-    return this.artistService.removeArtist(id);
+  async removeArtist(@Param() params: FindIdParams) {
+    const artistId = new ArtistId(params.id);
+    return this.sharedArtistUseCaseProxy.removeArtist(artistId);
   }
 }
