@@ -43,7 +43,6 @@ function authenticationService() {
             const accessToken = await getAccessTokenManagementAPI();
             auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
             const response = await auth0ManagementApi.get(`/users/${auth0Id}/roles`)
-            console.log('rolerequestResponse',response)
             const roles = response.data
             return roles
         } catch (error) {
