@@ -4,18 +4,17 @@ import { Post } from 'src/domain/entities/post.entity';
 import { PostId } from 'src/domain/value objects/postId';
 import { UpdatePostDto } from 'src/presentation/dto/post/update-post.dto';
 import { Repository } from 'typeorm';
-import { PostUseCaseProxy } from 'src/application/proxies/postUseCase.proxy';
-import { PostService } from 'src/application/services/post.service';
+import { GetPostByIdUseCase } from './getPostById.useCase';
 
 @Injectable()
 export class UpdatePostUseCase {
   constructor(
-    private readonly postService: PostService,
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    private readonly getPostByIdUseCase: GetPostByIdUseCase,
   ) {}
 
   async execute(id: PostId, postData: UpdatePostDto): Promise<Post> {
-    const existingPost = await this.postService.getPostById(id);
+    const existingPost = await this.getPostByIdUseCase.execute(id);
     const postToUpdate = this.postRepository.merge(existingPost, postData);
     return this.postRepository.save(postToUpdate);
   }

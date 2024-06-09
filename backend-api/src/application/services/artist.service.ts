@@ -15,10 +15,10 @@ import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
 import { Repository } from 'typeorm';
 import { AssetService } from './asset.service';
-import { PostService } from '../services/post.service';
 import { CategoryService } from './category.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { ValidationService } from 'src/application/validators/validation.service';
+import { SharedPostUseCaseProxy } from '../shared/modules/post/proxies/sharedPostUseCase.proxy';
 
 @Injectable()
 export class ArtistService {
@@ -27,10 +27,10 @@ export class ArtistService {
     private readonly userRepository: Repository<User>,
     private readonly fileService: FileService,
     private readonly assetService: AssetService,
-    private readonly postService: PostService,
     private readonly categoryService: CategoryService,
     private readonly errorService: ErrorService,
     private readonly validationService: ValidationService,
+    private readonly sharedPostUseCaseProxy: SharedPostUseCaseProxy,
   ) {}
 
   async getAllArtists(): Promise<User[]> {
@@ -58,11 +58,11 @@ export class ArtistService {
   }
 
   async getOneArtistPost(userId: string, postId: string): Promise<Post> {
-    return this.postService.getOneArtistPost(userId, postId);
+    return this.sharedPostUseCaseProxy.getOneArtistPost(userId, postId);
   }
 
   async getAllArtistPosts(id: string): Promise<Post[]> {
-    return this.postService.getAllArtistPosts(id);
+    return this.sharedPostUseCaseProxy.getAllArtistPosts(id);
   }
 
   async getArtistCategories(userId: string): Promise<Category[]> {
@@ -97,7 +97,9 @@ export class ArtistService {
     }[] = [];
 
     for (const artist of lastRegisteredArtists) {
-      const pinnedPost = await this.postService.getArtistPinnedPost(artist.id);
+      const pinnedPost = await this.sharedPostUseCaseProxy.getArtistPinnedPost(
+        artist.id,
+      );
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
       const artistAsset = await this.assetService.getArtistProfilePicture(
         artist.id,
@@ -138,7 +140,7 @@ export class ArtistService {
       const randomIndex = Math.floor(Math.random() * artistsInDB);
       const randomArtist = randomArtists[randomIndex];
 
-      const pinnedPost = await this.postService.getArtistPinnedPost(
+      const pinnedPost = await this.sharedPostUseCaseProxy.getArtistPinnedPost(
         randomArtist.id,
       );
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
@@ -167,7 +169,7 @@ export class ArtistService {
     const postPicture = files.postPicture[0];
 
     const artist = await this.createArtist(artistData, profilePicture);
-    await this.postService.createPost(
+    await this.sharedPostUseCaseProxy.createPost(
       {
         isPinned: artistData.post.isPinned,
         description: artistData.post.description,

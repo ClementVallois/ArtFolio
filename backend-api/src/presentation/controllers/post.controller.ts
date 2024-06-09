@@ -13,7 +13,6 @@ import {
   StreamableFile,
   UploadedFile,
 } from '@nestjs/common';
-import { PostService } from '../../application/services/post.service';
 import { CreatePostDto } from '../dto/post/create-post.dto';
 import { UpdatePostDto } from '../dto/post/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
@@ -23,23 +22,26 @@ import { FastifyReply } from 'fastify';
 import { createReadStream } from 'fs';
 import { join } from 'path';
 import { PostId } from 'src/domain/value objects/postId';
+import { PostUseCaseProxy } from 'src/application/proxies/postUseCase.proxy';
+import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
 export class PostController {
-  constructor(private readonly postService: PostService) {}
+  constructor(
+    private readonly postUseCaseProxy: PostUseCaseProxy,
+    private readonly sharedPostUseCaseProxy: SharedPostUseCaseProxy,
+  ) {}
 
   @Get()
   async getAllPosts() {
-    console.log('Controlleur');
-
-    return this.postService.getAllPosts();
+    return this.sharedPostUseCaseProxy.getAllPosts();
   }
 
   @Get(':id')
   async getPostById(@Param() params: FindIdParams) {
     const postId = new PostId(params.id);
-    return this.postService.getPostById(postId);
+    return this.postUseCaseProxy.getPostById(postId);
   }
 
   @Get(':id/assets')
@@ -48,7 +50,7 @@ export class PostController {
     @Res({ passthrough: true }) response: FastifyReply,
   ) {
     const postId = new PostId(params.id);
-    const files = await this.postService.getPostAssets(postId);
+    const files = await this.postUseCaseProxy.getPostAssets(postId);
 
     const stream = createReadStream(join(process.cwd(), files[0].url));
     response.headers({
@@ -67,7 +69,7 @@ export class PostController {
     if (!file) {
       throw new BadRequestException('Post picture file is required.');
     } else {
-      return this.postService.createPost(postData, file);
+      return this.sharedPostUseCaseProxy.createPost(postData, file);
     }
   }
 
@@ -77,12 +79,12 @@ export class PostController {
     @Body() postData: UpdatePostDto,
   ) {
     const postId = new PostId(params.id);
-    return this.postService.updatePost(postId, postData);
+    return this.postUseCaseProxy.updatePost(postId, postData);
   }
 
   @Delete(':id')
   async removePost(@Param() params: FindIdParams) {
     const postId = new PostId(params.id);
-    return this.postService.removePost(postId);
+    return this.postUseCaseProxy.removePost(postId);
   }
 }

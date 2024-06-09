@@ -6,17 +6,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssetService } from 'src/application/services/asset.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CategoryService } from 'src/application/services/category.service';
-import { PostService } from 'src/application/services/post.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { ValidationService } from '../../validators/validation.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Category } from 'src/domain/entities/category.entity';
-import { PostUseCaseProxy } from 'src/application/proxies/postUseCase.proxy';
-import { GetAllPostsUseCase } from 'src/application/useCases/post/getAllPosts.useCase';
+import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Post, Asset, Category])],
+  imports: [
+    TypeOrmModule.forFeature([User, Post, Asset, Category]),
+    SharedPostModule,
+  ],
   controllers: [ArtistController],
   providers: [
     ArtistService,
