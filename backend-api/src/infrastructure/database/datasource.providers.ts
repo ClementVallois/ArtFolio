@@ -17,7 +17,7 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       database: this.configService.get<string>('DB_API_NAME'),
       entities: [__dirname + '../../../**/domain/**/*.entity{.ts,.js}'],
       synchronize: true,
-      logging: false,
+      logging: true,
       migrationsRun: true,
       migrations: [__dirname + '/../**/migrations/*{.ts,.js}'],
       namingStrategy: new SnakeNamingStrategy(),

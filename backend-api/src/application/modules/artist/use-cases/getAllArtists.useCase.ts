@@ -1,24 +1,17 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
-import { Repository } from 'typeorm';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 
 @Injectable()
 export class GetAllArtistsUseCase {
-  constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly artistRepository: ArtistRepository) {}
 
   async execute(): Promise<User[]> {
     try {
-      return await this.userRepository.find({
-        where: { role: 'artist' },
-        order: { createdAt: 'DESC' },
-      });
+      return await this.artistRepository.findAllByDescCreateDate();
     } catch (error) {
       throw new HttpException(
-        'Error getting artists',
+        `Error getting artists : ${error}`,
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }

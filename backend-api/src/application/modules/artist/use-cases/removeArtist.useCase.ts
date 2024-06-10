@@ -5,17 +5,19 @@ import { FileService } from 'src/infrastructure/services/file/file.service';
 import { Repository } from 'typeorm';
 import { ArtistId } from 'src/domain/value objects/artistId';
 import { GetArtistByIdUseCase } from './getArtistById.useCase';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 
 @Injectable()
 export class RemoveArtistUseCase {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly artistRepository: ArtistRepository,
     private readonly fileService: FileService,
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
   ) {}
 
-  async execute(artistId: ArtistId): Promise<User> {
-    const artist = await this.getArtistByIdUseCase.execute(artistId);
+  async execute(id: ArtistId): Promise<User> {
+    const artistId = id.toString();
+    const artist = await this.getArtistByIdUseCase.execute(id);
 
     try {
       await this.fileService.deleteProfilePicture(artistId);
@@ -28,7 +30,7 @@ export class RemoveArtistUseCase {
     }
 
     try {
-      return await this.userRepository.remove(artist);
+      return await this.artistRepository.remove(artist);
     } catch (error) {
       console.error(`Failed to remove artist from database: ${error}`);
       throw new HttpException(

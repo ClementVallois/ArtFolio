@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Asset } from 'src/domain/entities/asset.entity';
+import { PostId } from 'src/domain/value objects/postId';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -88,7 +89,8 @@ export class FileService {
     return { filePath, fileType };
   }
 
-  async deletePostsPictures(postId): Promise<void> {
+  async deletePostsPictures(id: PostId): Promise<void> {
+    const postId = id.toString();
     const postPictures = await this.assetRepository.find({
       where: {
         postId: { id: postId },

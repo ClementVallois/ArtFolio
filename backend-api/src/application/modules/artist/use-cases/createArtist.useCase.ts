@@ -9,11 +9,12 @@ import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHan
 import { ValidationService } from 'src/application/validators/validation.service';
 import { File } from '@nest-lab/fastify-multer';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 
 @Injectable()
 export class CreateArtistUseCase {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly artistRepository: ArtistRepository,
     private readonly sharedPostUseCaseProxy: SharedPostUseCaseProxy,
     private readonly categoryService: CategoryService,
     private readonly validationService: ValidationService,
@@ -31,8 +32,7 @@ export class CreateArtistUseCase {
 
     let artist: User;
     try {
-      artist = this.userRepository.create(artistData);
-      await this.userRepository.save(artist);
+      artist = await this.artistRepository.create(artistData);
     } catch (error) {
       this.databaseErrorHandler.handleDatabaseError(error, artistData);
     }

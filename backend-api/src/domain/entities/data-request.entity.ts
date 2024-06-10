@@ -14,7 +14,6 @@ export class DataRequest {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // One User can have many DataRequests
   @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
   @ManyToOne(() => User, (user) => user.id, {
     onDelete: 'CASCADE',

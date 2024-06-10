@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { AssetService } from 'src/application/services/asset.service';
-import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
 import { GetArtistPinnedPostUseCase } from 'src/application/shared/modules/post/use-cases/getArtistPinnedPost.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { ArtistId } from 'src/domain/value objects/artistId';
-import { Repository } from 'typeorm';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 
 @Injectable()
 export class GetRandomArtistsPostUseCase {
   constructor(
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly artistRepository: ArtistRepository,
     private readonly getArtistPinnedPostUseCase: GetArtistPinnedPostUseCase,
     private readonly assetService: AssetService,
   ) {}
@@ -26,9 +23,7 @@ export class GetRandomArtistsPostUseCase {
       artistAsset: Asset;
     }[]
   > {
-    const randomArtists = await this.userRepository.find({
-      where: { role: 'artist' },
-    });
+    const randomArtists = await this.artistRepository.find();
 
     const artistsInDB = randomArtists.length;
     const selectedArtists: {

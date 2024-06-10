@@ -20,27 +20,26 @@ import { UpdateArtistUseCase } from 'src/application/modules/artist/use-cases/up
 import { RemoveArtistUseCase } from 'src/application/modules/artist/use-cases/removeArtist.useCase';
 import { SharedPostUseCaseProxy } from '../post/proxies/sharedPostUseCase.proxy';
 import { ValidationService } from 'src/application/validators/validation.service';
-import { ArtistModule } from 'src/application/modules/artist/artist.module';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
   providers: [
+    ArtistRepository,
+    { provide: 'IArtistRepository', useClass: ArtistRepository },
     FileService,
-
     ErrorService,
     GetArtistByIdUseCase,
-
     DatabaseErrorHandler,
     ProfilePictureHandler,
     AssetService,
     CategoryService,
     ValidationService,
     SharedArtistUseCaseProxy,
-    GetArtistPinnedPostUseCase,
     GetRandomArtistsPostUseCase,
     GetAllPostsUseCase,
     GetLastRegisteredArtistsPostsUseCase,

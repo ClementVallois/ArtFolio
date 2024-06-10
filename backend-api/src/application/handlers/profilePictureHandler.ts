@@ -1,4 +1,3 @@
-// src/application/useCases/shared/profilePictureHandler.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import { User } from 'src/domain/entities/user.entity';
