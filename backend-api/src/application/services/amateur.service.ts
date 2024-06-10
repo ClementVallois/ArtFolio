@@ -11,7 +11,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Asset } from 'src/domain/entities/asset.entity';
-import { DataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
 import { File } from '@nest-lab/fastify-multer';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';
@@ -24,8 +24,8 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Asset)
     private readonly assetRepository: Repository<Asset>,
-    @InjectRepository(DataRequest)
-    private readonly dataRequestRepository: Repository<DataRequest>,
+    @InjectRepository(PersonalDataRequest)
+    private readonly dataRequestRepository: Repository<PersonalDataRequest>,
     private readonly errorService: ErrorService,
     private readonly fileService: FileService,
     private readonly assetService: AssetService,
@@ -70,7 +70,7 @@ export class UserService {
     return userAssets;
   }
 
-  async getUserDataRequests(userId: string): Promise<DataRequest[]> {
+  async getUserDataRequests(userId: string): Promise<PersonalDataRequest[]> {
     const dataRequests = await this.dataRequestRepository.find({
       where: { user: { id: userId } },
     });

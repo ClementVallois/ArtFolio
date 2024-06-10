@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { DataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
 import { User } from 'src/domain/entities/user.entity';
 
 @Injectable()
 export class DataRequestSeederService {
   constructor(
-    @InjectRepository(DataRequest)
-    private readonly dataRequestRepository: Repository<DataRequest>,
+    @InjectRepository(PersonalDataRequest)
+    private readonly dataRequestRepository: Repository<PersonalDataRequest>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
   ) {}
@@ -27,7 +27,7 @@ export class DataRequestSeederService {
     const users = await this.userRepository.find();
     const fakeData = Array.from({ length: 10 }, () => {
       const user = faker.helpers.arrayElement(users);
-      const fakeEntity = new DataRequest();
+      const fakeEntity = new PersonalDataRequest();
       fakeEntity.id = faker.string.uuid();
       fakeEntity.user = user;
       fakeEntity.createdAt = faker.date.recent();

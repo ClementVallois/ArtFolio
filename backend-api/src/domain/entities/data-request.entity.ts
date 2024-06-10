@@ -9,8 +9,8 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('data_requests')
-export class DataRequest {
+@Entity('personal_data_requests')
+export class PersonalDataRequest {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

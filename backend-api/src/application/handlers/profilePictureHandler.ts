@@ -12,9 +12,12 @@ export class ProfilePictureHandler {
     private readonly assetService: AssetService,
   ) {}
 
-  async handle(user: User, profilePicture: File | undefined): Promise<void> {
+  async handle(
+    artistData: User,
+    profilePicture: File | undefined,
+  ): Promise<void> {
     if (!profilePicture) return;
-    const artistId = new ArtistId(user.id);
+    const artistId = new ArtistId(artistData.id);
     const existingProfilePicture =
       await this.assetService.getArtistProfilePicture(artistId);
     if (existingProfilePicture) {
@@ -23,10 +26,13 @@ export class ProfilePictureHandler {
 
     try {
       const fileData = await this.fileService.saveProfilePicture(
-        user.id,
+        artistData.id,
         profilePicture,
       );
-      await this.assetService.addOrUpdateProfilePictureMetadata(user, fileData);
+      await this.assetService.addOrUpdateProfilePictureMetadata(
+        artistData,
+        fileData,
+      );
     } catch (error) {
       throw new HttpException(
         'Failed to save profile picture',

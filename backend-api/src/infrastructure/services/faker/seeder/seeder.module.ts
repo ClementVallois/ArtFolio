@@ -4,7 +4,7 @@ import { User } from 'src/domain/entities/user.entity';
 import { Category } from 'src/domain/entities/category.entity';
 import { Post } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
-import { DataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
 import { PostSeederService } from './seeders/post.seeder.service';
 import { UserSeederService } from './seeders/user.seeder.service';
 import { AssetSeederService } from './seeders/asset.seeder.service';
@@ -13,7 +13,13 @@ import { DataRequestSeederService } from './seeders/data-request.seeder.service'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Category, Post, Asset, DataRequest]),
+    TypeOrmModule.forFeature([
+      User,
+      Category,
+      Post,
+      Asset,
+      PersonalDataRequest,
+    ]),
   ],
   controllers: [],
   providers: [
