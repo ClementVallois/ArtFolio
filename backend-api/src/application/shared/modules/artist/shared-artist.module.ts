@@ -14,20 +14,44 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CategoryService } from 'src/application/services/category.service';
 import { Category } from 'src/domain/entities/category.entity';
 import { GetLastRegisteredArtistsPostsUseCase } from 'src/application/modules/artist/use-cases/getLastRegisteredArtistsPosts.useCase';
+import { GetRandomArtistsPostUseCase } from 'src/application/modules/artist/use-cases/getRandomArtistsPost.useCase';
+import { CreateArtistUseCase } from 'src/application/modules/artist/use-cases/createArtist.useCase';
+import { UpdateArtistUseCase } from 'src/application/modules/artist/use-cases/updateArtist.useCase';
+import { RemoveArtistUseCase } from 'src/application/modules/artist/use-cases/removeArtist.useCase';
+import { SharedPostUseCaseProxy } from '../post/proxies/sharedPostUseCase.proxy';
+import { ValidationService } from 'src/application/validators/validation.service';
+import { ArtistModule } from 'src/application/modules/artist/artist.module';
+import { ErrorService } from 'src/infrastructure/common/filter/error.service';
+import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
+import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
+import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
   providers: [
     FileService,
+
+    ErrorService,
+    GetArtistByIdUseCase,
+
+    DatabaseErrorHandler,
+    ProfilePictureHandler,
     AssetService,
     CategoryService,
+    ValidationService,
     SharedArtistUseCaseProxy,
+    GetArtistPinnedPostUseCase,
+    GetRandomArtistsPostUseCase,
     GetAllPostsUseCase,
     GetLastRegisteredArtistsPostsUseCase,
     GetArtistPinnedPostUseCase,
     GetAllArtistPostsUseCase,
     GetOneArtistPostUseCase,
     CreatePostUseCase,
+    CreateArtistUseCase,
+    UpdateArtistUseCase,
+    RemoveArtistUseCase,
+    SharedPostUseCaseProxy,
   ],
   exports: [
     SharedArtistUseCaseProxy,

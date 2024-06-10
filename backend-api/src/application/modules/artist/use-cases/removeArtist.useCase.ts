@@ -14,13 +14,12 @@ export class RemoveArtistUseCase {
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
   ) {}
 
-  async execute(id: ArtistId): Promise<User> {
-    const artistId = id.toString();
+  async execute(artistId: ArtistId): Promise<User> {
     const artist = await this.getArtistByIdUseCase.execute(artistId);
 
     try {
-      await this.fileService.deleteProfilePicture(id);
-      await this.fileService.deleteUserPostsPictures(id);
+      await this.fileService.deleteProfilePicture(artistId);
+      await this.fileService.deleteUserPostsPictures(artistId);
     } catch (error) {
       throw new HttpException(
         "Failed to remove the artist's profile picture",

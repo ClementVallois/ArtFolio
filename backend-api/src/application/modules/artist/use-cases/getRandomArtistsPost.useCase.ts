@@ -2,9 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AssetService } from 'src/application/services/asset.service';
 import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
+import { GetArtistPinnedPostUseCase } from 'src/application/shared/modules/post/use-cases/getArtistPinnedPost.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
+import { ArtistId } from 'src/domain/value objects/artistId';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -12,7 +14,7 @@ export class GetRandomArtistsPostUseCase {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    private readonly sharedPostUseCaseProxy: SharedPostUseCaseProxy,
+    private readonly getArtistPinnedPostUseCase: GetArtistPinnedPostUseCase,
     private readonly assetService: AssetService,
   ) {}
 
@@ -39,15 +41,13 @@ export class GetRandomArtistsPostUseCase {
     for (let i = 0; i < numberOfArtists; i++) {
       const randomIndex = Math.floor(Math.random() * artistsInDB);
       const randomArtist = randomArtists[randomIndex];
-
-      const pinnedPost = await this.sharedPostUseCaseProxy.getArtistPinnedPost(
-        randomArtist.id,
-      );
+      const artistId = new ArtistId(randomArtist.id);
+      const pinnedPost =
+        await this.getArtistPinnedPostUseCase.execute(artistId);
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
 
-      const artistAsset = await this.assetService.getArtistProfilePicture(
-        randomArtist.id,
-      );
+      const artistAsset =
+        await this.assetService.getArtistProfilePicture(artistId);
 
       selectedArtists.push({
         artist: randomArtist,

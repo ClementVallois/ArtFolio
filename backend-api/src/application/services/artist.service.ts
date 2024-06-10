@@ -19,6 +19,7 @@ import { CategoryService } from './category.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { SharedPostUseCaseProxy } from '../shared/modules/post/proxies/sharedPostUseCase.proxy';
+import { ArtistId } from 'src/domain/value objects/artistId';
 
 @Injectable()
 export class ArtistService {
@@ -100,10 +101,11 @@ export class ArtistService {
       const pinnedPost = await this.sharedPostUseCaseProxy.getArtistPinnedPost(
         artist.id,
       );
+      const artistId = new ArtistId(artist.id);
+
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
-      const artistAsset = await this.assetService.getArtistProfilePicture(
-        artist.id,
-      );
+      const artistAsset =
+        await this.assetService.getArtistProfilePicture(artistId);
 
       artistWithPostsList.push({
         artist,
@@ -139,15 +141,15 @@ export class ArtistService {
     for (let i = 0; i < numberOfArtists; i++) {
       const randomIndex = Math.floor(Math.random() * artistsInDB);
       const randomArtist = randomArtists[randomIndex];
+      const artistId = new ArtistId(randomArtist.id);
 
       const pinnedPost = await this.sharedPostUseCaseProxy.getArtistPinnedPost(
         randomArtist.id,
       );
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
 
-      const artistAsset = await this.assetService.getArtistProfilePicture(
-        randomArtist.id,
-      );
+      const artistAsset =
+        await this.assetService.getArtistProfilePicture(artistId);
 
       selectedArtists.push({
         artist: randomArtist,
@@ -210,8 +212,10 @@ export class ArtistService {
   }
 
   async handleProfilePicture(artistData: User, profilePicture: File) {
+    const artistId = new ArtistId(artistData.id);
+
     const artistProfilePicture =
-      await this.assetService.getArtistProfilePicture(artistData.id);
+      await this.assetService.getArtistProfilePicture(artistId);
     if (artistProfilePicture && profilePicture) {
       await this.fileService.deleteProfilePicture(artistData.id);
     }

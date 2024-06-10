@@ -14,21 +14,30 @@ import { Category } from 'src/domain/entities/category.entity';
 import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
 import { ArtistUseCaseProxy } from './proxies/artistUseCase.proxy';
 import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
+import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
+import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
+import { GetAllArtistsUseCase } from './use-cases/getAllArtists.useCase';
+import { GetArtistByIdUseCase } from './use-cases/getArtistById.useCase';
+import { SharedCategoryUseCaseProxy } from 'src/application/shared/modules/category/proxies/sharedCategoryUseCase.proxy';
+import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
+import { GetArtistCategoriesUseCase } from '../category/use-cases/getArtistCategories.useCase';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Post, Asset, Category]),
     SharedPostModule,
     SharedArtistModule,
+    SharedCategoryModule,
   ],
   controllers: [ArtistController],
   providers: [
-    ArtistUseCaseProxy,
-    AssetService,
-    FileService,
     CategoryService,
-    ErrorService,
-    ValidationService,
+    ArtistUseCaseProxy,
+    GetAllArtistsUseCase,
+    GetArtistByIdUseCase,
+    SharedCategoryUseCaseProxy,
+    GetArtistCategoriesUseCase,
   ],
+  exports: [ArtistUseCaseProxy],
 })
 export class ArtistModule {}

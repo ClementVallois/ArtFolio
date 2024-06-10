@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
 import { File } from '@nest-lab/fastify-multer';
 import { GetArtistByIdUseCase } from './getArtistById.useCase';
+import { ArtistId } from 'src/domain/value objects/artistId';
 
 @Injectable()
 export class UpdateArtistUseCase {
@@ -17,7 +18,7 @@ export class UpdateArtistUseCase {
   ) {}
 
   async execute(
-    id: string,
+    id: ArtistId,
     artistData: UpdateArtistDto,
     profilePicture: File,
   ): Promise<User> {
