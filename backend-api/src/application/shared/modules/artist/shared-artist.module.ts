@@ -25,12 +25,14 @@ import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHan
 import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { AssignCategoriesToArtistUseCase } from 'src/application/modules/category/use-cases/assignCategoriesToArtist.useCase';
+import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
   providers: [
-    ArtistRepository,
-    { provide: 'IArtistRepository', useClass: ArtistRepository },
+    { provide: ArtistRepository, useClass: ArtistRepository },
+    { provide: CategoryRepository, useClass: CategoryRepository },
     FileService,
     ErrorService,
     GetArtistByIdUseCase,
@@ -48,6 +50,7 @@ import { ArtistRepository } from 'src/infrastructure/repositories/artist.reposit
     GetOneArtistPostUseCase,
     CreatePostUseCase,
     CreateArtistUseCase,
+    AssignCategoriesToArtistUseCase,
     UpdateArtistUseCase,
     RemoveArtistUseCase,
     SharedPostUseCaseProxy,

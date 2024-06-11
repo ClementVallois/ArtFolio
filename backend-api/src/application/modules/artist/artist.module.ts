@@ -15,6 +15,7 @@ import { SharedCategoryUseCaseProxy } from 'src/application/shared/modules/categ
 import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
 import { GetArtistCategoriesUseCase } from '../category/use-cases/getArtistCategories.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 
 @Module({
   imports: [
@@ -25,8 +26,8 @@ import { ArtistRepository } from 'src/infrastructure/repositories/artist.reposit
   ],
   controllers: [ArtistController],
   providers: [
-    ArtistRepository,
-    { provide: 'IArtistRepository', useClass: ArtistRepository },
+    { provide: ArtistRepository, useClass: ArtistRepository },
+    { provide: CategoryRepository, useClass: CategoryRepository },
     CategoryService,
     ArtistUseCaseProxy,
     GetAllArtistsUseCase,

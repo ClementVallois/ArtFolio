@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { PersonalDataRequestService } from '../../services/personal-data-request.service';
 import { PersonalDataRequestController } from '../../../presentation/controllers/personal-data-request.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
@@ -18,7 +17,6 @@ import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalData
       provide: 'IPersonalDataRequestRepository',
       useClass: PersonalDataRequestRepository,
     },
-    PersonalDataRequestService,
     GetAllPersonalDataRequestUseCase,
     GetOnePersonalDataRequestUseCase,
     CreatePersonalDataRequestUseCase,

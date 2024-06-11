@@ -4,7 +4,7 @@ import { CategoryId } from 'src/domain/value objects/categoryId';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 
 @Injectable()
-export class RemoveCategoryUseCase {
+export class GetCategoryByIdUseCase {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(id: CategoryId): Promise<Category> {
@@ -12,6 +12,6 @@ export class RemoveCategoryUseCase {
     if (!category) {
       throw new NotFoundException(`Category not found with ID: ${id}`);
     }
-    return this.categoryRepository.remove(category);
+    return category;
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
+import { ArtistId } from 'src/domain/value objects/artistId';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
 import { Repository } from 'typeorm';
@@ -18,9 +19,10 @@ export class ArtistRepository implements IArtistRepository {
     return this.artistRepository.save(artist);
   }
 
-  async findArtistById(id: string): Promise<User | undefined> {
+  async findArtistById(id: ArtistId): Promise<User | undefined> {
+    const artistId = id.toString();
     return this.artistRepository.findOne({
-      where: { id, role: 'artist' },
+      where: { id: artistId, role: 'artist' },
     });
   }
 

@@ -1,26 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/domain/entities/category.entity';
 import { ArtistId } from 'src/domain/value objects/artistId';
-import { Repository } from 'typeorm';
+import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 
 @Injectable()
 export class GetArtistCategoriesUseCase {
-  constructor(
-    @InjectRepository(Category)
-    private categoryRepository: Repository<Category>,
-  ) {}
+  constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(id: ArtistId): Promise<Category[]> {
-    const artistId = id.toString();
-    const categories = await this.categoryRepository.find({
-      where: { user: { id: artistId } },
-    });
-    if (!categories || categories.length === 0) {
+    const artistCategories =
+      await this.categoryRepository.findArtistCategories(id);
+
+    if (artistCategories.length === 0) {
       throw new NotFoundException(
-        `Categories not found for User with ID: ${artistId}`,
+        `Categories not found for User with ID: ${id}`,
       );
     }
-    return categories;
+    return artistCategories;
   }
 }

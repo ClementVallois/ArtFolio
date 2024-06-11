@@ -8,11 +8,10 @@ export class GetArtistByIdUseCase {
   constructor(private readonly artistRepository: ArtistRepository) {}
 
   async execute(id: ArtistId): Promise<User> {
-    const artistId = id.toString();
-    const artist = await this.artistRepository.findArtistById(artistId);
+    const artist = await this.artistRepository.findArtistById(id);
     if (!artist) {
-      throw new NotFoundException(`Artist not found with ID: ${artistId}`);
+      throw new NotFoundException(`Artist not found with ID: ${id}`);
     }
-    return artist;
+    return artist[0];
   }
 }
