@@ -13,7 +13,7 @@ export class AssignCategoriesToArtistUseCase {
 
   async execute(artistId: ArtistId, categoriesIds: string[]): Promise<void> {
     for (const categoryId of categoriesIds) {
-      const category = await this.categoryRepository.findOne(
+      const category = await this.categoryRepository.findOneCategory(
         new CategoryId(categoryId),
       );
       if (!category) {
@@ -24,7 +24,7 @@ export class AssignCategoriesToArtistUseCase {
         throw new NotFoundException(`Artist ${artistId} not found`);
       }
       category.user[0] = artist;
-      await this.categoryRepository.save(category);
+      await this.categoryRepository.saveCategory(category);
     }
   }
 }

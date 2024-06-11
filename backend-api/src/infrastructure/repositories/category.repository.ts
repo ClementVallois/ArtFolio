@@ -30,18 +30,18 @@ export class CategoryRepository implements ICategoryRepository {
     return this.categoryRepository.save(existingCategory);
   }
 
-  remove(category: Category): Promise<Category> {
+  removeCategory(category: Category): Promise<Category> {
     return this.categoryRepository.remove(category);
   }
 
-  save(category: Category): Promise<Category> {
+  saveCategory(category: Category): Promise<Category> {
     return this.categoryRepository.save(category);
   }
 
-  findAll(): Promise<Category[] | undefined> {
+  findAllCategories(): Promise<Category[]> {
     return this.categoryRepository.find();
   }
-  findOne(categoryId: CategoryId): Promise<Category> {
+  findOneCategory(categoryId: CategoryId): Promise<Category> {
     return this.categoryRepository.findOne({
       where: { id: categoryId.toString() },
     });

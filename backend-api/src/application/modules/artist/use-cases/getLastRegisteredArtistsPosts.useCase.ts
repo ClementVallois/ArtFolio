@@ -44,8 +44,9 @@ export class GetLastRegisteredArtistsPostsUseCase {
       const pinnedPost =
         await this.getArtistPinnedPostUseCase.execute(artistId);
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
+
       const artistAsset =
-        await this.assetService.getArtistProfilePicture(artistId);
+        await this.assetService.getUserProfilePicture(artistId);
 
       artistWithPostsList.push({
         artist,

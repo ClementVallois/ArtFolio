@@ -27,7 +27,7 @@ export class RemoveArtistUseCase {
     }
 
     try {
-      return await this.artistRepository.remove(artist);
+      return await this.artistRepository.removeArtist(artist);
     } catch (error) {
       console.error(`Failed to remove artist from database: ${error}`);
       throw new HttpException(

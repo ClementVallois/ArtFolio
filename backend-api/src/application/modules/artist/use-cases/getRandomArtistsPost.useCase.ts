@@ -23,7 +23,7 @@ export class GetRandomArtistsPostUseCase {
       artistAsset: Asset;
     }[]
   > {
-    const randomArtists = await this.artistRepository.findAll();
+    const randomArtists = await this.artistRepository.findAllArtists();
 
     const artistsInDB = randomArtists.length;
     const selectedArtists: {
@@ -42,7 +42,7 @@ export class GetRandomArtistsPostUseCase {
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
 
       const artistAsset =
-        await this.assetService.getArtistProfilePicture(artistId);
+        await this.assetService.getUserProfilePicture(artistId);
 
       selectedArtists.push({
         artist: randomArtist,

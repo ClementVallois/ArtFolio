@@ -12,7 +12,7 @@ import {
   BadRequestException,
   UploadedFiles,
 } from '@nestjs/common';
-import { UserService } from '../../application/services/amateur.service';
+import { UserService } from '../../application/services/user.service';
 import { CreateUserDto } from '../dto/amateur/create-user.dto';
 import { UpdateUserDto } from '../dto/amateur/update-user.dto';
 import { FindAuth0IdParams, FindIdParams } from '../utils/params.dto';

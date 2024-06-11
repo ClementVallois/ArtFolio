@@ -1,7 +1,7 @@
 import { Logger, Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './infrastructure/security/jwt.module';
-import { UserModule } from './application/modules/amateur/user.module';
+import { UserModule } from './application/modules/user/user.module';
 import { PostModule } from './application/modules/post/post.module';
 import { DatabaseModule } from './infrastructure/database/datasource.module';
 import { AssetModule } from './application/modules/asset/asset.module';
@@ -13,6 +13,7 @@ import { ArtistModule } from './application/modules/artist/artist.module';
 import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { SeederService } from './infrastructure/services/faker/seeder/seeder.service';
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
+import { AmateurModule } from './application/modules/amateur/amateur.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { PersonalDataRequestModule } from './application/modules/personal-data-r
     ArtistModule,
     PostModule,
     DatabaseModule,
+    AmateurModule,
     PersonalDataRequestModule,
     EnvConfigModule,
     SeederModule,

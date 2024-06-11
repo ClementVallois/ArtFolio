@@ -40,10 +40,10 @@ export class FileService {
     return { filePath, fileType };
   }
 
-  async deleteProfilePicture(artistId): Promise<void> {
+  async deleteProfilePicture(userId: string): Promise<void> {
     const userProfilePicture = await this.assetRepository.findOne({
       where: {
-        userId: { id: artistId },
+        userId: { id: userId },
         type: 'profile_picture',
       },
     });
@@ -119,7 +119,7 @@ export class FileService {
     }
   }
 
-  async deleteUserPostsPictures(userId): Promise<void> {
+  async deleteUserPostsPictures(userId: string): Promise<void> {
     const postPictures = await this.assetRepository.find({
       where: {
         userId: { id: userId },

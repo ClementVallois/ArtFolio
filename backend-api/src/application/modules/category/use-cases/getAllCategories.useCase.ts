@@ -7,7 +7,7 @@ export class GetAllCategoriesUseCase {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(): Promise<Category[]> {
-    const categories = await this.categoryRepository.findAll();
+    const categories = await this.categoryRepository.findAllCategories();
 
     if (!categories) {
       throw new NotFoundException(`No categories found`);

@@ -8,7 +8,7 @@ export class GetCategoryByIdUseCase {
   constructor(private readonly categoryRepository: CategoryRepository) {}
 
   async execute(id: CategoryId): Promise<Category> {
-    const category = await this.categoryRepository.findOne(id);
+    const category = await this.categoryRepository.findOneCategory(id);
     if (!category) {
       throw new NotFoundException(`Category not found with ID: ${id}`);
     }

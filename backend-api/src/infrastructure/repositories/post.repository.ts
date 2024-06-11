@@ -15,7 +15,7 @@
 //     return this.postRepository.find(options);
 //   }
 
-//   findOne(options?: any): Promise<Post | undefined> {
+//   findOne(options?: any): Promise<Post> {
 //     return this.postRepository.findOne(options);
 //   }
 

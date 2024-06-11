@@ -105,7 +105,7 @@ export class ArtistService {
 
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
       const artistAsset =
-        await this.assetService.getArtistProfilePicture(artistId);
+        await this.assetService.getUserProfilePicture(artistId);
 
       artistWithPostsList.push({
         artist,
@@ -149,7 +149,7 @@ export class ArtistService {
       const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
 
       const artistAsset =
-        await this.assetService.getArtistProfilePicture(artistId);
+        await this.assetService.getUserProfilePicture(artistId);
 
       selectedArtists.push({
         artist: randomArtist,
@@ -215,7 +215,7 @@ export class ArtistService {
     const artistId = new ArtistId(artistData.id);
 
     const artistProfilePicture =
-      await this.assetService.getArtistProfilePicture(artistId);
+      await this.assetService.getUserProfilePicture(artistId);
     if (artistProfilePicture && profilePicture) {
       await this.fileService.deleteProfilePicture(artistData.id);
     }

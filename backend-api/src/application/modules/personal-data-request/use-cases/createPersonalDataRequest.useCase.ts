@@ -20,6 +20,8 @@ export class CreatePersonalDataRequestUseCase {
     });
     const dataRequest = new PersonalDataRequest();
     dataRequest.user = user;
-    return this.personalDataRequestRepository.create(dataRequest);
+    return this.personalDataRequestRepository.createPersonalDataRequest(
+      dataRequest,
+    );
   }
 }

@@ -12,6 +12,6 @@ export class GetArtistByIdUseCase {
     if (!artist) {
       throw new NotFoundException(`Artist not found with ID: ${id}`);
     }
-    return artist[0];
+    return artist;
   }
 }

@@ -14,7 +14,7 @@ export class PersonalDataRequestRepository
     private readonly personalDataRequestRepository: Repository<PersonalDataRequest>,
   ) {}
 
-  async create(
+  async createPersonalDataRequest(
     personalDataRequestData: PersonalDataRequest,
   ): Promise<PersonalDataRequest> {
     const personalDataRequest = this.personalDataRequestRepository.create(
@@ -23,13 +23,11 @@ export class PersonalDataRequestRepository
     return this.personalDataRequestRepository.save(personalDataRequest);
   }
 
-  async findAllPersonalDataRequestWithUser(): Promise<
-    PersonalDataRequest[] | undefined
-  > {
+  async findAllPersonalDataRequestWithUser(): Promise<PersonalDataRequest[]> {
     return this.personalDataRequestRepository.find({ relations: ['user'] });
   }
 
-  async findOne(
+  async findOnePersonalDataRequest(
     personalDataRequestId: PersonalDataRequestId,
   ): Promise<PersonalDataRequest> {
     const id = personalDataRequestId.toString();

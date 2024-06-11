@@ -14,32 +14,32 @@ export class ArtistRepository implements IArtistRepository {
     private readonly artistRepository: Repository<User>,
   ) {}
 
-  async create(artistData: CreateArtistDto): Promise<User> {
+  async createArtist(artistData: CreateArtistDto): Promise<User> {
     const artist = this.artistRepository.create(artistData);
     return this.artistRepository.save(artist);
   }
 
-  async findArtistById(id: ArtistId): Promise<User | undefined> {
+  async findArtistById(id: ArtistId): Promise<User> {
     const artistId = id.toString();
     return this.artistRepository.findOne({
       where: { id: artistId, role: 'artist' },
     });
   }
 
-  async findAll(): Promise<User[] | undefined> {
+  async findAllArtists(): Promise<User[]> {
     return this.artistRepository.find({
       where: { role: 'artist' },
     });
   }
 
-  async findAllByDescCreateDate(): Promise<User[] | undefined> {
+  async findAllByDescCreateDate(): Promise<User[]> {
     return this.artistRepository.find({
       where: { role: 'artist' },
       order: { createdAt: 'DESC' },
     });
   }
 
-  async remove(artist: User): Promise<User> {
+  async removeArtist(artist: User): Promise<User> {
     return this.artistRepository.remove(artist);
   }
 

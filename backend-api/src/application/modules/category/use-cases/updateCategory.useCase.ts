@@ -16,7 +16,7 @@ export class UpdateCategoryUseCase {
     id: CategoryId,
     categoryData: UpdateCategoryDto,
   ): Promise<Category> {
-    const existingCategory = await this.categoryRepository.findOne(id);
+    const existingCategory = await this.categoryRepository.findOneCategory(id);
 
     if (!existingCategory) {
       throw new NotFoundException(`Category not found with ID: ${id}`);

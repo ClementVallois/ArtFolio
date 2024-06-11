@@ -100,7 +100,7 @@ export class UserSeederService {
       user.description = faker.lorem.words({ min: 10, max: 30 });
       user.status = 'active';
       user.auth0Id = auth0Id;
-      user.role = 'user';
+      user.role = 'amateur';
       user.createdAt = faker.date.recent();
       user.updatedAt = faker.date.recent();
       await this.userRepository.save(user);

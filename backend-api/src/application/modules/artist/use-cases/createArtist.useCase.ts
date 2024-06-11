@@ -31,7 +31,7 @@ export class CreateArtistUseCase {
 
     let artist: User;
     try {
-      artist = await this.artistRepository.create(artistData);
+      artist = await this.artistRepository.createArtist(artistData);
     } catch (error) {
       this.databaseErrorHandler.handleDatabaseError(error, artistData);
     }

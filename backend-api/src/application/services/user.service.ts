@@ -33,7 +33,7 @@ export class UserService {
 
   async getAllUsers(): Promise<User[]> {
     try {
-      return await this.userRepository.findBy({ role: 'user' });
+      return await this.userRepository.findBy({ role: 'amateur' });
     } catch (error) {
       throw new HttpException(
         'Error getting users',

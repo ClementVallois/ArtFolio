@@ -7,6 +7,7 @@ import { User } from 'src/domain/entities/user.entity';
 
 import { Repository } from 'typeorm';
 import { ArtistId } from 'src/domain/value objects/artistId';
+import { UserId } from 'src/domain/value objects/userId';
 
 @Injectable()
 export class AssetService {
@@ -43,16 +44,16 @@ export class AssetService {
     return userAssets;
   }
 
-  async getArtistProfilePicture(artistId: ArtistId): Promise<Asset> {
-    const artist = artistId.toString();
-    const artistAsset = await this.assetRepository.findOne({
-      where: { type: 'profile_picture', userId: { id: artist } },
+  async getUserProfilePicture(userId: UserId | ArtistId): Promise<Asset> {
+    const id = userId.toString();
+    const userProfilePicture = await this.assetRepository.findOne({
+      where: { type: 'profile_picture', userId: { id: id } },
     });
 
-    if (!artistAsset) {
+    if (!userProfilePicture) {
       return null;
     }
-    return artistAsset;
+    return userProfilePicture;
   }
 
   async addOrUpdateProfilePictureMetadata(

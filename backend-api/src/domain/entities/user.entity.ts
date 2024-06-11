@@ -37,7 +37,7 @@ export class User {
 
   @Column({
     type: 'enum',
-    enum: ['artist', 'user', 'moderator'],
+    enum: ['artist', 'amateur', 'moderator'],
     nullable: true,
   })
   role: string;

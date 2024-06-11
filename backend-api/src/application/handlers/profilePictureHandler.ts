@@ -3,7 +3,7 @@ import { File } from '@nest-lab/fastify-multer';
 import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from '../services/asset.service';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { UserId } from 'src/domain/value objects/userId';
 
 @Injectable()
 export class ProfilePictureHandler {
@@ -12,25 +12,22 @@ export class ProfilePictureHandler {
     private readonly assetService: AssetService,
   ) {}
 
-  async handle(
-    artistData: User,
-    profilePicture: File | undefined,
-  ): Promise<void> {
+  async handle(userData: User, profilePicture: File): Promise<void> {
     if (!profilePicture) return;
-    const artistId = new ArtistId(artistData.id);
+    const userId = new UserId(userData.id);
     const existingProfilePicture =
-      await this.assetService.getArtistProfilePicture(artistId);
+      await this.assetService.getUserProfilePicture(userId);
     if (existingProfilePicture) {
-      await this.fileService.deleteProfilePicture(artistId);
+      await this.fileService.deleteProfilePicture(userData.id);
     }
 
     try {
       const fileData = await this.fileService.saveProfilePicture(
-        artistData.id,
+        userData.id,
         profilePicture,
       );
       await this.assetService.addOrUpdateProfilePictureMetadata(
-        artistData,
+        userData,
         fileData,
       );
     } catch (error) {
