@@ -7,8 +7,9 @@ import { UserId } from '../value objects/userId';
 export interface IAssetRepository {
   findPostAssets(id: PostId): Promise<Asset[]>;
   findUserAssets(userId: UserId): Promise<Asset[]>;
-  findUserProfilePictureAsset(userId: AmateurId | ArtistId): Promise<Asset>;
-
-  createAsset(assetData: Asset): Promise<Asset>;
+  findUserProfilePictureAsset(
+    userId: AmateurId | ArtistId | UserId,
+  ): Promise<Asset>;
+  createAsset(assetData: Partial<Asset>): Promise<Asset>;
   saveAsset(assetEntity: Asset): Promise<Asset>;
 }

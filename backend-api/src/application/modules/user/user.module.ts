@@ -13,13 +13,40 @@ import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repos
 import { ValidationService } from 'src/application/validators/validation.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
+import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
+import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
+import { UserRepository } from 'src/infrastructure/repositories/user.repository';
+import { GetUserProfilePictureUseCase } from '../asset/use-cases/getUserProfilePicture.useCase';
+import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
+import { Category } from 'src/domain/entities/category.entity';
+import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
+import { GetUserByIdUseCase } from './use-cases/getUserById.useCase';
+import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
+import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Asset, PersonalDataRequest, Post])],
+  imports: [
+    TypeOrmModule.forFeature([
+      User,
+      Asset,
+      PersonalDataRequest,
+      Post,
+      Category,
+    ]),
+  ],
   controllers: [UserController],
   providers: [
     { provide: 'IAmateurRepository', useClass: AmateurRepository },
+    { provide: 'IAssetRepository', useClass: AssetRepository },
+    { provide: 'IUserRepository', useClass: UserRepository },
+    { provide: 'ICategoryRepository', useClass: CategoryRepository },
+    ProfilePictureService,
     UserService,
+    GetUserProfilePictureUseCase,
+    GetCategoryByIdUseCase,
+    GetUserByIdUseCase,
+    SaveAssetUseCase,
+    CreateAssetUseCase,
     ValidationService,
     DatabaseErrorHandler,
     ProfilePictureHandler,

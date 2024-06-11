@@ -29,6 +29,14 @@ import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.
 import { GetAmateurByIdUseCase } from 'src/application/modules/amateur/use-cases/getAmateurById.useCase';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { PostRepository } from 'src/infrastructure/repositories/post.repository';
+import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
+import { GetUserProfilePictureUseCase } from 'src/application/modules/asset/use-cases/getUserProfilePicture.useCase';
+import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
+import { UserRepository } from 'src/infrastructure/repositories/user.repository';
+import { GetCategoryByIdUseCase } from 'src/application/modules/category/use-cases/getCategoryById.useCase';
+import { GetUserByIdUseCase } from 'src/application/modules/user/use-cases/getUserById.useCase';
+import { SaveAssetUseCase } from 'src/application/modules/asset/use-cases/saveAsset.useCase';
+import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/createAsset.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
@@ -37,18 +45,26 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
     { provide: 'IAmateurRepository', useClass: AmateurRepository },
     { provide: 'IPostRepository', useClass: PostRepository },
+    { provide: 'IAssetRepository', useClass: AssetRepository },
+    { provide: 'IUserRepository', useClass: UserRepository },
     FileService,
     ErrorService,
     GetArtistByIdUseCase,
     DatabaseErrorHandler,
     ProfilePictureHandler,
     AssetService,
+    GetCategoryByIdUseCase,
     ValidationService,
     SharedArtistUseCaseProxy,
     GetRandomArtistsPostUseCase,
     GetAllPostsUseCase,
     GetLastRegisteredArtistsPostsUseCase,
     GetArtistPinnedPostUseCase,
+    ProfilePictureService,
+    GetUserByIdUseCase,
+    SaveAssetUseCase,
+    CreateAssetUseCase,
+    GetUserProfilePictureUseCase,
     GetAllArtistPostsUseCase,
     GetOneArtistPostUseCase,
     GetAmateurByIdUseCase,

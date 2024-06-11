@@ -26,14 +26,15 @@ export class AssetRepository implements IAssetRepository {
     });
   }
   async findUserProfilePictureAsset(
-    userId: AmateurId | ArtistId,
+    userId: AmateurId | ArtistId | UserId,
   ): Promise<Asset> {
     return this.categoryRepository.findOne({
       where: { type: 'profile_picture', userId: { id: userId.toString() } },
     });
   }
-  async createAsset(assetData: Asset): Promise<Asset> {
-    return this.categoryRepository.save(assetData);
+  async createAsset(assetData: Partial<Asset>): Promise<Asset> {
+    const newAsset = this.categoryRepository.create(assetData);
+    return this.categoryRepository.save(newAsset);
   }
   async saveAsset(assetEntity: Asset): Promise<Asset> {
     return this.categoryRepository.save(assetEntity);

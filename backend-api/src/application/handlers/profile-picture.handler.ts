@@ -1,22 +1,27 @@
+// profile-picture.handler.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
-import { AssetService } from '../services/asset.service';
 import { UserId } from 'src/domain/value objects/userId';
+import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
+import { GetUserProfilePictureUseCase } from '../modules/asset/use-cases/getUserProfilePicture.useCase';
 
 @Injectable()
 export class ProfilePictureHandler {
   constructor(
     private readonly fileService: FileService,
-    private readonly assetService: AssetService,
+    private readonly profilePictureService: ProfilePictureService,
+    private readonly getUserProfilePicture: GetUserProfilePictureUseCase,
   ) {}
 
   async handle(userData: User, profilePicture: File): Promise<void> {
     if (!profilePicture) return;
+
     const userId = new UserId(userData.id);
     const existingProfilePicture =
-      await this.assetService.getUserProfilePicture(userId);
+      await this.getUserProfilePicture.execute(userId);
+
     if (existingProfilePicture) {
       await this.fileService.deleteProfilePicture(userData.id);
     }
@@ -26,7 +31,7 @@ export class ProfilePictureHandler {
         userData.id,
         profilePicture,
       );
-      await this.assetService.addOrUpdateProfilePictureMetadata(
+      await this.profilePictureService.addOrUpdateProfilePictureMetadata(
         userData,
         fileData,
       );

@@ -1,21 +1,31 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Asset } from 'src/domain/entities/asset.entity';
+import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interface';
 import { AmateurId } from 'src/domain/value objects/amateurId';
 import { ArtistId } from 'src/domain/value objects/artistId';
-import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
+import { UserId } from 'src/domain/value objects/userId';
 
 @Injectable()
 export class GetUserProfilePictureUseCase {
-  constructor(private readonly assetRepository: AssetRepository) {}
+  constructor(
+    @Inject('IAssetRepository')
+    private readonly assetRepository: IAssetRepository,
+  ) {}
 
-  async execute(userId: AmateurId | ArtistId): Promise<Asset> {
-    const userProfilePicture =
-      await this.assetRepository.findUserProfilePictureAsset(userId);
-    if (!userProfilePicture) {
-      throw new NotFoundException(
-        `Profile picture asset not found for User with ID: ${userId}`,
-      );
+  async execute(userId: AmateurId | ArtistId | UserId): Promise<Asset | null> {
+    try {
+      const userProfilePicture =
+        await this.assetRepository.findUserProfilePictureAsset(userId);
+      if (!userProfilePicture) {
+        throw new NotFoundException(
+          `Profile picture asset not found for User with ID: ${userId}`,
+        );
+      }
+      return userProfilePicture;
+    } catch (error) {
+      console.error(error);
+
+      return null;
     }
-    return userProfilePicture;
   }
 }

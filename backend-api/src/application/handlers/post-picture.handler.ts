@@ -1,16 +1,42 @@
-// import { Injectable } from '@nestjs/common';
-// import { FileData } from 'src/infrastructure/common/types/file.interface';
-// import { AssetService } from '../services/asset.service';
+// import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+// import { File } from '@nest-lab/fastify-multer';
+// import { User } from 'src/domain/entities/user.entity';
+// import { FileService } from 'src/infrastructure/services/file/file.service';
+// import { PostPictureService } from './post-picture.service';
+// import { PostId } from 'src/domain/value objects/postId';
 
 // @Injectable()
 // export class PostPictureHandler {
-//   constructor(private readonly assetService: AssetService) {}
+//   constructor(
+//     private readonly fileService: FileService,
+//     private readonly postPictureService: PostPictureService,
+//   ) {}
 
-//   async handlePostPicture(
-//     postId: string,
+//   async handle(
 //     userId: string,
-//     fileData: FileData,
+//     postId: string,
+//     postPicture: File,
 //   ): Promise<void> {
-//     await this.assetService.addPostPicture(postId, userId, fileData);
+//     if (!postPicture) return;
+
+//     const postIdValue = new PostId(postId);
+
+//     try {
+//       const fileData = await this.fileService.savePostPicture(
+//         userId,
+//         postId,
+//         postPicture,
+//       );
+//       await this.postPictureService.addPostPictureMetadataInDatabase(
+//         postIdValue,
+//         userId,
+//         fileData,
+//       );
+//     } catch (error) {
+//       throw new HttpException(
+//         'Failed to save post picture',
+//         HttpStatus.INTERNAL_SERVER_ERROR,
+//       );
+//     }
 //   }
 // }

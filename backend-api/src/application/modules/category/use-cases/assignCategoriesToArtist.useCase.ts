@@ -1,31 +1,26 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
+import { Inject, Injectable } from '@nestjs/common';
 import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
 import { ArtistId } from 'src/domain/value objects/artistId';
 import { CategoryId } from 'src/domain/value objects/categoryId';
+import { GetArtistByIdUseCase } from '../../artist/use-cases/getArtistById.useCase';
+import { GetCategoryByIdUseCase } from './getCategoryById.useCase';
 
 @Injectable()
 export class AssignCategoriesToArtistUseCase {
   constructor(
     @Inject('ICategoryRepository')
     private readonly categoryRepository: ICategoryRepository,
-    @Inject('IArtistRepository')
-    private readonly artistRepository: IArtistRepository,
+    private readonly getCategoryByIdUseCase: GetCategoryByIdUseCase,
+    private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
   ) {}
 
   async execute(artistId: ArtistId, categoriesIds: string[]): Promise<void> {
+    const artist = await this.getArtistByIdUseCase.execute(artistId);
     for (const categoryId of categoriesIds) {
-      const category = await this.categoryRepository.findOneCategory(
+      const category = await this.getCategoryByIdUseCase.execute(
         new CategoryId(categoryId),
       );
-      if (!category) {
-        throw new NotFoundException(`Category ${categoryId} not found`);
-      }
-      const artist = await this.artistRepository.findArtistById(artistId);
-      if (!artist) {
-        throw new NotFoundException(`Artist ${artistId} not found`);
-      }
-      category.user[0] = artist;
+      category.user = [artist];
       await this.categoryRepository.saveCategory(category);
     }
   }
