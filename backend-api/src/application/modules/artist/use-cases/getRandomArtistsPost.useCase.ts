@@ -23,7 +23,7 @@ export class GetRandomArtistsPostUseCase {
       artistAsset: Asset;
     }[]
   > {
-    const randomArtists = await this.artistRepository.find();
+    const randomArtists = await this.artistRepository.findAll();
 
     const artistsInDB = randomArtists.length;
     const selectedArtists: {

@@ -7,10 +7,12 @@ export class GetAllPersonalDataRequestUseCase {
     private readonly personalDataRequestRepository: PersonalDataRequestRepository,
   ) {}
 
-  async execute(): Promise<PersonalDataRequest[]> {
-    const dataRequests = await this.personalDataRequestRepository.find({
-      relations: ['user'],
-    });
-    return dataRequests;
+  async execute(): Promise<PersonalDataRequest[] | string> {
+    const dataRequest =
+      await this.personalDataRequestRepository.findAllPersonalDataRequestWithUser();
+    if (dataRequest.length === 0) {
+      return 'No data request found';
+    }
+    return dataRequest;
   }
 }

@@ -24,13 +24,13 @@ export class ArtistRepository implements IArtistRepository {
     });
   }
 
-  async find(options?: any): Promise<User[] | undefined> {
+  async findAll(): Promise<User[] | undefined> {
     return this.artistRepository.find({
       where: { role: 'artist' },
     });
   }
 
-  async findAllByDescCreateDate(options?: any): Promise<User[] | undefined> {
+  async findAllByDescCreateDate(): Promise<User[] | undefined> {
     return this.artistRepository.find({
       where: { role: 'artist' },
       order: { createdAt: 'DESC' },

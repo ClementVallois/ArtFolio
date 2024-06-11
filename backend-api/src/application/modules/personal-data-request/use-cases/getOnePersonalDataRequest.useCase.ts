@@ -8,9 +8,6 @@ export class GetOnePersonalDataRequestUseCase {
     private readonly personalDataRequestRepository: PersonalDataRequestRepository,
   ) {}
   async execute(id: PersonalDataRequestId): Promise<PersonalDataRequest> {
-    const personalDataRequestId = id.toString();
-    return this.personalDataRequestRepository.findOne({
-      where: { id: personalDataRequestId },
-    });
+    return this.personalDataRequestRepository.findOne(id);
   }
 }

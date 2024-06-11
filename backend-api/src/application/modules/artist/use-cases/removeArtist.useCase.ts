@@ -1,8 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
-import { Repository } from 'typeorm';
 import { ArtistId } from 'src/domain/value objects/artistId';
 import { GetArtistByIdUseCase } from './getArtistById.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
@@ -18,7 +16,6 @@ export class RemoveArtistUseCase {
   async execute(id: ArtistId): Promise<User> {
     const artistId = id.toString();
     const artist = await this.getArtistByIdUseCase.execute(id);
-
     try {
       await this.fileService.deleteProfilePicture(artistId);
       await this.fileService.deleteUserPostsPictures(artistId);

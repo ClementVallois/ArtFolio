@@ -5,16 +5,23 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { PersonalDataRequestRepository } from 'src/infrastructure/repositories/personal-data-request.repository';
+import { GetAllPersonalDataRequestUseCase } from './use-cases/getAllPersonalDataRequests.useCase';
+import { GetOnePersonalDataRequestUseCase } from './use-cases/getOnePersonalDataRequest.useCase';
+import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalDataRequest.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PersonalDataRequest, User])],
   controllers: [PersonalDataRequestController],
   providers: [
+    PersonalDataRequestRepository,
     {
       provide: 'IPersonalDataRequestRepository',
       useClass: PersonalDataRequestRepository,
     },
     PersonalDataRequestService,
+    GetAllPersonalDataRequestUseCase,
+    GetOnePersonalDataRequestUseCase,
+    CreatePersonalDataRequestUseCase,
   ],
 })
 export class PersonalDataRequestModule {}
