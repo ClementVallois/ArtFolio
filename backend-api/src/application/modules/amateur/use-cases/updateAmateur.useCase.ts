@@ -3,7 +3,7 @@ import { User } from 'src/domain/entities/user.entity';
 import { AmateurId } from 'src/domain/value objects/amateurId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
-import { UpdateUserDto } from 'src/presentation/dto/amateur/update-user.dto';
+import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
 
 @Injectable()
 export class UpdateAmateurUseCase {
@@ -14,7 +14,7 @@ export class UpdateAmateurUseCase {
 
   async execute(
     amateurId: AmateurId,
-    amateurData: UpdateUserDto,
+    amateurData: UpdateAmateurDto,
   ): Promise<User> {
     const amateur = await this.amateurRepository.findAmateurById(amateurId);
     if (!amateur) {

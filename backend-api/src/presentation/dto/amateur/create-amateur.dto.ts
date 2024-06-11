@@ -7,7 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateAmateurDto {
   @IsNotEmpty({ message: '$property is required' })
   @IsString({ message: '$property must be a string' })
   @MaxLength(50, {

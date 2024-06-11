@@ -12,8 +12,6 @@ import {
   BadRequestException,
   UploadedFiles,
 } from '@nestjs/common';
-import { CreateUserDto } from '../dto/amateur/create-user.dto';
-import { UpdateUserDto } from '../dto/amateur/update-user.dto';
 import { FindIdParams } from '../utils/params.dto';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -27,6 +25,8 @@ import { AmateurId } from 'src/domain/value objects/amateurId';
 import { GetUserAssetsUseCase } from 'src/application/modules/amateur/use-cases/getAmateurAssets.useCase';
 import { UpdateAmateurUseCase } from 'src/application/modules/amateur/use-cases/updateAmateur.useCase';
 import { RemoveAmateurUseCase } from 'src/application/modules/amateur/use-cases/removeAmateur.useCase';
+import { CreateAmateurDto } from '../dto/amateur/create-amateur.dto';
+import { UpdateAmateurDto } from '../dto/amateur/update-amateur.dto';
 
 @Controller('amateurs')
 export class AmateurController {
@@ -85,7 +85,7 @@ export class AmateurController {
   @Post()
   async createUser(
     @UploadedFiles() files: { profilePicture: File },
-    @Body() userData: CreateUserDto,
+    @Body() userData: CreateAmateurDto,
   ) {
     const user = await this.createAmateurUseCase.execute(userData, files);
 
@@ -98,7 +98,7 @@ export class AmateurController {
   @Patch(':id')
   async updateAmateur(
     @Param() params: FindIdParams,
-    @Body() userData: UpdateUserDto,
+    @Body() userData: UpdateAmateurDto,
   ) {
     const id = new AmateurId(params.id);
     return this.updateAmateurUseCase.execute(id, userData);

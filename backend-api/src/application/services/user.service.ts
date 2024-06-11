@@ -5,8 +5,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from '../../presentation/dto/amateur/create-user.dto';
-import { UpdateUserDto } from '../../presentation/dto/amateur/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -16,6 +14,8 @@ import { File } from '@nest-lab/fastify-multer';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from './asset.service';
+import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
+import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
 
 @Injectable()
 export class UserService {
@@ -83,7 +83,7 @@ export class UserService {
   }
 
   async handleCreateUser(
-    userData: CreateUserDto,
+    userData: CreateAmateurDto,
     files: { profilePicture: File },
   ): Promise<User> {
     this.validateFiles(files);
@@ -100,7 +100,7 @@ export class UserService {
   }
 
   async createUser(
-    userData: CreateUserDto,
+    userData: CreateAmateurDto,
     profilePicture: File,
   ): Promise<User> {
     let user: User;
@@ -115,7 +115,7 @@ export class UserService {
     return user;
   }
 
-  private handleDatabaseErrors(error: any, userData: CreateUserDto) {
+  private handleDatabaseErrors(error: any, userData: CreateAmateurDto) {
     const errorMessage = this.errorService.parseDatabaseError(error, userData);
     throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
   }
@@ -137,7 +137,7 @@ export class UserService {
     }
   }
 
-  async updateUser(id: string, userData: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, userData: UpdateAmateurDto): Promise<User> {
     const user = await this.getUserById(id);
     this.userRepository.merge(user, userData);
     return this.userRepository.save(user);

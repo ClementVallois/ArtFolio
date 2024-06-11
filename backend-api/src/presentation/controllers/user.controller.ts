@@ -13,8 +13,8 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { UserService } from '../../application/services/user.service';
-import { CreateUserDto } from '../dto/amateur/create-user.dto';
-import { UpdateUserDto } from '../dto/amateur/update-user.dto';
+import { CreateAmateurDto } from '../dto/amateur/create-amateur.dto';
+import { UpdateAmateurDto } from '../dto/amateur/update-amateur.dto';
 import { FindAuth0IdParams, FindIdParams } from '../utils/params.dto';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -80,7 +80,7 @@ export class UserController {
   @Post()
   async createUser(
     @UploadedFiles() files: { profilePicture: File },
-    @Body() userData: CreateUserDto,
+    @Body() userData: CreateAmateurDto,
   ) {
     const user = await this.userService.handleCreateUser(userData, files);
 
@@ -93,7 +93,7 @@ export class UserController {
   @Patch(':id')
   async updateUser(
     @Param() { id }: FindIdParams,
-    @Body() userData: UpdateUserDto,
+    @Body() userData: UpdateAmateurDto,
   ) {
     return this.userService.updateUser(id, userData);
   }

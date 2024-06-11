@@ -5,7 +5,7 @@ import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHan
 import { ValidationService } from 'src/application/validators/validation.service';
 import { File } from '@nest-lab/fastify-multer';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
-import { CreateUserDto } from 'src/presentation/dto/amateur/create-user.dto';
+import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
 
 @Injectable()
 export class CreateAmateurUseCase {
@@ -17,7 +17,7 @@ export class CreateAmateurUseCase {
   ) {}
 
   async execute(
-    amateurData: CreateUserDto,
+    amateurData: CreateAmateurDto,
     files: { profilePicture: File },
   ): Promise<User> {
     this.validationService.validateProfilePicture(files);
