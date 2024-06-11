@@ -1,14 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from 'src/domain/entities/category.entity';
+import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
 import { CategoryId } from 'src/domain/value objects/categoryId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { UpdateCategoryDto } from 'src/presentation/dto/category/update-category.dto';
 
 @Injectable()
 export class UpdateCategoryUseCase {
   constructor(
-    private readonly categoryRepository: CategoryRepository,
+    @Inject('ICategoryRepository')
+    private readonly categoryRepository: ICategoryRepository,
     private readonly databaseErrorHandler: DatabaseErrorHandler,
   ) {}
 

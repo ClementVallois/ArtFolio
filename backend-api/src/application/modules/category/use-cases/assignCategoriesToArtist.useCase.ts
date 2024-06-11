@@ -1,14 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
+import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
 import { ArtistId } from 'src/domain/value objects/artistId';
 import { CategoryId } from 'src/domain/value objects/categoryId';
-import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
-import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 
 @Injectable()
 export class AssignCategoriesToArtistUseCase {
   constructor(
-    private readonly categoryRepository: CategoryRepository,
-    private readonly artistRepository: ArtistRepository,
+    @Inject('ICategoryRepository')
+    private readonly categoryRepository: ICategoryRepository,
+    @Inject('IArtistRepository')
+    private readonly artistRepository: IArtistRepository,
   ) {}
 
   async execute(artistId: ArtistId, categoriesIds: string[]): Promise<void> {

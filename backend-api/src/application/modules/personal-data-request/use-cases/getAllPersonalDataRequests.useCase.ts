@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
-import { PersonalDataRequestRepository } from 'src/infrastructure/repositories/personal-data-request.repository';
+import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
 @Injectable()
 export class GetAllPersonalDataRequestUseCase {
   constructor(
-    private readonly personalDataRequestRepository: PersonalDataRequestRepository,
+    @Inject('IPersonalDataRequestRepository')
+    private readonly personalDataRequestRepository: IPersonalDataRequestRepository,
   ) {}
 
   async execute(): Promise<PersonalDataRequest[] | string> {

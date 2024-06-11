@@ -1,18 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Post } from 'src/domain/entities/post.entity';
-import { Repository } from 'typeorm';
+import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 
 @Injectable()
 export class GetAllPostsUseCase {
   constructor(
-    @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
+    @Inject('IPostRepository')
+    private readonly postRepository: IPostRepository,
   ) {}
 
   async execute(): Promise<Post[]> {
-    return await this.postRepository.find({
-      order: { createdAt: 'DESC' },
-    });
+    return await this.postRepository.findAllPostsByDescCreatedDate();
   }
 }

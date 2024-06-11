@@ -11,7 +11,6 @@ import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoryService } from 'src/application/services/category.service';
 import { Category } from 'src/domain/entities/category.entity';
 import { GetLastRegisteredArtistsPostsUseCase } from 'src/application/modules/artist/use-cases/getLastRegisteredArtistsPosts.useCase';
 import { GetRandomArtistsPostUseCase } from 'src/application/modules/artist/use-cases/getRandomArtistsPost.useCase';
@@ -22,24 +21,28 @@ import { SharedPostUseCaseProxy } from '../post/proxies/sharedPostUseCase.proxy'
 import { ValidationService } from 'src/application/validators/validation.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 import { AssignCategoriesToArtistUseCase } from 'src/application/modules/category/use-cases/assignCategoriesToArtist.useCase';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
+import { GetAmateurByIdUseCase } from 'src/application/modules/amateur/use-cases/getAmateurById.useCase';
+import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
+import { PostRepository } from 'src/infrastructure/repositories/post.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
   providers: [
-    { provide: ArtistRepository, useClass: ArtistRepository },
-    { provide: CategoryRepository, useClass: CategoryRepository },
+    { provide: 'IArtistRepository', useClass: ArtistRepository },
+    { provide: 'ICategoryRepository', useClass: CategoryRepository },
+    { provide: 'IAmateurRepository', useClass: AmateurRepository },
+    { provide: 'IPostRepository', useClass: PostRepository },
     FileService,
     ErrorService,
     GetArtistByIdUseCase,
     DatabaseErrorHandler,
     ProfilePictureHandler,
     AssetService,
-    CategoryService,
     ValidationService,
     SharedArtistUseCaseProxy,
     GetRandomArtistsPostUseCase,
@@ -48,6 +51,7 @@ import { CategoryRepository } from 'src/infrastructure/repositories/category.rep
     GetArtistPinnedPostUseCase,
     GetAllArtistPostsUseCase,
     GetOneArtistPostUseCase,
+    GetAmateurByIdUseCase,
     CreatePostUseCase,
     CreateArtistUseCase,
     AssignCategoriesToArtistUseCase,

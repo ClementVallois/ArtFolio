@@ -1,20 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Post } from 'src/domain/entities/post.entity';
+import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 import { ArtistId } from 'src/domain/value objects/artistId';
 import { PostId } from 'src/domain/value objects/postId';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class GetOneArtistPostUseCase {
   constructor(
-    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @Inject('IPostRepository')
+    private readonly postRepository: IPostRepository,
   ) {}
 
   async execute(artistId: ArtistId, postId: PostId): Promise<Post> {
-    const artistPost = await this.postRepository.findOne({
-      where: { user: { id: artistId.toString() }, id: postId.toString() },
-    });
+    const artistPost = await this.postRepository.findOnePostByPostIdAndArtistId(
+      artistId,
+      postId,
+    );
     if (!artistPost) {
       throw new NotFoundException(
         `Post not found for Artist with ID: ${artistId} and Post ID: ${postId}`,

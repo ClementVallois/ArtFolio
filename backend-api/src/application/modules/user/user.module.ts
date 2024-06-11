@@ -12,18 +12,14 @@ import { Post } from 'src/domain/entities/post.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
-import { CreateAmateurUseCase } from '../amateur/use-cases/createAmateur.useCase';
-import { GetAllAmateursUseCase } from '../amateur/use-cases/getAllAmateurs.useCase';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Asset, PersonalDataRequest, Post])],
   controllers: [UserController],
   providers: [
-    { provide: AmateurRepository, useClass: AmateurRepository },
+    { provide: 'IAmateurRepository', useClass: AmateurRepository },
     UserService,
-    CreateAmateurUseCase,
-    GetAllAmateursUseCase,
     ValidationService,
     DatabaseErrorHandler,
     ProfilePictureHandler,

@@ -25,6 +25,7 @@ import { PostId } from 'src/domain/value objects/postId';
 
 import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
 import { PostUseCaseProxy } from 'src/application/modules/post/proxies/postUseCase.proxy';
+import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
 
 @UseGuards(AuthGuard('jwt'))
 @Controller('posts')
@@ -32,6 +33,7 @@ export class PostController {
   constructor(
     private readonly postUseCaseProxy: PostUseCaseProxy,
     private readonly sharedPostUseCaseProxy: SharedPostUseCaseProxy,
+    private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
   ) {}
 
   @Get()
@@ -51,7 +53,7 @@ export class PostController {
     @Res({ passthrough: true }) response: FastifyReply,
   ) {
     const postId = new PostId(params.id);
-    const files = await this.postUseCaseProxy.getPostAssets(postId);
+    const files = await this.getPostAssetsUseCase.execute(postId);
 
     const stream = createReadStream(join(process.cwd(), files[0].url));
     response.headers({

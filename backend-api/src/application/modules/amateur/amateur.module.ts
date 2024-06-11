@@ -9,12 +9,11 @@ import { Post } from 'src/domain/entities/post.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { CreateAmateurUseCase } from './use-cases/createAmateur.useCase';
 import { GetAllAmateursUseCase } from './use-cases/getAllAmateurs.useCase';
 import { AmateurController } from 'src/presentation/controllers/amateur.controller';
 import { GetAmateurByIdUseCase } from './use-cases/getAmateurById.useCase';
-import { GetUserAssetsUseCase } from './use-cases/getAmateurAssets.useCase';
 import { UpdateAmateurUseCase } from './use-cases/updateAmateur.useCase';
 import { RemoveAmateurUseCase } from './use-cases/removeAmateur.useCase';
 
@@ -22,11 +21,10 @@ import { RemoveAmateurUseCase } from './use-cases/removeAmateur.useCase';
   imports: [TypeOrmModule.forFeature([User, Asset, Post])],
   controllers: [AmateurController],
   providers: [
-    { provide: AmateurRepository, useClass: AmateurRepository },
+    { provide: 'IAmateurRepository', useClass: AmateurRepository },
     CreateAmateurUseCase,
     GetAllAmateursUseCase,
     GetAmateurByIdUseCase,
-    GetUserAssetsUseCase,
     UpdateAmateurUseCase,
     RemoveAmateurUseCase,
     ValidationService,

@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Post } from 'src/domain/entities/post.entity';
 import { PostId } from 'src/domain/value objects/postId';
-import { Repository } from 'typeorm';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { GetPostByIdUseCase } from './getPostById.useCase';
+import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 
 @Injectable()
 export class RemovePostUseCase {
   constructor(
-    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @Inject('IPostRepository')
+    private readonly postRepository: IPostRepository,
     private readonly getPostByIdUseCase: GetPostByIdUseCase,
     private readonly fileService: FileService,
   ) {}

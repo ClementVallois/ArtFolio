@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { AssetService } from 'src/application/services/asset.service';
 import { GetArtistPinnedPostUseCase } from 'src/application/shared/modules/post/use-cases/getArtistPinnedPost.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
+import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { ArtistId } from 'src/domain/value objects/artistId';
-import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 
 @Injectable()
 export class GetRandomArtistsPostUseCase {
   constructor(
-    private readonly artistRepository: ArtistRepository,
+    @Inject('IArtistRepository')
+    private readonly artistRepository: IArtistRepository,
     private readonly getArtistPinnedPostUseCase: GetArtistPinnedPostUseCase,
     private readonly assetService: AssetService,
   ) {}

@@ -1,10 +1,13 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
-import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 
 @Injectable()
 export class GetAllArtistsUseCase {
-  constructor(private readonly artistRepository: ArtistRepository) {}
+  constructor(
+    @Inject('IArtistRepository')
+    private readonly artistRepository: IArtistRepository,
+  ) {}
 
   async execute(): Promise<User[]> {
     try {

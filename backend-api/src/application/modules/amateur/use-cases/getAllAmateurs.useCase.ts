@@ -1,10 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
-import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
+import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 
 @Injectable()
 export class GetAllAmateursUseCase {
-  constructor(private readonly amateurRepository: AmateurRepository) {}
+  constructor(
+    @Inject('IAmateurRepository')
+    private readonly amateurRepository: IAmateurRepository,
+  ) {}
 
   async execute(): Promise<User[]> {
     const amateurs = await this.amateurRepository.findAllAmateurs();

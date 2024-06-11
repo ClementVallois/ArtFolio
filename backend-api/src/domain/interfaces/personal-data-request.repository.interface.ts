@@ -11,5 +11,4 @@ export interface IPersonalDataRequestRepository {
   findOnePersonalDataRequest(
     dataRequestId: PersonalDataRequestId,
   ): Promise<PersonalDataRequest>;
-  // remove(dataRequestData: PersonalDataRequestId): Promise<PersonalDataRequest>;
 }

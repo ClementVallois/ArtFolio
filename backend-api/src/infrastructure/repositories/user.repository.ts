@@ -1,7 +1,16 @@
-// async getUserByAuth0Id(auth0Id: string): Promise<User> {
-//     const user = await this.userRepository.findOneBy({ auth0Id: auth0Id });
-//     if (!user) {
-//       throw new NotFoundException(`User not found with Auth0 ID: ${auth0Id}`);
-//     }
-//     return user;
-//   }
+import { InjectRepository } from '@nestjs/typeorm';
+import { User } from 'src/domain/entities/user.entity';
+import { IUserRepository } from 'src/domain/interfaces/user.repository.interface';
+import { UserId } from 'src/domain/value objects/userId';
+import { Repository } from 'typeorm';
+
+export class UserRepository implements IUserRepository {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {}
+
+  findUserById(userId: UserId): Promise<User> {
+    return this.userRepository.findOneBy({ id: userId.toString() });
+  }
+}

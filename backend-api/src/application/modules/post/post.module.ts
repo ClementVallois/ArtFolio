@@ -6,24 +6,28 @@ import { Asset } from 'src/domain/entities/asset.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from 'src/application/services/asset.service';
-import { GetPostAssetsUseCase } from 'src/application/modules/post/use-cases/getPostAssets.useCase';
 import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
 import { RemovePostUseCase } from 'src/application/modules/post/use-cases/removePost.useCase';
 import { UpdatePostUseCase } from 'src/application/modules/post/use-cases/updatePost.useCase';
 import { PostUseCaseProxy } from 'src/application/modules/post/proxies/postUseCase.proxy';
 import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
+import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
+import { GetPostAssetsUseCase } from '../asset/use-cases/getPostAssets.useCase';
+import { PostRepository } from 'src/infrastructure/repositories/post.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, Asset, User]), SharedPostModule],
   controllers: [PostController],
   providers: [
+    { provide: 'IAssetRepository', useClass: AssetRepository },
+    { provide: 'IPostRepository', useClass: PostRepository },
     FileService,
     AssetService,
     PostUseCaseProxy,
-    GetPostAssetsUseCase,
     GetPostByIdUseCase,
     RemovePostUseCase,
     UpdatePostUseCase,
+    GetPostAssetsUseCase,
   ],
   exports: [],
 })

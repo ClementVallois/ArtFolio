@@ -7,6 +7,7 @@ import { PersonalDataRequestRepository } from 'src/infrastructure/repositories/p
 import { GetAllPersonalDataRequestUseCase } from './use-cases/getAllPersonalDataRequests.useCase';
 import { GetOnePersonalDataRequestUseCase } from './use-cases/getOnePersonalDataRequest.useCase';
 import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalDataRequest.useCase';
+import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PersonalDataRequest, User])],
@@ -16,6 +17,10 @@ import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalData
     {
       provide: 'IPersonalDataRequestRepository',
       useClass: PersonalDataRequestRepository,
+    },
+    {
+      provide: 'IUserRepository',
+      useClass: UserRepository,
     },
     GetAllPersonalDataRequestUseCase,
     GetOnePersonalDataRequestUseCase,

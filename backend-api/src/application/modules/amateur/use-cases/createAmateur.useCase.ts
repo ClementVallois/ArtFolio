@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
-import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { File } from '@nest-lab/fastify-multer';
-import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
+import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 
 @Injectable()
 export class CreateAmateurUseCase {
   constructor(
-    private readonly amateurRepository: AmateurRepository,
+    @Inject('IAmateurRepository')
+    private readonly amateurRepository: IAmateurRepository,
     private readonly validationService: ValidationService,
     private readonly databaseErrorHandler: DatabaseErrorHandler,
     private readonly profilePictureHandler: ProfilePictureHandler,

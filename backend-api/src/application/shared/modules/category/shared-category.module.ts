@@ -7,7 +7,6 @@ import { CategoryRepository } from 'src/infrastructure/repositories/category.rep
 @Module({
   imports: [TypeOrmModule.forFeature([Category])],
   providers: [
-    CategoryRepository,
     {
       provide: 'ICategoryRepository',
       useClass: CategoryRepository,

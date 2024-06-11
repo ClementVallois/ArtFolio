@@ -1,14 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AssetService } from '../../services/asset.service';
-import { AssetController } from 'src/presentation/controllers/asset.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { Post } from 'src/domain/entities/post.entity';
+import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Asset, User, Post])],
-  controllers: [AssetController],
-  providers: [AssetService],
+  controllers: [],
+  providers: [{ provide: 'IAssetRepository', useClass: AssetRepository }],
 })
 export class AssetModule {}

@@ -10,7 +10,7 @@ import { Post } from 'src/domain/entities/post.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { CreateAmateurUseCase } from '../use-cases/createAmateur.useCase';
 
 @Module({

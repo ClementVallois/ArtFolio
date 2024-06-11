@@ -1,14 +1,15 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
+import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value objects/amateurId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
 
 @Injectable()
 export class UpdateAmateurUseCase {
   constructor(
-    private readonly amateurRepository: AmateurRepository,
+    @Inject('IAmateurRepository')
+    private readonly amateurRepository: IAmateurRepository,
     private readonly databaseErrorHandler: DatabaseErrorHandler,
   ) {}
 

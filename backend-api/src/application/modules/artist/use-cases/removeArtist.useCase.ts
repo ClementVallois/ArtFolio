@@ -1,14 +1,15 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { ArtistId } from 'src/domain/value objects/artistId';
 import { GetArtistByIdUseCase } from './getArtistById.useCase';
-import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 
 @Injectable()
 export class RemoveArtistUseCase {
   constructor(
-    private readonly artistRepository: ArtistRepository,
+    @Inject('IArtistRepository')
+    private readonly artistRepository: IArtistRepository,
     private readonly fileService: FileService,
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
   ) {}

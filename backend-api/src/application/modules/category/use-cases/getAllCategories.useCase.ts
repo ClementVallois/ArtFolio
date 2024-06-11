@@ -1,10 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from 'src/domain/entities/category.entity';
-import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
+import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
 
 @Injectable()
 export class GetAllCategoriesUseCase {
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(
+    @Inject('ICategoryRepository')
+    private readonly categoryRepository: ICategoryRepository,
+  ) {}
 
   async execute(): Promise<Category[]> {
     const categories = await this.categoryRepository.findAllCategories();

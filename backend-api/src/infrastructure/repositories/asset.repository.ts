@@ -1,0 +1,41 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interface';
+import { AmateurId } from 'src/domain/value objects/amateurId';
+import { ArtistId } from 'src/domain/value objects/artistId';
+import { PostId } from 'src/domain/value objects/postId';
+import { UserId } from 'src/domain/value objects/userId';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class AssetRepository implements IAssetRepository {
+  constructor(
+    @InjectRepository(Asset)
+    private readonly categoryRepository: Repository<Asset>,
+  ) {}
+
+  async findPostAssets(postId: PostId): Promise<Asset[]> {
+    return this.categoryRepository.find({
+      where: { postId: { id: postId.toString() } },
+    });
+  }
+  async findUserAssets(userId: UserId): Promise<Asset[]> {
+    return this.categoryRepository.find({
+      where: { userId: { id: userId.toString() } },
+    });
+  }
+  async findUserProfilePictureAsset(
+    userId: AmateurId | ArtistId,
+  ): Promise<Asset> {
+    return this.categoryRepository.findOne({
+      where: { type: 'profile_picture', userId: { id: userId.toString() } },
+    });
+  }
+  async createAsset(assetData: Asset): Promise<Asset> {
+    return this.categoryRepository.save(assetData);
+  }
+  async saveAsset(assetEntity: Asset): Promise<Asset> {
+    return this.categoryRepository.save(assetEntity);
+  }
+}

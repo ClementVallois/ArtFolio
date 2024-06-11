@@ -11,19 +11,38 @@ import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { AssetService } from 'src/application/services/asset.service';
+import { GetAmateurByIdUseCase } from 'src/application/modules/amateur/use-cases/getAmateurById.useCase';
+import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
+import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { PostRepository } from 'src/infrastructure/repositories/post.repository';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset])],
   providers: [
+    {
+      provide: 'IAmateurRepository',
+      useClass: AmateurRepository,
+    },
+    {
+      provide: 'IArtistRepository',
+      useClass: ArtistRepository,
+    },
+    {
+      provide: 'IPostRepository',
+      useClass: PostRepository,
+    },
     FileService,
     AssetService,
     SharedPostUseCaseProxy,
     CreatePostUseCase,
     GetAllPostsUseCase,
     GetArtistPinnedPostUseCase,
+    GetArtistByIdUseCase,
     GetAllArtistPostsUseCase,
     GetOneArtistPostUseCase,
     CreatePostUseCase,
+    GetAmateurByIdUseCase,
   ],
   exports: [
     SharedPostUseCaseProxy,

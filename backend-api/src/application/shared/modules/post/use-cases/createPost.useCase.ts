@@ -3,22 +3,24 @@ import {
   BadRequestException,
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 import { AssetService } from 'src/application/services/asset.service';
 import { Post } from 'src/domain/entities/post.entity';
-import { User } from 'src/domain/entities/user.entity';
+import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
+import { ArtistId } from 'src/domain/value objects/artistId';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CreatePostDto } from 'src/presentation/dto/post/create-post.dto';
-import { Repository } from 'typeorm';
 
 @Injectable()
 export class CreatePostUseCase {
   constructor(
-    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @Inject('IPostRepository')
+    private readonly postRepository: IPostRepository,
+    private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
     private readonly fileService: FileService,
     private readonly assetService: AssetService,
   ) {}
@@ -30,19 +32,15 @@ export class CreatePostUseCase {
 
     let post: Post;
 
-    const user = await this.userRepository.findOneBy({
-      id: postData.userId,
-    });
+    const artistId = new ArtistId(postData.userId);
+    const user = await this.getArtistByIdUseCase.execute(artistId);
+
     if (!user) {
       throw new NotFoundException(`User not found with ID: ${postData.userId}`);
     }
 
     try {
-      post = this.postRepository.create({
-        ...postData,
-        user: user,
-      });
-      await this.postRepository.save(post);
+      post = await this.postRepository.createPost(postData, user);
     } catch (error) {
       throw new HttpException(
         'Failed to create post',

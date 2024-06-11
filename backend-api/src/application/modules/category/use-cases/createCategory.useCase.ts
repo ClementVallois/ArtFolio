@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Category } from 'src/domain/entities/category.entity';
+import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { CreateCategoryDto } from 'src/presentation/dto/category/create-category.dto';
 
 @Injectable()
 export class CreateCategoryUseCase {
   constructor(
-    private readonly categoryRepository: CategoryRepository,
+    @Inject('ICategoryRepository')
+    private readonly categoryRepository: ICategoryRepository,
     private readonly databaseErrorHandler: DatabaseErrorHandler,
   ) {}
 

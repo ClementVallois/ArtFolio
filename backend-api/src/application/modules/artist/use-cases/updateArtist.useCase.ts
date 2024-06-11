@@ -1,16 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
-import { ProfilePictureHandler } from 'src/application/handlers/profilePictureHandler';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { File } from '@nest-lab/fastify-multer';
 import { GetArtistByIdUseCase } from './getArtistById.useCase';
 import { ArtistId } from 'src/domain/value objects/artistId';
-import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 
 @Injectable()
 export class UpdateArtistUseCase {
   constructor(
-    private readonly artistRepository: ArtistRepository,
+    @Inject('IArtistRepository')
+    private readonly artistRepository: IArtistRepository,
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
     private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}

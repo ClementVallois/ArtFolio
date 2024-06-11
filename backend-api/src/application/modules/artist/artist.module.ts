@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ArtistController } from '../../../presentation/controllers/artist.controller';
 import { User } from 'src/domain/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { CategoryService } from 'src/application/services/category.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Category } from 'src/domain/entities/category.entity';
@@ -26,9 +25,8 @@ import { CategoryRepository } from 'src/infrastructure/repositories/category.rep
   ],
   controllers: [ArtistController],
   providers: [
-    { provide: ArtistRepository, useClass: ArtistRepository },
-    { provide: CategoryRepository, useClass: CategoryRepository },
-    CategoryService,
+    { provide: 'IArtistRepository', useClass: ArtistRepository },
+    { provide: 'ICategoryRepository', useClass: CategoryRepository },
     ArtistUseCaseProxy,
     GetAllArtistsUseCase,
     GetArtistByIdUseCase,

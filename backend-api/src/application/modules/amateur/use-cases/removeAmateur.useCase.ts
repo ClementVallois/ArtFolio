@@ -1,18 +1,20 @@
 import {
   HttpException,
   HttpStatus,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
+import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value objects/amateurId';
-import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 
 @Injectable()
 export class RemoveAmateurUseCase {
   constructor(
-    private readonly amateurRepository: AmateurRepository,
+    @Inject('IAmateurRepository')
+    private readonly amateurRepository: IAmateurRepository,
     private readonly fileService: FileService,
   ) {}
 
