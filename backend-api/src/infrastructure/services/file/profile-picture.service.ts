@@ -5,7 +5,7 @@ import { SaveAssetUseCase } from 'src/application/modules/asset/use-cases/saveAs
 import { GetUserByIdUseCase } from 'src/application/modules/user/use-cases/getUserById.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { User } from 'src/domain/entities/user.entity';
-import { UserId } from 'src/domain/value objects/userId';
+import { UserId } from 'src/domain/value-objects/userId';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
 
 @Injectable()

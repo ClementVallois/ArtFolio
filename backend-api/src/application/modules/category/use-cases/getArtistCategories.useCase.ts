@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from 'src/domain/entities/category.entity';
 import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 
 @Injectable()
 export class GetArtistCategoriesUseCase {

@@ -6,8 +6,8 @@ import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 
 import { Repository } from 'typeorm';
-import { ArtistId } from 'src/domain/value objects/artistId';
-import { UserId } from 'src/domain/value objects/userId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
+import { UserId } from 'src/domain/value-objects/userId';
 
 @Injectable()
 export class AssetService {

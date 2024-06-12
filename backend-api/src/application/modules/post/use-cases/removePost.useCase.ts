@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Post } from 'src/domain/entities/post.entity';
-import { PostId } from 'src/domain/value objects/postId';
+import { PostId } from 'src/domain/value-objects/postId';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { GetPostByIdUseCase } from './getPostById.useCase';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';

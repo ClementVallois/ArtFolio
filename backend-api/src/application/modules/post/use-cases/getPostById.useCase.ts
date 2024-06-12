@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
-import { PostId } from 'src/domain/value objects/postId';
+import { PostId } from 'src/domain/value-objects/postId';
 
 @Injectable()
 export class GetPostByIdUseCase {

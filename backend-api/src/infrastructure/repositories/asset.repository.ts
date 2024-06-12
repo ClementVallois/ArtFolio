@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interface';
-import { AmateurId } from 'src/domain/value objects/amateurId';
-import { ArtistId } from 'src/domain/value objects/artistId';
-import { PostId } from 'src/domain/value objects/postId';
-import { UserId } from 'src/domain/value objects/userId';
+import { AmateurId } from 'src/domain/value-objects/amateurId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
+import { PostId } from 'src/domain/value-objects/postId';
+import { UserId } from 'src/domain/value-objects/userId';
 import { Repository } from 'typeorm';
 
 @Injectable()

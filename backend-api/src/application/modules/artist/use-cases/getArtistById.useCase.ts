@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 
 @Injectable()
 export class GetArtistByIdUseCase {

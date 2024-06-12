@@ -1,7 +1,7 @@
 import { UpdatePostDto } from 'src/presentation/dto/post/update-post.dto';
 import { Post } from '../entities/post.entity';
-import { PostId } from '../value objects/postId';
-import { ArtistId } from '../value objects/artistId';
+import { PostId } from '../value-objects/postId';
+import { ArtistId } from '../value-objects/artistId';
 import { User } from '../entities/user.entity';
 import { CreatePostDto } from 'src/presentation/dto/post/create-post.dto';
 

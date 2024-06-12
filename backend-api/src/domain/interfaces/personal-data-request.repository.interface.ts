@@ -1,5 +1,5 @@
 import { PersonalDataRequest } from '../entities/personal-data-request.entity';
-import { PersonalDataRequestId } from '../value objects/personalDataRequestId';
+import { PersonalDataRequestId } from '../value-objects/personalDataRequestId';
 
 export interface IPersonalDataRequestRepository {
   createPersonalDataRequest(

@@ -1,6 +1,6 @@
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
 import { User } from '../entities/user.entity';
-import { ArtistId } from '../value objects/artistId';
+import { ArtistId } from '../value-objects/artistId';
 
 export interface IArtistRepository {
   createArtist(artist: any): Promise<User>;

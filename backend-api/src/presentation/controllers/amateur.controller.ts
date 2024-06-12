@@ -16,12 +16,15 @@ import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.
 import { CreateAmateurUseCase } from 'src/application/modules/amateur/use-cases/createAmateur.useCase';
 import { GetAllAmateursUseCase } from 'src/application/modules/amateur/use-cases/getAllAmateurs.useCase';
 import { GetAmateurByIdUseCase } from 'src/application/modules/amateur/use-cases/getAmateurById.useCase';
-import { AmateurId } from 'src/domain/value objects/amateurId';
+import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { UpdateAmateurUseCase } from 'src/application/modules/amateur/use-cases/updateAmateur.useCase';
 import { RemoveAmateurUseCase } from 'src/application/modules/amateur/use-cases/removeAmateur.useCase';
 import { CreateAmateurDto } from '../dto/amateur/create-amateur.dto';
 import { UpdateAmateurDto } from '../dto/amateur/update-amateur.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Amateurs')
+@ApiBearerAuth()
 @Controller('amateurs')
 export class AmateurController {
   constructor(

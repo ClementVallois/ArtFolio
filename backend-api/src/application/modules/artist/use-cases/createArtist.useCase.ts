@@ -7,7 +7,7 @@ import { ValidationService } from 'src/application/validators/validation.service
 import { File } from '@nest-lab/fastify-multer';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
 import { AssignCategoriesToArtistUseCase } from '../../category/use-cases/assignCategoriesToArtist.useCase';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 
 @Injectable()

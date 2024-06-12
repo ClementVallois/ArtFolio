@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
 import { Repository } from 'typeorm';

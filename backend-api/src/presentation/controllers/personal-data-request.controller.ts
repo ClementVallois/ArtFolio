@@ -1,12 +1,15 @@
 import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { FindIdParams } from '../utils/params.dto';
 import { CreateDataRequestDto } from '../dto/personal-data-request/create-data-request.dto';
-import { PersonalDataRequestId } from 'src/domain/value objects/personalDataRequestId';
+import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
 import { GetAllPersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllPersonalDataRequests.useCase';
 import { CreatePersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/createPersonalDataRequest.useCase';
 import { GetOnePersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/getOnePersonalDataRequest.useCase';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
-@Controller('data-requests')
+@ApiTags('Personal Data Request')
+@ApiBearerAuth()
+@Controller('personal-data-requests')
 export class PersonalDataRequestController {
   constructor(
     private readonly getAllPersonalDataRequestUseCase: GetAllPersonalDataRequestUseCase,

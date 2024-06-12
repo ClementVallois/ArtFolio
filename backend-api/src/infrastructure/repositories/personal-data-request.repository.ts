@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
-import { PersonalDataRequestId } from 'src/domain/value objects/personalDataRequestId';
+import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
 import { Repository } from 'typeorm';
 
 @Injectable()

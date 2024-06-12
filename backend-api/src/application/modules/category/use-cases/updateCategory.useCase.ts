@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from 'src/domain/entities/category.entity';
 import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
-import { CategoryId } from 'src/domain/value objects/categoryId';
+import { CategoryId } from 'src/domain/value-objects/categoryId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { UpdateCategoryDto } from 'src/presentation/dto/category/update-category.dto';
 

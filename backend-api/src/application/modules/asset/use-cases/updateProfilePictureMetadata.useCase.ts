@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
 import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interface';
-import { UserId } from 'src/domain/value objects/userId';
+import { UserId } from 'src/domain/value-objects/userId';
 
 @Injectable()
 export class UpdateProfilePictureMetadataUseCase {

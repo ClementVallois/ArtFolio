@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as fs from 'fs';
 import { Asset } from 'src/domain/entities/asset.entity';
-import { PostId } from 'src/domain/value objects/postId';
+import { PostId } from 'src/domain/value-objects/postId';
 import { Repository } from 'typeorm';
 
 @Injectable()

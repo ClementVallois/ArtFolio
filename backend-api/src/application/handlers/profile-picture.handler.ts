@@ -3,7 +3,7 @@ import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import { User } from 'src/domain/entities/user.entity';
 import { FileService } from 'src/infrastructure/services/file/file.service';
-import { UserId } from 'src/domain/value objects/userId';
+import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
 import { GetUserProfilePictureUseCase } from '../modules/asset/use-cases/getUserProfilePicture.useCase';
 

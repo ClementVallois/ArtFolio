@@ -1,8 +1,8 @@
 import { CreateCategoryDto } from 'src/presentation/dto/category/create-category.dto';
 import { Category } from '../entities/category.entity';
-import { CategoryId } from '../value objects/categoryId';
+import { CategoryId } from '../value-objects/categoryId';
 import { UpdateCategoryDto } from 'src/presentation/dto/category/update-category.dto';
-import { ArtistId } from '../value objects/artistId';
+import { ArtistId } from '../value-objects/artistId';
 
 export interface ICategoryRepository {
   createCategory(categoryData: CreateCategoryDto): Promise<Category>;

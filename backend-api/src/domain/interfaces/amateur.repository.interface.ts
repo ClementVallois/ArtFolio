@@ -1,6 +1,6 @@
 import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
 import { User } from '../entities/user.entity';
-import { AmateurId } from '../value objects/amateurId';
+import { AmateurId } from '../value-objects/amateurId';
 import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
 
 export interface IAmateurRepository {

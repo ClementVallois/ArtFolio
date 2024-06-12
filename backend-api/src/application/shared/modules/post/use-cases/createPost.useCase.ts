@@ -11,7 +11,7 @@ import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/g
 import { AssetService } from 'src/application/services/asset.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { CreatePostDto } from 'src/presentation/dto/post/create-post.dto';
 

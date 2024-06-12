@@ -37,6 +37,7 @@ import { GetCategoryByIdUseCase } from 'src/application/modules/category/use-cas
 import { GetUserByIdUseCase } from 'src/application/modules/user/use-cases/getUserById.useCase';
 import { SaveAssetUseCase } from 'src/application/modules/asset/use-cases/saveAsset.useCase';
 import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/createAsset.useCase';
+import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
@@ -56,6 +57,7 @@ import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/crea
     GetCategoryByIdUseCase,
     ValidationService,
     SharedArtistUseCaseProxy,
+    GetPostAssetsUseCase,
     GetRandomArtistsPostUseCase,
     GetAllPostsUseCase,
     GetLastRegisteredArtistsPostsUseCase,

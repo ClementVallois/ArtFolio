@@ -1,11 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { AssetService } from 'src/application/services/asset.service';
 import { GetArtistPinnedPostUseCase } from 'src/application/shared/modules/post/use-cases/getArtistPinnedPost.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
+import { GetPostAssetsUseCase } from '../../asset/use-cases/getPostAssets.useCase';
+import { GetUserProfilePictureUseCase } from '../../asset/use-cases/getUserProfilePicture.useCase';
+import { PostId } from 'src/domain/value-objects/postId';
 
 @Injectable()
 export class GetLastRegisteredArtistsPostsUseCase {
@@ -13,7 +15,8 @@ export class GetLastRegisteredArtistsPostsUseCase {
     @Inject('IArtistRepository')
     private readonly artistRepository: IArtistRepository,
     private readonly getArtistPinnedPostUseCase: GetArtistPinnedPostUseCase,
-    private readonly assetService: AssetService,
+    private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
+    private readonly getUserProfilePictureUseCase: GetUserProfilePictureUseCase,
   ) {}
 
   async execute(numberOfPosts: number): Promise<
@@ -44,10 +47,12 @@ export class GetLastRegisteredArtistsPostsUseCase {
       const artistId = new ArtistId(artist.id);
       const pinnedPost =
         await this.getArtistPinnedPostUseCase.execute(artistId);
-      const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
+      const postAssets = await this.getPostAssetsUseCase.execute(
+        new PostId(pinnedPost.id),
+      );
 
       const artistAsset =
-        await this.assetService.getUserProfilePicture(artistId);
+        await this.getUserProfilePictureUseCase.execute(artistId);
 
       artistWithPostsList.push({
         artist,

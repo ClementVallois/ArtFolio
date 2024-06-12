@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ICategoryRepository } from 'src/domain/interfaces/category.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
-import { CategoryId } from 'src/domain/value objects/categoryId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
+import { CategoryId } from 'src/domain/value-objects/categoryId';
 import { GetArtistByIdUseCase } from '../../artist/use-cases/getArtistById.useCase';
 import { GetCategoryByIdUseCase } from './getCategoryById.useCase';
 

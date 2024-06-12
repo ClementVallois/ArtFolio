@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
-import { AmateurId } from 'src/domain/value objects/amateurId';
+import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
 import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
 import { Repository } from 'typeorm';

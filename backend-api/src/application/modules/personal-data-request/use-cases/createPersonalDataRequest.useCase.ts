@@ -1,7 +1,7 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
-import { UserId } from 'src/domain/value objects/userId';
+import { UserId } from 'src/domain/value-objects/userId';
 import { CreateDataRequestDto } from 'src/presentation/dto/personal-data-request/create-data-request.dto';
 import { GetUserByIdUseCase } from '../../user/use-cases/getUserById.useCase';
 @Injectable()

@@ -21,7 +21,10 @@ import { join } from 'path';
 import { FastifyReply } from 'fastify';
 import { File } from '@nest-lab/fastify-multer';
 import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth()
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}

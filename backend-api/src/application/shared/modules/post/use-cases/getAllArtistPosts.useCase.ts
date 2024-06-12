@@ -2,7 +2,7 @@ import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
-import { ArtistId } from 'src/domain/value objects/artistId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 
 @Injectable()
 export class GetAllArtistPostsUseCase {
