@@ -6,7 +6,7 @@ import {
   IsUUID,
   MaxLength,
 } from 'class-validator';
-import { ToBoolean } from 'src/presentation/decorators/toBoolean.decorator';
+import { ToBoolean } from 'src/presentation/decorators/toBoolean/toBoolean.decorator';
 
 export class CreatePostDto {
   @IsBoolean({ message: '$property must be a boolean' })

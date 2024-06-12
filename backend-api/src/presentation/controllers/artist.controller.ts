@@ -27,7 +27,17 @@ import { PostId } from 'src/domain/value objects/postId';
 import { SharedArtistUseCaseProxy } from 'src/application/shared/modules/artist/proxies/sharedArtistUseCase.proxy';
 import { SharedPostUseCaseProxy } from 'src/application/shared/modules/post/proxies/sharedPostUseCase.proxy';
 import { SharedCategoryUseCaseProxy } from 'src/application/shared/modules/category/proxies/sharedCategoryUseCase.proxy';
+import { Permissions } from '../decorators/permissions/permissions.decorator';
+import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
+@ApiTags('Artists')
+@ApiBearerAuth()
 @Controller(['artists'])
 export class ArtistController {
   constructor(
@@ -37,8 +47,12 @@ export class ArtistController {
     private readonly sharedCategoryUseCaseProxy: SharedCategoryUseCaseProxy,
   ) {}
 
-  @UseGuards(AuthGuard('jwt'))
+  @ApiOperation({ summary: 'Get all artists' })
+  @ApiResponse({ status: 200, description: 'Return all artists.' })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Get()
+  @Permissions('delete:post')
   async getAllArtists() {
     return this.artistUseCaseProxy.getAllArtists();
   }
