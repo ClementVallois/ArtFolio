@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
 import { UserId } from 'src/domain/value objects/userId';
 import { CreateDataRequestDto } from 'src/presentation/dto/personal-data-request/create-data-request.dto';
@@ -15,11 +15,11 @@ export class CreatePersonalDataRequestUseCase {
     personalDataRequestData: CreateDataRequestDto,
   ): Promise<PersonalDataRequest> {
     const user = await this.getUserByIdUseCase.execute(
-      new UserId(personalDataRequestData.user),
+      new UserId(personalDataRequestData.userId),
     );
     if (!user) {
       throw new NotFoundException(
-        `User not found with ID: ${personalDataRequestData.user}`,
+        `User not found with ID: ${personalDataRequestData.userId}`,
       );
     }
     const dataRequest = new PersonalDataRequest();

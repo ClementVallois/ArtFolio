@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Asset } from 'src/domain/entities/asset.entity';
-import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { File } from '@nest-lab/fastify-multer';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';

@@ -4,7 +4,7 @@ import { UserController } from 'src/presentation/controllers/user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
-import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from 'src/application/services/asset.service';

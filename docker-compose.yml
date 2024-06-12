@@ -45,7 +45,7 @@ services:
 
     # Main Database 
     postgres-api:
-        image: postgres:16.2
+        image: postgres:16.2-alpine
         ports:
             - "${DB_API_PORT}:5432"
         volumes:
@@ -76,7 +76,7 @@ services:
 
     # Database used for the chat feature
     postgres-chat:
-        image: postgres:16.2
+        image: postgres:16.2-alpine
         ports:
             - "${DB_CHAT_PORT}:5432"
         volumes:

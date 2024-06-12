@@ -110,7 +110,7 @@ dist
 # Serverless directories
 .serverless/
 
-# PNG files
+# Image mimetype files
 *.png
 *.jpg 
 *.jpeg
@@ -133,3 +133,6 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Swagger metadata 
+backend-api/src/metadata.ts

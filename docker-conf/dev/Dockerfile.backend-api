@@ -2,13 +2,15 @@ FROM node:lts-alpine
 
 WORKDIR /app/backend-api
 
-COPY ../backend-api/package*.json .
-COPY ../backend-api/tsconfig*.json .
+COPY backend-api/package*.json ./
+COPY backend-api/tsconfig*.json ./
 
 RUN npm install
 
-COPY backend-api .
+COPY backend-api ./
+# COPY ./.env /app/backend-api/.env
+# COPY ./entrypoint.sh /app/backend-api/entrypoint.sh
+# RUN chmod +x /app/backend-api/entrypoint.sh
 
 EXPOSE 3000
-
 CMD ["npm", "run", "start:dev"]

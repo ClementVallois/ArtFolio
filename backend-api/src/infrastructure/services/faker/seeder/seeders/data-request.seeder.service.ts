@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { PersonalDataRequest } from 'src/domain/entities/data-request.entity';
+import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { User } from 'src/domain/entities/user.entity';
 
 @Injectable()
