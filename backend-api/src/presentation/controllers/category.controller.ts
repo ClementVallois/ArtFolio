@@ -16,18 +16,33 @@ import { GetCategoryByIdUseCase } from 'src/application/modules/category/use-cas
 import { CategoryId } from 'src/domain/value objects/categoryId';
 import { UpdateCategoryUseCase } from 'src/application/modules/category/use-cases/updateCategory.useCase';
 import { RemoveCategoryUseCase } from 'src/application/modules/category/use-cases/removeCategory.useCase';
+import { ApiParam, ApiResponse } from '@nestjs/swagger';
 
 @Controller('categories')
 export class CategoryController {
   constructor(
     private readonly createCategoryUseCase: CreateCategoryUseCase,
     private readonly getAllCategoriesUseCase: GetAllCategoriesUseCase,
-    private readonly getCategoryById: GetCategoryByIdUseCase,
+    private readonly getCategoryByIdUseCase: GetCategoryByIdUseCase,
     private readonly updateCategoryUseCase: UpdateCategoryUseCase,
     private readonly removeCategoryUseCase: RemoveCategoryUseCase,
   ) {}
 
   @Get()
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'Should be an id of a post that exists in the database',
+    type: Number,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'A post has been successfully fetched',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'A post with given id does not exist.',
+  })
   async getAllCategories() {
     return this.getAllCategoriesUseCase.execute();
   }
@@ -35,7 +50,7 @@ export class CategoryController {
   @Get(':id')
   async getOneCategory(@Param() params: FindIdParams) {
     const categoryId = new CategoryId(params.id);
-    return this.getCategoryById.execute(categoryId);
+    return this.getCategoryByIdUseCase.execute(categoryId);
   }
 
   @Post()

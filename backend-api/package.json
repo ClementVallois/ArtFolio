@@ -26,6 +26,7 @@
     "typeorm:revert-migration": "npm run typeorm -- -d ./src/config/ormconfig.ts migration:revert"
   },
   "dependencies": {
+    "@fastify/static": "^7.0.4",
     "@nest-lab/fastify-multer": "^1.2.0",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.1",
@@ -33,6 +34,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-fastify": "^10.3.6",
+    "@nestjs/swagger": "^7.3.1",
     "@nestjs/typeorm": "^10.0.2",
     "@types/passport-local": "^1.0.38",
     "class-transformer": "^0.5.1",

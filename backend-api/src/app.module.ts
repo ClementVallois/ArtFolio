@@ -14,6 +14,7 @@ import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { SeederService } from './infrastructure/services/faker/seeder/seeder.service';
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 import { AmateurModule } from './application/modules/amateur/amateur.module';
+import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AmateurModule } from './application/modules/amateur/amateur.module';
     EnvConfigModule,
     SeederModule,
     FastifyMulterModule,
+    SwaggerConfigModule.forRoot(),
   ],
   controllers: [],
   providers: [SeederService],
