@@ -6,7 +6,7 @@ import { ArtistId } from 'src/domain/value-objects/artistId';
 import { UserId } from 'src/domain/value-objects/userId';
 
 @Injectable()
-export class GetUserProfilePictureUseCase {
+export class GetUserProfilePictureAssetUseCase {
   constructor(
     @Inject('IAssetRepository')
     private readonly assetRepository: IAssetRepository,

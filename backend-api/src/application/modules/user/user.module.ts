@@ -16,13 +16,16 @@ import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
 import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { GetUserProfilePictureUseCase } from '../asset/use-cases/getUserProfilePicture.useCase';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { Category } from 'src/domain/entities/category.entity';
 import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
 import { GetUserByIdUseCase } from './use-cases/getUserById.useCase';
 import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
 import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
+import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
 
 @Module({
   imports: [
@@ -42,7 +45,10 @@ import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
     ProfilePictureService,
     UserService,
-    GetUserProfilePictureUseCase,
+    GetUserProfilePictureAssetUseCase,
+    GetPostPictureAssetsUseCase,
+    GetArtistPostPictureAssetsUseCase,
+    RemoveAssetUseCase,
     GetCategoryByIdUseCase,
     GetUserByIdUseCase,
     SaveAssetUseCase,

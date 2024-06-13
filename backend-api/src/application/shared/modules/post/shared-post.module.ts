@@ -16,6 +16,15 @@ import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repos
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 import { PostRepository } from 'src/infrastructure/repositories/post.repository';
+import { GetPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
+import { GetUserProfilePictureAssetUseCase } from 'src/application/modules/asset/use-cases/getUserProfilePictureAsset.useCase';
+import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
+import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
+import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/createAsset.useCase';
+import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
+import { RemoveAssetUseCase } from 'src/application/modules/asset/use-cases/removeAsset.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset])],
@@ -32,12 +41,25 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
       provide: 'IPostRepository',
       useClass: PostRepository,
     },
+    {
+      provide: 'IAssetRepository',
+      useClass: AssetRepository,
+    },
     FileService,
     AssetService,
+    PostPictureHandler,
+    PostPictureService,
+    CreateAssetUseCase,
+    GetPostByIdUseCase,
     SharedPostUseCaseProxy,
     CreatePostUseCase,
     GetAllPostsUseCase,
+    RemoveAssetUseCase,
+    RemoveAssetUseCase,
     GetArtistPinnedPostUseCase,
+    GetPostPictureAssetsUseCase,
+    GetArtistPostPictureAssetsUseCase,
+    GetUserProfilePictureAssetUseCase,
     GetArtistByIdUseCase,
     GetAllArtistPostsUseCase,
     GetOneArtistPostUseCase,

@@ -30,7 +30,6 @@ import { GetAmateurByIdUseCase } from 'src/application/modules/amateur/use-cases
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { PostRepository } from 'src/infrastructure/repositories/post.repository';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
-import { GetUserProfilePictureUseCase } from 'src/application/modules/asset/use-cases/getUserProfilePicture.useCase';
 import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 import { GetCategoryByIdUseCase } from 'src/application/modules/category/use-cases/getCategoryById.useCase';
@@ -38,6 +37,13 @@ import { GetUserByIdUseCase } from 'src/application/modules/user/use-cases/getUs
 import { SaveAssetUseCase } from 'src/application/modules/asset/use-cases/saveAsset.useCase';
 import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/createAsset.useCase';
 import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
+import { GetUserProfilePictureAssetUseCase } from 'src/application/modules/asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
+import { RemoveAssetUseCase } from 'src/application/modules/asset/use-cases/removeAsset.useCase';
+import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
+import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset, Category])],
@@ -63,10 +69,16 @@ import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/ge
     GetLastRegisteredArtistsPostsUseCase,
     GetArtistPinnedPostUseCase,
     ProfilePictureService,
+    GetPostByIdUseCase,
     GetUserByIdUseCase,
     SaveAssetUseCase,
     CreateAssetUseCase,
-    GetUserProfilePictureUseCase,
+    GetUserProfilePictureAssetUseCase,
+    GetArtistPostPictureAssetsUseCase,
+    RemoveAssetUseCase,
+    PostPictureHandler,
+    PostPictureService,
+    GetPostPictureAssetsUseCase,
     GetAllArtistPostsUseCase,
     GetOneArtistPostUseCase,
     GetAmateurByIdUseCase,

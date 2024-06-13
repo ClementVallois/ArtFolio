@@ -43,10 +43,12 @@ import { UpdateArtistUseCase } from 'src/application/modules/artist/use-cases/up
 import { RemoveArtistUseCase } from 'src/application/modules/artist/use-cases/removeArtist.useCase';
 import { GetAllArtistsUseCase } from 'src/application/modules/artist/use-cases/getAllArtists.useCase';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { Post as PostEntity } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { GetRandomArtistsPostUseCase } from 'src/application/modules/artist/use-cases/getRandomArtistsPost.useCase';
+import { Category } from 'src/domain/entities/category.entity';
+import { FileUploadDto } from '../dto/artist/fileUpload.dto';
 
 @ApiTags('Artists')
 @Controller(['artists'])
@@ -66,23 +68,23 @@ export class ArtistController {
 
   /**
    * Get all artists
-   * @returns {Promise<User[]>} Array of all artists
+   * @returns {Promise<Artist[]>} Array of all artists
    */
   @ApiOperation({ summary: 'Get all artists' })
   @ApiResponse({ status: 200, description: 'Return all artists.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  @Permissions('read:allArtist')
   @Get()
-  async getAllArtists(): Promise<User[]> {
+  async getAllArtists(): Promise<Artist[]> {
     return this.getAllArtistsUseCase.execute();
   }
 
   /**
    * Get an artist by ID
    * @param {FindIdParams} params - Parameters to find the artist
-   * @returns {Promise<User>} The artist data
+   * @returns {Promise<Artist>} The artist data
    */
   @ApiOperation({ summary: 'Get an artist by ID' })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
@@ -91,9 +93,9 @@ export class ArtistController {
   @ApiResponse({ status: 404, description: 'Artist not found' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  @Permissions('read:allArtist')
   @Get(':id')
-  async getArtistById(@Param() params: FindIdParams): Promise<User> {
+  async getArtistById(@Param() params: FindIdParams): Promise<Artist> {
     const artistId = new ArtistId(params.id);
     return this.getArtistByIdUseCase.execute(artistId);
   }
@@ -110,7 +112,7 @@ export class ArtistController {
   @ApiResponse({ status: 404, description: 'Artist not found' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  @Permissions('read:posts')
   @Get(':id/posts')
   async getArtistPosts(@Param() params: FindIdParams): Promise<PostEntity[]> {
     const artistId = new ArtistId(params.id);
@@ -120,7 +122,7 @@ export class ArtistController {
   /**
    * Get an artist's categories
    * @param {FindIdParams} params - Parameters to find the artist
-   * @returns {Promise<any>} The artist's categories
+   * @returns {Promise<Category[]>} The artist's categories
    */
   @ApiOperation({ summary: "Get an artist's categories" })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
@@ -131,7 +133,9 @@ export class ArtistController {
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:all')
   @Get(':id/categories')
-  async getArtistCategories(@Param() params: FindIdParams) {
+  async getArtistCategories(
+    @Param() params: FindIdParams,
+  ): Promise<Category[]> {
     const artistId = new ArtistId(params.id);
     return this.getArtistCategoriesUseCase.execute(artistId);
   }
@@ -170,7 +174,7 @@ export class ArtistController {
   /**
    * Get the last registered artists' posts
    * @param {FindNumberParams} params - Parameters to specify the number of posts
-   * @returns {Promise<{artist: User; pinnedPost: PostEntity; postAssets: Asset[]; artistAsset: Asset}[]>} The last registered artists' posts
+   * @returns {Promise<{artist: Artist; pinnedPost: PostEntity; postAssets: Asset[]; artistAsset: Asset}[]>} The last registered artists' posts
    */
   @ApiOperation({ summary: "Get the last registered artists' posts" })
   @ApiParam({
@@ -187,7 +191,7 @@ export class ArtistController {
     @Param() params: FindNumberParams,
   ): Promise<
     {
-      artist: User;
+      artist: Artist;
       pinnedPost: PostEntity;
       postAssets: Asset[];
       artistAsset: Asset;
@@ -199,7 +203,7 @@ export class ArtistController {
   /**
    * Get nb randoms artist's post
    * @param {FindNumberParams} params - Parameters to specify the number of posts
-   * @returns {Promise<{artist: User; pinnedPost: PostEntity; postAssets: Asset[]; artistAsset: Asset}[]>} The nb randoms artist's post
+   * @returns {Promise<{artist: Artist; pinnedPost: PostEntity; postAssets: Asset[]; artistAsset: Asset}[]>} The nb randoms artist's post
    */
   @ApiOperation({ summary: "Get nb random artist's post" })
   @ApiParam({
@@ -211,7 +215,7 @@ export class ArtistController {
   @Get('random/:nb')
   async getRandomArtistsPost(@Param() params: FindNumberParams): Promise<
     {
-      artist: User;
+      artist: Artist;
       pinnedPost: PostEntity;
       postAssets: Asset[];
       artistAsset: Asset;
@@ -235,6 +239,10 @@ export class ArtistController {
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiBody({
+    description: 'Data for artist creation',
+    type: CreateArtistDto,
+  })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('create:artist')
@@ -260,7 +268,7 @@ export class ArtistController {
     }),
   )
   async createArtist(
-    @UploadedFiles() files: { profilePicture: File; postPicture: File[] },
+    @UploadedFiles() files: FileUploadDto,
     @Body() artistData: CreateArtistDto,
   ): Promise<{ message: string; artistId: string }> {
     const artist = await this.createArtistUseCase.execute(artistData, files);
@@ -270,16 +278,17 @@ export class ArtistController {
       artistId: artist.id,
     };
   }
+
   /**
    * Update an artist
    * @param {FindIdParams} params - Parameters to find the artist
    * @param {File} file - Uploaded file for profile picture
    * @param {UpdateArtistDto} artistData - Data to update the artist
-   * @returns {Promise<User>} The updated artist data
+   * @returns {Promise<Artist>} The updated artist data
    */
   @ApiOperation({ summary: 'Update an artist' })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
-  @ApiBody({ type: UpdateArtistDto })
+  @ApiBody({ description: 'Data for artist update', type: UpdateArtistDto })
   @ApiConsumes('multipart/form-data')
   @ApiResponse({
     status: 200,
@@ -313,7 +322,7 @@ export class ArtistController {
     @Param() params: FindIdParams,
     @UploadedFiles() file: File,
     @Body() artistData: UpdateArtistDto,
-  ): Promise<User> {
+  ): Promise<Artist> {
     const artistId = new ArtistId(params.id);
     return this.updateArtistUseCase.execute(artistId, artistData, file);
   }
@@ -321,7 +330,7 @@ export class ArtistController {
   /**
    * Delete an artist
    * @param {FindIdParams} params - Parameters to find the artist
-   * @returns {Promise<User>} The deleted artist data
+   * @returns {Promise<Artist>} The deleted artist data
    */
   @ApiOperation({ summary: 'Delete an artist' })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
@@ -335,7 +344,7 @@ export class ArtistController {
   @ApiBearerAuth()
   @Permissions('delete:artist')
   @Delete(':id')
-  async removeArtist(@Param() params: FindIdParams): Promise<User> {
+  async removeArtist(@Param() params: FindIdParams): Promise<Artist> {
     const artistId = new ArtistId(params.id);
     return this.removeArtistUseCase.execute(artistId);
   }

@@ -8,7 +8,7 @@ export class GetAllPersonalDataRequestUseCase {
     private readonly personalDataRequestRepository: IPersonalDataRequestRepository,
   ) {}
 
-  async execute(): Promise<PersonalDataRequest[] | string> {
+  async execute(): Promise<PersonalDataRequest[]> {
     const dataRequest =
       await this.personalDataRequestRepository.findAllPersonalDataRequestWithUser();
     if (dataRequest.length === 0) {

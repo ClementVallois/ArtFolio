@@ -23,7 +23,6 @@ import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.
 import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
-import { GetUserProfilePictureUseCase } from '../asset/use-cases/getUserProfilePicture.useCase';
 import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
@@ -33,6 +32,14 @@ import { UpdateArtistUseCase } from './use-cases/updateArtist.useCase';
 import { RemoveArtistUseCase } from './use-cases/removeArtist.useCase';
 import { GetRandomArtistsPostUseCase } from './use-cases/getRandomArtistsPost.useCase';
 import { GetPostAssetsUseCase } from '../asset/use-cases/getPostAssets.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
+import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
+import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
+import { GetPostByIdUseCase } from '../post/use-cases/getPostById.useCase';
+import { PostRepository } from 'src/infrastructure/repositories/post.repository';
 
 @Module({
   imports: [
@@ -47,24 +54,31 @@ import { GetPostAssetsUseCase } from '../asset/use-cases/getPostAssets.useCase';
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
     { provide: 'IUserRepository', useClass: UserRepository },
     { provide: 'IAssetRepository', useClass: AssetRepository },
+    { provide: 'IPostRepository', useClass: PostRepository },
     ArtistUseCaseProxy,
     GetAllArtistsUseCase,
     CreateArtistUseCase,
     AssignCategoriesToArtistUseCase,
     ValidationService,
+    RemoveAssetUseCase,
     DatabaseErrorHandler,
     UpdateArtistUseCase,
     RemoveArtistUseCase,
     GetRandomArtistsPostUseCase,
+    GetPostPictureAssetsUseCase,
+    GetArtistPostPictureAssetsUseCase,
     GetPostAssetsUseCase,
     ProfilePictureHandler,
     GetUserByIdUseCase,
+    PostPictureService,
+    GetPostByIdUseCase,
     GetCategoryByIdUseCase,
     FileService,
     CreateAssetUseCase,
     SaveAssetUseCase,
+    PostPictureHandler,
     ProfilePictureService,
-    GetUserProfilePictureUseCase,
+    GetUserProfilePictureAssetUseCase,
     GetArtistByIdUseCase,
     SharedCategoryUseCaseProxy,
     GetArtistCategoriesUseCase,

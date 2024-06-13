@@ -31,7 +31,10 @@ export class CreateAmateurUseCase {
       this.databaseErrorHandler.handleDatabaseError(error, amateurData);
     }
 
-    await this.profilePictureHandler.handle(amateur, profilePicture);
+    await this.profilePictureHandler.createOrUpdateProfilePicture(
+      amateur,
+      profilePicture,
+    );
 
     return amateur;
   }

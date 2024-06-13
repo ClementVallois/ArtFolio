@@ -14,6 +14,15 @@ import { SharedPostModule } from 'src/application/shared/modules/post/shared-pos
 import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
 import { GetPostAssetsUseCase } from '../asset/use-cases/getPostAssets.useCase';
 import { PostRepository } from 'src/infrastructure/repositories/post.repository';
+import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
+import { GetArtistByIdUseCase } from '../artist/use-cases/getArtistById.useCase';
+import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
+import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
+import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
+import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, Asset, User]), SharedPostModule],
@@ -21,12 +30,21 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
   providers: [
     { provide: 'IAssetRepository', useClass: AssetRepository },
     { provide: 'IPostRepository', useClass: PostRepository },
+    { provide: 'IArtistRepository', useClass: ArtistRepository },
     FileService,
     AssetService,
+    PostPictureHandler,
     PostUseCaseProxy,
     GetPostByIdUseCase,
     RemovePostUseCase,
     UpdatePostUseCase,
+    RemoveAssetUseCase,
+    GetPostPictureAssetsUseCase,
+    GetArtistPostPictureAssetsUseCase,
+    GetUserProfilePictureAssetUseCase,
+    PostPictureService,
+    GetArtistByIdUseCase,
+    CreateAssetUseCase,
     GetPostAssetsUseCase,
   ],
   exports: [],

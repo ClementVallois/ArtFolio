@@ -1,38 +1,26 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
-import { FileService } from 'src/infrastructure/services/file/file.service';
+import { GetAmateurByIdUseCase } from './getAmateurById.useCase';
+import { UserId } from 'src/domain/value-objects/userId';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 
 @Injectable()
 export class RemoveAmateurUseCase {
   constructor(
     @Inject('IAmateurRepository')
     private readonly amateurRepository: IAmateurRepository,
-    private readonly fileService: FileService,
+    private readonly getAmateurByIdUseCase: GetAmateurByIdUseCase,
+    private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}
 
   async execute(amateurId: AmateurId): Promise<User> {
-    const user = await this.amateurRepository.findAmateurById(amateurId);
-    if (!user) {
-      throw new NotFoundException(`Amateur not found with ID: ${amateurId}`);
-    }
+    const user = await this.getAmateurByIdUseCase.execute(amateurId);
 
-    try {
-      await this.fileService.deleteProfilePicture(user.id);
-      await this.fileService.deleteUserPostsPictures(user.id);
-    } catch (error) {
-      throw new HttpException(
-        "Failed to remove the amateur's profile picture",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    await this.profilePictureHandler.deleteProfilePicture(
+      new UserId(amateurId.toString()),
+    );
 
     try {
       return await this.amateurRepository.removeAmateur(user);

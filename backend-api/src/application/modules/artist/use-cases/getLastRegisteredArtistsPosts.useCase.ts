@@ -6,8 +6,8 @@ import { User } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { GetPostAssetsUseCase } from '../../asset/use-cases/getPostAssets.useCase';
-import { GetUserProfilePictureUseCase } from '../../asset/use-cases/getUserProfilePicture.useCase';
 import { PostId } from 'src/domain/value-objects/postId';
+import { GetUserProfilePictureAssetUseCase } from '../../asset/use-cases/getUserProfilePictureAsset.useCase';
 
 @Injectable()
 export class GetLastRegisteredArtistsPostsUseCase {
@@ -16,7 +16,7 @@ export class GetLastRegisteredArtistsPostsUseCase {
     private readonly artistRepository: IArtistRepository,
     private readonly getArtistPinnedPostUseCase: GetArtistPinnedPostUseCase,
     private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
-    private readonly getUserProfilePictureUseCase: GetUserProfilePictureUseCase,
+    private readonly getUserProfilePictureAssetUseCase: GetUserProfilePictureAssetUseCase,
   ) {}
 
   async execute(numberOfPosts: number): Promise<
@@ -52,7 +52,7 @@ export class GetLastRegisteredArtistsPostsUseCase {
       );
 
       const artistAsset =
-        await this.getUserProfilePictureUseCase.execute(artistId);
+        await this.getUserProfilePictureAssetUseCase.execute(artistId);
 
       artistWithPostsList.push({
         artist,

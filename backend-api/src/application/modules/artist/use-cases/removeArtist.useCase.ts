@@ -1,31 +1,27 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
-import { FileService } from 'src/infrastructure/services/file/file.service';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { GetArtistByIdUseCase } from './getArtistById.useCase';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
+import { UserId } from 'src/domain/value-objects/userId';
+import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
+import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
 
 @Injectable()
 export class RemoveArtistUseCase {
   constructor(
     @Inject('IArtistRepository')
     private readonly artistRepository: IArtistRepository,
-    private readonly fileService: FileService,
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
+    private readonly profilePictureHandler: ProfilePictureHandler,
+    private readonly postPictureHandler: PostPictureHandler,
   ) {}
 
-  async execute(id: ArtistId): Promise<User> {
-    const artistId = id.toString();
-    const artist = await this.getArtistByIdUseCase.execute(id);
-    try {
-      await this.fileService.deleteProfilePicture(artistId);
-      await this.fileService.deleteUserPostsPictures(artistId);
-    } catch (error) {
-      throw new HttpException(
-        "Failed to remove the artist's profile picture",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+  async execute(artistId: ArtistId): Promise<User> {
+    const artist = await this.getArtistByIdUseCase.execute(artistId);
+    const userId = new UserId(artistId.toString());
+    await this.profilePictureHandler.deleteProfilePicture(userId);
+    await this.postPictureHandler.deleteArtistPostsPictures(artistId);
 
     try {
       return await this.artistRepository.removeArtist(artist);

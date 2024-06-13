@@ -28,7 +28,10 @@ export class UpdateArtistUseCase {
       artistData,
     );
 
-    await this.profilePictureHandler.handle(updatedArtist, profilePicture);
+    await this.profilePictureHandler.createOrUpdateProfilePicture(
+      updatedArtist,
+      profilePicture,
+    );
     return artist;
   }
 }

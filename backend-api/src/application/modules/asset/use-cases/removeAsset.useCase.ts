@@ -3,19 +3,18 @@ import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interfa
 import { Asset } from 'src/domain/entities/asset.entity';
 
 @Injectable()
-export class CreateAssetUseCase {
+export class RemoveAssetUseCase {
   constructor(
     @Inject('IAssetRepository')
     private readonly assetRepository: IAssetRepository,
   ) {}
 
-  async execute(assetData: Partial<Asset>): Promise<Asset> {
-    let assetToCreate: Asset;
+  async execute(assetData: Asset): Promise<Asset> {
     try {
-      assetToCreate = await this.assetRepository.createAsset(assetData);
+      await this.assetRepository.removeAsset(assetData);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-    return assetToCreate;
+    return assetData;
   }
 }

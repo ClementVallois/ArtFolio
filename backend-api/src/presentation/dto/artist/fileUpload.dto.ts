@@ -1,7 +1,18 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { File } from '@nest-lab/fastify-multer';
 
-class FileUploadDto {
-  file: File;
-}
+export class FileUploadDto {
+  @ApiProperty({
+    type: 'string',
+    format: 'binary',
+    description: 'Profile picture file',
+  })
+  profilePicture: File;
 
-export default FileUploadDto;
+  @ApiProperty({
+    type: 'array',
+    items: { type: 'string', format: 'binary' },
+    description: 'Post pictures files',
+  })
+  postPicture: File[];
+}

@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interface';
 import { Asset } from 'src/domain/entities/asset.entity';
 
@@ -13,7 +13,7 @@ export class SaveAssetUseCase {
     try {
       await this.assetRepository.saveAsset(assetData);
     } catch (error) {
-      throw new Error(error);
+      throw new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR);
     }
     return assetData;
   }

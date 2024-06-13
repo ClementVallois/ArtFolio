@@ -1,42 +1,47 @@
-// import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
-// import { File } from '@nest-lab/fastify-multer';
-// import { User } from 'src/domain/entities/user.entity';
-// import { FileService } from 'src/infrastructure/services/file/file.service';
-// import { PostPictureService } from './post-picture.service';
-// import { PostId } from 'src/domain/value objects/postId';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { File } from '@nest-lab/fastify-multer';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
+import { PostId } from 'src/domain/value-objects/postId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 
-// @Injectable()
-// export class PostPictureHandler {
-//   constructor(
-//     private readonly fileService: FileService,
-//     private readonly postPictureService: PostPictureService,
-//   ) {}
+@Injectable()
+export class PostPictureHandler {
+  constructor(private readonly postPictureService: PostPictureService) {}
 
-//   async handle(
-//     userId: string,
-//     postId: string,
-//     postPicture: File,
-//   ): Promise<void> {
-//     if (!postPicture) return;
+  async createPostPicture(
+    artistId: ArtistId,
+    postId: string,
+    postPicture: File,
+  ): Promise<void> {
+    if (!postPicture) return;
 
-//     const postIdValue = new PostId(postId);
+    const postIdValue = new PostId(postId);
 
-//     try {
-//       const fileData = await this.fileService.savePostPicture(
-//         userId,
-//         postId,
-//         postPicture,
-//       );
-//       await this.postPictureService.addPostPictureMetadataInDatabase(
-//         postIdValue,
-//         userId,
-//         fileData,
-//       );
-//     } catch (error) {
-//       throw new HttpException(
-//         'Failed to save post picture',
-//         HttpStatus.INTERNAL_SERVER_ERROR,
-//       );
-//     }
-//   }
-// }
+    try {
+      const fileData = await this.postPictureService.savePostPicture(
+        postId,
+        postPicture,
+      );
+      await this.postPictureService.addPostPictureMetadata(
+        postIdValue,
+        artistId,
+        fileData,
+      );
+    } catch (error) {
+      throw new HttpException(
+        'Failed to save post picture',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async deletePostPicture(postId: PostId): Promise<void> {
+    await this.postPictureService.deletePostsPictures(postId);
+    // Not needed because delete is done on cascade from post
+    // await this.postPictureService.removePostPictureMetadata(postId);
+  }
+
+  async deleteArtistPostsPictures(artistId: ArtistId): Promise<void> {
+    await this.postPictureService.deleteArtistPostsPictures(artistId);
+  }
+}

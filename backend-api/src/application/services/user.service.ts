@@ -16,6 +16,9 @@ import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from './asset.service';
 import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
 import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
+import { UserId } from 'src/domain/value-objects/userId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
+import { ProfilePictureHandler } from '../handlers/profile-picture.handler';
 
 @Injectable()
 export class UserService {
@@ -29,6 +32,7 @@ export class UserService {
     private readonly errorService: ErrorService,
     private readonly fileService: FileService,
     private readonly assetService: AssetService,
+    private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}
 
   async getAllUsers(): Promise<User[]> {
@@ -121,10 +125,11 @@ export class UserService {
   }
   private async handleProfilePicture(user: User, profilePicture: File) {
     try {
-      const fileData = await this.fileService.saveProfilePicture(
-        user.id,
-        profilePicture,
-      );
+      const fileData =
+        await this.profilePictureHandler.createOrUpdateProfilePicture(
+          user,
+          profilePicture,
+        );
       await this.assetService.addProfilePictureMetadataInDatabase(
         user.id,
         fileData,
@@ -147,8 +152,8 @@ export class UserService {
     const user = await this.getUserById(id);
 
     try {
-      await this.fileService.deleteProfilePicture(id);
-      await this.fileService.deleteUserPostsPictures(id);
+      await this.profilePictureHandler.deleteProfilePicture(new UserId(id));
+      await this.fileService.deleteArtistPostsPictures(new ArtistId(id));
     } catch (error) {
       throw new HttpException(
         "Failed to remove the user's profile picture",

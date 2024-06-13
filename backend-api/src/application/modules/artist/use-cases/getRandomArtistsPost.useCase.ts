@@ -7,7 +7,7 @@ import { IArtistRepository } from 'src/domain/interfaces/artist.repository.inter
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { GetPostAssetsUseCase } from '../../asset/use-cases/getPostAssets.useCase';
 import { PostId } from 'src/domain/value-objects/postId';
-import { GetUserProfilePictureUseCase } from '../../asset/use-cases/getUserProfilePicture.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../../asset/use-cases/getUserProfilePictureAsset.useCase';
 
 @Injectable()
 export class GetRandomArtistsPostUseCase {
@@ -16,7 +16,7 @@ export class GetRandomArtistsPostUseCase {
     private readonly artistRepository: IArtistRepository,
     private readonly getArtistPinnedPostUseCase: GetArtistPinnedPostUseCase,
     private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
-    private readonly getUserProfilePictureUseCase: GetUserProfilePictureUseCase,
+    private readonly getUserProfilePictureAssetUseCase: GetUserProfilePictureAssetUseCase,
   ) {}
 
   async execute(numberOfArtists: number): Promise<
@@ -48,7 +48,7 @@ export class GetRandomArtistsPostUseCase {
       );
 
       const artistAsset =
-        await this.getUserProfilePictureUseCase.execute(artistId);
+        await this.getUserProfilePictureAssetUseCase.execute(artistId);
 
       selectedArtists.push({
         artist: randomArtist,

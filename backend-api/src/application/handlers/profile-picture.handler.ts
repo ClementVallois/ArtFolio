@@ -1,33 +1,33 @@
-// profile-picture.handler.ts
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import { User } from 'src/domain/entities/user.entity';
-import { FileService } from 'src/infrastructure/services/file/file.service';
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
-import { GetUserProfilePictureUseCase } from '../modules/asset/use-cases/getUserProfilePicture.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../modules/asset/use-cases/getUserProfilePictureAsset.useCase';
 
 @Injectable()
 export class ProfilePictureHandler {
   constructor(
-    private readonly fileService: FileService,
     private readonly profilePictureService: ProfilePictureService,
-    private readonly getUserProfilePicture: GetUserProfilePictureUseCase,
+    private readonly getUserProfilePictureAssetUseCase: GetUserProfilePictureAssetUseCase,
   ) {}
 
-  async handle(userData: User, profilePicture: File): Promise<void> {
+  async createOrUpdateProfilePicture(
+    userData: User,
+    profilePicture: File,
+  ): Promise<void> {
     if (!profilePicture) return;
 
     const userId = new UserId(userData.id);
     const existingProfilePicture =
-      await this.getUserProfilePicture.execute(userId);
+      await this.getUserProfilePictureAssetUseCase.execute(userId);
 
     if (existingProfilePicture) {
-      await this.fileService.deleteProfilePicture(userData.id);
+      await this.profilePictureService.deleteProfilePicture(userId);
     }
 
     try {
-      const fileData = await this.fileService.saveProfilePicture(
+      const fileData = await this.profilePictureService.saveProfilePicture(
         userData.id,
         profilePicture,
       );
@@ -41,5 +41,10 @@ export class ProfilePictureHandler {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async deleteProfilePicture(userId: UserId): Promise<void> {
+    await this.profilePictureService.deleteProfilePicture(userId);
+    await this.profilePictureService.removeProfilePictureMetadata(userId);
   }
 }

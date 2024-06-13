@@ -130,7 +130,6 @@ export class PostController {
    * @param {File} file - The uploaded file for the post picture.
    * @param {CreatePostDto} postData - The data for creating a new post.
    * @returns {Promise<PostEntity>} A promise that resolves to the newly created post.
-   * @throws {BadRequestException} If the post picture file is not provided.
    */
   @ApiOperation({ summary: 'Create a new post' })
   @ApiBody({ type: CreatePostDto })

@@ -32,11 +32,27 @@ export class AssetRepository implements IAssetRepository {
       where: { type: 'profile_picture', userId: { id: userId.toString() } },
     });
   }
+
+  async findArtistPostPictureAssets(artistId: ArtistId): Promise<Asset[]> {
+    return this.categoryRepository.find({
+      where: { type: 'post_picture', userId: { id: artistId.toString() } },
+    });
+  }
+
+  async findPostPictureAssets(postId: PostId): Promise<Asset[]> {
+    return this.categoryRepository.find({
+      where: { type: 'post_picture', postId: { id: postId.toString() } },
+    });
+  }
   async createAsset(assetData: Partial<Asset>): Promise<Asset> {
     const newAsset = this.categoryRepository.create(assetData);
     return this.categoryRepository.save(newAsset);
   }
   async saveAsset(assetEntity: Asset): Promise<Asset> {
     return this.categoryRepository.save(assetEntity);
+  }
+
+  async removeAsset(asset: Asset): Promise<Asset> {
+    return this.categoryRepository.remove(asset);
   }
 }

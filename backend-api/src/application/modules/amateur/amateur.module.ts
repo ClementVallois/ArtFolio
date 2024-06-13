@@ -19,13 +19,16 @@ import { RemoveAmateurUseCase } from './use-cases/removeAmateur.useCase';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
 import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { GetUserProfilePictureUseCase } from '../asset/use-cases/getUserProfilePicture.useCase';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { Category } from 'src/domain/entities/category.entity';
 import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
 import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
 import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
 import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
+import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Asset, Post, Category])],
@@ -35,13 +38,16 @@ import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
     { provide: 'IAssetRepository', useClass: AssetRepository },
     { provide: 'IUserRepository', useClass: UserRepository },
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
-    GetUserProfilePictureUseCase,
+    GetUserProfilePictureAssetUseCase,
     CreateAmateurUseCase,
     GetAllAmateursUseCase,
     GetAmateurByIdUseCase,
     UpdateAmateurUseCase,
     GetCategoryByIdUseCase,
     GetUserByIdUseCase,
+    GetPostPictureAssetsUseCase,
+    GetArtistPostPictureAssetsUseCase,
+    RemoveAssetUseCase,
     SaveAssetUseCase,
     CreateAssetUseCase,
     ProfilePictureService,

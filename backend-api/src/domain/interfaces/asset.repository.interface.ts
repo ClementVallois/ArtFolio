@@ -10,6 +10,9 @@ export interface IAssetRepository {
   findUserProfilePictureAsset(
     userId: AmateurId | ArtistId | UserId,
   ): Promise<Asset>;
+  findArtistPostPictureAssets(artistId: ArtistId): Promise<Asset[]>;
+  findPostPictureAssets(postId: PostId): Promise<Asset[]>;
   createAsset(assetData: Partial<Asset>): Promise<Asset>;
   saveAsset(assetEntity: Asset): Promise<Asset>;
+  removeAsset(asset: Asset): Promise<Asset>;
 }

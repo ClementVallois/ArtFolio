@@ -86,7 +86,7 @@ export class AssetService {
 
   async addProfilePictureMetadataInDatabase(
     userId: string,
-    fileData: FileData,
+    fileData,
   ): Promise<Asset> {
     const user = await this.userRepository.findOneBy({
       id: userId,
