@@ -6,11 +6,9 @@ import { Post } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Category } from 'src/domain/entities/category.entity';
 import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
-import { ArtistUseCaseProxy } from './proxies/artistUseCase.proxy';
 import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
 import { GetAllArtistsUseCase } from './use-cases/getAllArtists.useCase';
 import { GetArtistByIdUseCase } from './use-cases/getArtistById.useCase';
-import { SharedCategoryUseCaseProxy } from 'src/application/shared/modules/category/proxies/sharedCategoryUseCase.proxy';
 import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
 import { GetArtistCategoriesUseCase } from '../category/use-cases/getArtistCategories.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
@@ -21,7 +19,6 @@ import { ValidationService } from 'src/application/validators/validation.service
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
-import { FileService } from 'src/infrastructure/services/file/file.service';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
 import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
@@ -55,7 +52,6 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
     { provide: 'IUserRepository', useClass: UserRepository },
     { provide: 'IAssetRepository', useClass: AssetRepository },
     { provide: 'IPostRepository', useClass: PostRepository },
-    ArtistUseCaseProxy,
     GetAllArtistsUseCase,
     CreateArtistUseCase,
     AssignCategoriesToArtistUseCase,
@@ -73,16 +69,13 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
     PostPictureService,
     GetPostByIdUseCase,
     GetCategoryByIdUseCase,
-    FileService,
     CreateAssetUseCase,
     SaveAssetUseCase,
     PostPictureHandler,
     ProfilePictureService,
     GetUserProfilePictureAssetUseCase,
     GetArtistByIdUseCase,
-    SharedCategoryUseCaseProxy,
     GetArtistCategoriesUseCase,
   ],
-  exports: [ArtistUseCaseProxy],
 })
 export class ArtistModule {}

@@ -3,8 +3,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
-import { FileService } from 'src/infrastructure/services/file/file.service';
-import { AssetService } from 'src/application/services/asset.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { ValidationService } from 'src/application/validators/validation.service';
@@ -56,8 +54,6 @@ import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
     DatabaseErrorHandler,
     ProfilePictureHandler,
     ErrorService,
-    FileService,
-    AssetService,
   ],
   exports: [],
 })

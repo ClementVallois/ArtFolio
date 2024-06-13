@@ -1,12 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SharedArtistUseCaseProxy } from './proxies/sharedArtistUseCase.proxy';
 import { GetAllPostsUseCase } from '../post/use-cases/getAllPosts.useCase';
 import { GetArtistPinnedPostUseCase } from '../post/use-cases/getArtistPinnedPost.useCase';
 import { GetAllArtistPostsUseCase } from '../post/use-cases/getAllArtistPosts.useCase';
 import { GetOneArtistPostUseCase } from '../post/use-cases/getOneArtistPost.useCase';
 import { CreatePostUseCase } from '../post/use-cases/createPost.useCase';
-import { AssetService } from 'src/application/services/asset.service';
-import { FileService } from 'src/infrastructure/services/file/file.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
@@ -17,7 +14,6 @@ import { GetRandomArtistsPostUseCase } from 'src/application/modules/artist/use-
 import { CreateArtistUseCase } from 'src/application/modules/artist/use-cases/createArtist.useCase';
 import { UpdateArtistUseCase } from 'src/application/modules/artist/use-cases/updateArtist.useCase';
 import { RemoveArtistUseCase } from 'src/application/modules/artist/use-cases/removeArtist.useCase';
-import { SharedPostUseCaseProxy } from '../post/proxies/sharedPostUseCase.proxy';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
@@ -54,15 +50,12 @@ import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPo
     { provide: 'IPostRepository', useClass: PostRepository },
     { provide: 'IAssetRepository', useClass: AssetRepository },
     { provide: 'IUserRepository', useClass: UserRepository },
-    FileService,
     ErrorService,
     GetArtistByIdUseCase,
     DatabaseErrorHandler,
     ProfilePictureHandler,
-    AssetService,
     GetCategoryByIdUseCase,
     ValidationService,
-    SharedArtistUseCaseProxy,
     GetPostAssetsUseCase,
     GetRandomArtistsPostUseCase,
     GetAllPostsUseCase,
@@ -87,10 +80,8 @@ import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPo
     AssignCategoriesToArtistUseCase,
     UpdateArtistUseCase,
     RemoveArtistUseCase,
-    SharedPostUseCaseProxy,
   ],
   exports: [
-    SharedArtistUseCaseProxy,
     GetAllPostsUseCase,
     GetLastRegisteredArtistsPostsUseCase,
     GetArtistPinnedPostUseCase,
