@@ -22,6 +22,7 @@ import { PostPictureService } from 'src/infrastructure/services/file/post-pictur
 import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/createAsset.useCase';
 import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
 import { RemoveAssetUseCase } from 'src/application/modules/asset/use-cases/removeAsset.useCase';
+import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset])],
@@ -53,6 +54,7 @@ import { RemoveAssetUseCase } from 'src/application/modules/asset/use-cases/remo
     GetArtistPinnedPostUseCase,
     GetPostPictureAssetsUseCase,
     GetArtistPostPictureAssetsUseCase,
+    GetPostAssetsUseCase,
     GetUserProfilePictureAssetUseCase,
     GetArtistByIdUseCase,
     GetAllArtistPostsUseCase,

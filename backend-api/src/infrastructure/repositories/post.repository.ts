@@ -23,10 +23,7 @@ export class PostRepository implements IPostRepository {
     });
   }
 
-  findOnePostByPostIdAndArtistId(
-    artistId: ArtistId,
-    postId: PostId,
-  ): Promise<Post> {
+  findPostIdAndArtistId(artistId: ArtistId, postId: PostId): Promise<Post> {
     return this.postRepository.findOne({
       where: {
         user: { id: artistId.toString() },
@@ -48,7 +45,7 @@ export class PostRepository implements IPostRepository {
       order: { createdAt: 'DESC' },
     });
   }
-  findAllPostsByDescCreatedDate(): Promise<Post[]> {
+  findAllPostsSortedByCreatedDate(): Promise<Post[]> {
     return this.postRepository.find({ order: { createdAt: 'DESC' } });
   }
 
@@ -65,7 +62,7 @@ export class PostRepository implements IPostRepository {
     return this.postRepository.save(postToCreate);
   }
 
-  remove(post: Post): Promise<Post> {
+  deletePost(post: Post): Promise<Post> {
     return this.postRepository.remove(post);
   }
 }

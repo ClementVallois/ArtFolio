@@ -12,7 +12,7 @@ export class GetOneArtistPostUseCase {
   ) {}
 
   async execute(artistId: ArtistId, postId: PostId): Promise<Post> {
-    const artistPost = await this.postRepository.findOnePostByPostIdAndArtistId(
+    const artistPost = await this.postRepository.findPostIdAndArtistId(
       artistId,
       postId,
     );

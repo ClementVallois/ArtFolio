@@ -19,10 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { FindIdParams } from '../utils/params.dto';
 import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import { FastifyReply } from 'fastify';
-import { createReadStream } from 'fs';
-import { join } from 'path';
 
-import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -42,18 +39,19 @@ import { UpdatePostUseCase } from 'src/application/modules/post/use-cases/update
 import { RemovePostUseCase } from 'src/application/modules/post/use-cases/removePost.useCase';
 import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
 import { Permissions } from '../decorators/permissions/permissions.decorator';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
 
 @ApiTags('Posts')
 @ApiBearerAuth()
 @Controller('posts')
 export class PostController {
   constructor(
-    private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
     private readonly getAllPostsUseCase: GetAllPostsUseCase,
     private readonly getPostByIdUseCase: GetPostByIdUseCase,
     private readonly createPostUseCase: CreatePostUseCase,
     private readonly updatePostUseCase: UpdatePostUseCase,
     private readonly removePostUseCase: RemovePostUseCase,
+    private readonly postPictureService: PostPictureService,
   ) {}
 
   /**
@@ -98,7 +96,7 @@ export class PostController {
    *
    * @param {FindIdParams} params - The parameters containing the ID of the post.
    * @param {FastifyReply} response - The response object.
-   * @returns {Promise<StreamableFile>} A promise that resolves to the assets of the post.
+   * @returns {Promise<StreamableFile>} A promise that streams the assets of the post.
    */
   @ApiOperation({ summary: 'Get assets for a post' })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the post' })
@@ -114,14 +112,7 @@ export class PostController {
     @Res({ passthrough: true }) response: FastifyReply,
   ): Promise<StreamableFile> {
     const postId = new PostId(params.id);
-    const files = await this.getPostAssetsUseCase.execute(postId);
-
-    const stream = createReadStream(join(process.cwd(), files[0].url));
-    response.headers({
-      'Content-Disposition': `inline; filename="${files[0].id}"`,
-      'Content-Type': `${files[0].mimetype}`,
-    });
-    return new StreamableFile(stream);
+    return this.postPictureService.streamPostAssets(postId, response);
   }
 
   /**

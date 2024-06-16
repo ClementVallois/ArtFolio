@@ -17,7 +17,7 @@ export class RemovePostUseCase {
   async execute(id: PostId): Promise<Post> {
     const existingPost = await this.getPostByIdUseCase.execute(id);
     await this.postPictureHandler.deletePostPicture(id);
-    await this.postRepository.remove(existingPost);
+    await this.postRepository.deletePost(existingPost);
     return existingPost;
   }
 }

@@ -1,5 +1,10 @@
 import { File } from '@nest-lab/fastify-multer';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  StreamableFile,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
@@ -12,6 +17,9 @@ import { Asset } from 'src/domain/entities/asset.entity';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { PostId } from 'src/domain/value-objects/postId';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
+import { FastifyReply } from 'fastify';
+import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
+import { join } from 'path';
 
 @Injectable()
 export class PostPictureService {
@@ -24,6 +32,7 @@ export class PostPictureService {
     private readonly getArtistPostPictureAssetsUseCase: GetArtistPostPictureAssetsUseCase,
     private readonly getPostPictureAssetUseCase: GetPostPictureAssetsUseCase,
     private readonly removeAssetUseCase: RemoveAssetUseCase,
+    private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
   ) {}
 
   async savePostPicture(
@@ -65,6 +74,27 @@ export class PostPictureService {
     };
 
     return this.createAssetUseCase.execute(assetToCreate);
+  }
+
+  async streamPostAssets(
+    postId: PostId,
+    response: FastifyReply,
+  ): Promise<StreamableFile> {
+    const postAssets = await this.getPostAssetsUseCase.execute(postId);
+
+    if (!postAssets || postAssets.length === 0) {
+      return;
+    }
+
+    const asset = postAssets[0];
+    const stream = fs.createReadStream(join(process.cwd(), asset.url));
+
+    response.headers({
+      'Content-Disposition': `inline; filename="${asset.id}"`,
+      'Content-Type': `${asset.mimetype}`,
+    });
+
+    return new StreamableFile(stream);
   }
 
   async removePostPictureMetadata(postId: PostId): Promise<void> {

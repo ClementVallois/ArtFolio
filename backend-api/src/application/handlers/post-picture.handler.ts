@@ -1,4 +1,4 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { File } from '@nest-lab/fastify-multer';
 import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
 import { PostId } from 'src/domain/value-objects/postId';
@@ -17,22 +17,15 @@ export class PostPictureHandler {
 
     const postIdValue = new PostId(postId);
 
-    try {
-      const fileData = await this.postPictureService.savePostPicture(
-        postId,
-        postPicture,
-      );
-      await this.postPictureService.addPostPictureMetadata(
-        postIdValue,
-        artistId,
-        fileData,
-      );
-    } catch (error) {
-      throw new HttpException(
-        'Failed to save post picture',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
+    const fileData = await this.postPictureService.savePostPicture(
+      postId,
+      postPicture,
+    );
+    await this.postPictureService.addPostPictureMetadata(
+      postIdValue,
+      artistId,
+      fileData,
+    );
   }
 
   async deletePostPicture(postId: PostId): Promise<void> {

@@ -10,6 +10,6 @@ export class GetAllPostsUseCase {
   ) {}
 
   async execute(): Promise<Post[]> {
-    return await this.postRepository.findAllPostsByDescCreatedDate();
+    return await this.postRepository.findAllPostsSortedByCreatedDate();
   }
 }

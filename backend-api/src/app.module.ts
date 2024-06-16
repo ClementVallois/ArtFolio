@@ -1,4 +1,4 @@
-import { Logger, Module, OnModuleInit } from '@nestjs/common';
+import { Module, OnModuleInit } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './infrastructure/security/jwt.module';
 import { UserModule } from './application/modules/user/user.module';
@@ -15,6 +15,8 @@ import { SeederService } from './infrastructure/services/faker/seeder/seeder.ser
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 import { AmateurModule } from './application/modules/amateur/amateur.module';
 import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
+import { Logger } from 'logger/logger';
+import { LogConfigService } from 'config/log-config.service';
 
 @Module({
   imports: [
@@ -42,30 +44,31 @@ import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
     SwaggerConfigModule.forRoot(),
   ],
   controllers: [],
-  providers: [SeederService],
+  providers: [SeederService, Logger, LogConfigService],
 })
 export class AppModule implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     private readonly seederService: SeederService,
+    private readonly logger: Logger,
   ) {}
 
   async onModuleInit(): Promise<void> {
     if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
-      Logger.log('Env file is configured for development database');
+      this.logger.info('Env file is configured for development database', 4);
     } else if (
       this.configService.get<string>('DB_ENV').toLowerCase() === 'prod'
     ) {
-      Logger.log('Env file is configured for production database');
+      this.logger.info('Env file is configured for production database', 4);
     }
     if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'development'
     ) {
-      Logger.log('Env file is configured for development environment');
+      this.logger.info('Env file is configured for development environment', 4);
     } else if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'production'
     ) {
-      Logger.log('Env file is configured for production environment');
+      this.logger.info('Env file is configured for production environment', 4);
     }
     // Uncomment to seed fake data
     // await this.seederService.seedAll();
