@@ -5,6 +5,9 @@ import { faker } from '@faker-js/faker';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { Post } from 'src/domain/entities/post.entity';
+import * as fs from 'fs';
+import * as path from 'path';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AssetSeederService {
@@ -15,6 +18,7 @@ export class AssetSeederService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
+    private readonly configService: ConfigService,
   ) {}
 
   private fakePostPicturesName = [
@@ -228,56 +232,161 @@ export class AssetSeederService {
   }
 
   async seed(): Promise<void> {
-    await this.seedProfilePictures();
     await this.addAssetsToPosts();
     await this.addAssetsToArtists();
+    await this.seedAmateurProfilePictures();
+    await this.seedArtistProfilePictures();
   }
 
   private async addAssetsToPosts(): Promise<void> {
     const users = await this.userRepository.find();
     const posts = await this.postRepository.find({ relations: ['user'] });
 
-    //Add post asset for artists only
-    const fakeData = Array.from({ length: 10 }, () => {
-      const artistUsers = faker.helpers.arrayElement(
-        users.filter((user) => {
-          return user.role === 'artist';
-        }),
-      );
-      const post = faker.helpers.arrayElement(posts);
+    const assetFolders = [
+      'dessin',
+      'mosaique',
+      'peinture',
+      'photographie',
+      'poterie',
+      'realisme',
+      'vitrail',
+    ];
+
+    for (const post of posts) {
+      const artistUsers = users.filter((user) => user.role === 'artist');
+      const randomArtist = faker.helpers.arrayElement(artistUsers);
+      const randomFolder = faker.helpers.arrayElement(assetFolders);
+
+      const filePath = this.configService.get<string>('DEV_PHOTO_SEED');
+      const folderPath = path.join(filePath, randomFolder);
+
+      const fileNames = fs.readdirSync(folderPath);
+      if (fileNames.length === 0) {
+        console.warn(`No files found in ${folderPath}`);
+        continue;
+      }
+
+      const randomIndex = faker.datatype.number({
+        min: 0,
+        max: fileNames.length - 1,
+      });
+      const randomFileName = fileNames[randomIndex];
+      const extension = path.extname(randomFileName).toLowerCase();
+      let mimeType: string;
+
+      if (extension === '.png') {
+        mimeType = 'image/png';
+      } else if (extension === '.jpg' || extension === '.jpeg') {
+        mimeType = 'image/jpeg';
+      } else if (extension === '.webp') {
+        mimeType = 'image/webp';
+      } else {
+        console.warn(`Unsupported file extension for ${randomFileName}`);
+        continue;
+      }
+
       const asset = new Asset();
       asset.id = faker.string.uuid();
-      asset.url = faker.internet.url();
+      asset.url = `${filePath}/${randomFolder}/${randomFileName}`;
       asset.postId = post;
       asset.type = 'post_picture';
-      asset.mimetype = faker.helpers.arrayElement(['image/png', 'image/jpeg']);
-      asset.userId = artistUsers;
+      asset.mimetype = mimeType;
+      asset.userId = randomArtist;
       asset.createdAt = faker.date.recent();
       asset.updatedAt = faker.date.recent();
-      return asset;
-    });
-    await this.assetRepository.save(fakeData);
+
+      await this.assetRepository.save(asset);
+    }
   }
 
-  private async seedProfilePictures(): Promise<void> {
-    const users = await this.userRepository.find();
-    for (const user of users) {
+  private async seedAmateurProfilePictures(): Promise<void> {
+    const users = await this.userRepository.find({
+      where: { role: 'amateur' },
+    });
+    const filePath = this.configService.get<string>('DEV_PHOTO_SEED');
+    const profilePictureDir = path.join(filePath, 'profil_picture');
+
+    const fileNames = fs.readdirSync(profilePictureDir);
+
+    for (const [index, user] of users.entries()) {
       const existingProfilePicture = await this.assetRepository.findOne({
         where: { userId: { id: user.id }, type: 'profile_picture' },
       });
-
       if (!existingProfilePicture) {
         const newProfilePicture = new Asset();
+        const fileName = fileNames[index % fileNames.length];
+        newProfilePicture.url = `${filePath}/profil_picture/${fileName}`;
         newProfilePicture.type = 'profile_picture';
         newProfilePicture.userId = { id: user.id } as User;
-        newProfilePicture.mimetype = faker.helpers.arrayElement([
-          'image/png',
-          'image/jpeg',
-        ]);
+
+        const extension = path.extname(fileName).toLowerCase();
+        let mimeType;
+        if (extension === '.png') {
+          mimeType = 'image/png';
+        } else if (extension === '.jpg' || extension === '.jpeg') {
+          mimeType = 'image/jpeg';
+        } else if (extension === '.webp') {
+          mimeType = 'image/webp';
+        } else {
+          mimeType = null;
+        }
+
+        newProfilePicture.mimetype = mimeType;
+        if (!newProfilePicture.mimetype) {
+          console.warn(`Unsupported file extension for ${fileName}`);
+          continue;
+        }
         newProfilePicture.id = faker.string.uuid();
         newProfilePicture.createdAt = faker.date.recent();
         newProfilePicture.updatedAt = faker.date.recent();
+        await this.assetRepository.save(newProfilePicture);
+      }
+    }
+  }
 
+  private async seedArtistProfilePictures(): Promise<void> {
+    const users = await this.userRepository.find({ where: { role: 'artist' } });
+    const filePath = this.configService.get<string>('DEV_PHOTO_SEED');
+    const profilePictureDir = path.join(filePath, 'profil_picture');
+
+    const fileNames = fs.readdirSync(profilePictureDir);
+
+    for (let i = fileNames.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [fileNames[i], fileNames[j]] = [fileNames[j], fileNames[i]];
+    }
+
+    for (const [index, user] of users.entries()) {
+      const existingProfilePicture = await this.assetRepository.findOne({
+        where: { userId: { id: user.id }, type: 'profile_picture' },
+      });
+      if (!existingProfilePicture) {
+        const newProfilePicture = new Asset();
+        const fileName = fileNames[index % fileNames.length];
+        newProfilePicture.url = `${filePath}/profil_picture/${fileName}`;
+        newProfilePicture.type = 'profile_picture';
+        newProfilePicture.userId = { id: user.id } as User;
+
+        const extension = path.extname(fileName).toLowerCase();
+        let mimeType;
+        if (extension === '.png') {
+          mimeType = 'image/png';
+        } else if (extension === '.jpg' || extension === '.jpeg') {
+          mimeType = 'image/jpeg';
+        } else if (extension === '.webp') {
+          mimeType = 'image/webp';
+        } else {
+          mimeType = null;
+        }
+
+        newProfilePicture.mimetype = mimeType;
+        if (!newProfilePicture.mimetype) {
+          console.warn(`Unsupported file extension for ${fileName}`);
+          continue;
+        }
+        newProfilePicture.id = faker.string.uuid();
+        newProfilePicture.createdAt = faker.date.recent();
+        newProfilePicture.updatedAt = faker.date.recent();
         await this.assetRepository.save(newProfilePicture);
       }
     }

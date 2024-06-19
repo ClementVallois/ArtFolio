@@ -114,6 +114,7 @@ dist
 *.png
 *.jpg 
 *.jpeg
+*.webp
 
 # FuseBox cache
 .fusebox/
