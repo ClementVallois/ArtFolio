@@ -17,6 +17,7 @@ import { AmateurModule } from './application/modules/amateur/amateur.module';
 import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
 import { Logger } from 'logger/logger';
 import { LogConfigService } from 'config/log-config.service';
+import { LogFileService } from 'logger/log-file.service';
 
 @Module({
   imports: [
@@ -44,7 +45,7 @@ import { LogConfigService } from 'config/log-config.service';
     SwaggerConfigModule.forRoot(),
   ],
   controllers: [],
-  providers: [SeederService, Logger, LogConfigService],
+  providers: [SeederService, Logger, LogConfigService, LogFileService],
 })
 export class AppModule implements OnModuleInit {
   constructor(

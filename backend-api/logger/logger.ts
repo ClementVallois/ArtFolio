@@ -1,38 +1,54 @@
 import { Injectable } from '@nestjs/common';
 import { ILogger } from './logger.interface';
 import { LogConfigService } from 'config/log-config.service';
+import * as path from 'path';
+import { LogFileService } from './log-file.service';
 
 @Injectable()
 export class Logger implements ILogger {
-  constructor(private readonly logConfigService: LogConfigService) {}
+  private readonly logFilePath: string;
 
-  log(message: string, level: number): void {
+  constructor(
+    private readonly logConfigService: LogConfigService,
+    private readonly logFileService: LogFileService,
+  ) {
+    this.logFilePath = path.join('logs', 'app.log');
+    const logDir = path.join('logs');
+    this.logFileService.ensureDirectoryExists(logDir);
+  }
+
+  async log(message: string, level: number): Promise<void> {
     if (level >= this.logConfigService.logLevel) {
-      console.log(`[${this.getLogLevelName(level).toUpperCase()}] ${message}`);
+      const timestamp = new Date().toISOString();
+      const logMessage = `[${timestamp}] [${this.getLogLevelName(level).toUpperCase()}] ${message}`;
+      await this.logFileService.appendToFile(
+        this.logFilePath,
+        `${logMessage}\n`,
+      );
     }
   }
 
-  error(message: string, error: any, level: number = 6): void {
-    this.log(message, level);
+  async error(message: string, error: any, level: number = 6): Promise<void> {
+    await this.log(message, level);
     if (error) {
-      console.error(error);
+      await this.logFileService.appendToFile(this.logFilePath, `${error}\n`);
     }
   }
 
-  warn(message: string, level: number = 5): void {
-    this.log(message, level);
+  async warn(message: string, level: number = 5): Promise<void> {
+    await this.log(message, level);
   }
 
-  info(message: string, level: number = 4): void {
-    this.log(message, level);
+  async info(message: string, level: number = 4): Promise<void> {
+    await this.log(message, level);
   }
 
-  debug(message: string, level: number = 3): void {
-    this.log(message, level);
+  async debug(message: string, level: number = 3): Promise<void> {
+    await this.log(message, level);
   }
 
-  trace(message: string, level: number = 2): void {
-    this.log(message, level);
+  async trace(message: string, level: number = 2): Promise<void> {
+    await this.log(message, level);
   }
 
   private getLogLevelName(level: number): string {
@@ -45,6 +61,7 @@ export class Logger implements ILogger {
       2: 'Trace',
       1: 'All',
     };
-    return logLevelNames[level] || 'Unknown';
+
+    return logLevelNames[level];
   }
 }
