@@ -65,8 +65,8 @@ export class PostController {
     description: 'All posts retrieved successfully.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:all')
   @Get()
   async getAllPosts(): Promise<PostEntity[]> {
     return this.getAllPostsUseCase.execute();
@@ -83,8 +83,8 @@ export class PostController {
   @ApiResponse({ status: 200, description: 'The post data.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Post not found' })
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:all')
   @Get(':id')
   async getPostById(@Param() params: FindIdParams): Promise<PostEntity> {
     const postId = new PostId(params.id);
@@ -104,8 +104,8 @@ export class PostController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Post or assets not found' })
   @ApiProduces('image/*')
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:all')
   @Get(':id/assets')
   async getPostAssets(
     @Param() params: FindIdParams,
@@ -131,8 +131,8 @@ export class PostController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad request' })
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('create:post')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('create:post')
   @Post()
   @UseInterceptors(FileInterceptor('postPicture'))
   async createPost(

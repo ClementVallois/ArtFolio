@@ -15,9 +15,8 @@ import { SeederService } from './infrastructure/services/faker/seeder/seeder.ser
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 import { AmateurModule } from './application/modules/amateur/amateur.module';
 import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
-import { Logger } from 'logger/logger';
-import { LogConfigService } from 'config/log-config.service';
-import { LogFileService } from 'logger/log-file.service';
+import { Logger } from 'src/infrastructure/logger/logger.service';
+import { LoggerModule } from './infrastructure/logger/logger.module';
 
 @Module({
   imports: [
@@ -35,6 +34,7 @@ import { LogFileService } from 'logger/log-file.service';
     CategoryModule,
     UserModule,
     ArtistModule,
+    LoggerModule,
     PostModule,
     DatabaseModule,
     AmateurModule,
@@ -45,7 +45,7 @@ import { LogFileService } from 'logger/log-file.service';
     SwaggerConfigModule.forRoot(),
   ],
   controllers: [],
-  providers: [SeederService, Logger, LogConfigService, LogFileService],
+  providers: [SeederService, Logger],
 })
 export class AppModule implements OnModuleInit {
   constructor(

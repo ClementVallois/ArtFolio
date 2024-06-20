@@ -23,6 +23,9 @@ import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/crea
 import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
 import { RemoveAssetUseCase } from 'src/application/modules/asset/use-cases/removeAsset.useCase';
 import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
+import { Logger } from 'src/infrastructure/logger/logger.service';
+import { LogConfigService } from 'config/log-config.service';
+import { LogFileService } from 'src/infrastructure/logger/log-file.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, User, Asset])],
@@ -51,6 +54,9 @@ import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/ge
     GetAllPostsUseCase,
     RemoveAssetUseCase,
     RemoveAssetUseCase,
+    Logger,
+    LogConfigService,
+    LogFileService,
     GetArtistPinnedPostUseCase,
     GetPostPictureAssetsUseCase,
     GetArtistPostPictureAssetsUseCase,

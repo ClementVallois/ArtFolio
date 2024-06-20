@@ -20,6 +20,9 @@ import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
 import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
 import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
+import { Logger } from 'src/infrastructure/logger/logger.service';
+import { LogConfigService } from 'config/log-config.service';
+import { LogFileService } from 'src/infrastructure/logger/log-file.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Post, Asset, User]), SharedPostModule],
@@ -33,6 +36,9 @@ import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
     RemovePostUseCase,
     UpdatePostUseCase,
     RemoveAssetUseCase,
+    Logger,
+    LogConfigService,
+    LogFileService,
     GetPostPictureAssetsUseCase,
     GetArtistPostPictureAssetsUseCase,
     GetUserProfilePictureAssetUseCase,

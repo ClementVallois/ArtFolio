@@ -37,6 +37,9 @@ import { PostPictureHandler } from 'src/application/handlers/post-picture.handle
 import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
 import { GetPostByIdUseCase } from '../post/use-cases/getPostById.useCase';
 import { PostRepository } from 'src/infrastructure/repositories/post.repository';
+import { Logger } from 'src/infrastructure/logger/logger.service';
+import { LogConfigService } from 'config/log-config.service';
+import { LogFileService } from 'src/infrastructure/logger/log-file.service';
 
 @Module({
   imports: [
@@ -66,6 +69,9 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
     GetPostAssetsUseCase,
     ProfilePictureHandler,
     GetUserByIdUseCase,
+    Logger,
+    LogConfigService,
+    LogFileService,
     PostPictureService,
     GetPostByIdUseCase,
     GetCategoryByIdUseCase,
