@@ -24,7 +24,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
     // basique CRUD for artists
     ////
     async function getAllArtists() {
-        allArtistData.value = await serviceArtist.getAllArtists();
+        allArtistData.value = await serviceArtist.getAllArtistsWithPinnedPost();
     };
 
     async function getArtistById(id) {

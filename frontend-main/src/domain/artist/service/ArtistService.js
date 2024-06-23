@@ -27,6 +27,22 @@ function artistService() {
         }
     };
 
+    async function getAllArtistsWithPinnedPost() {
+        try {
+            const response = await apiArtist.getAllArtistsWithPinnedPost();
+            console.log(response)
+
+            if (Array.isArray(response)) {
+                return response.map(jsonUser => User.fromJson(jsonUser));
+            } else {
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                return [];
+            }
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la récupération des artistes: " + error, 6);
+        }
+    };
+
 
     async function getArtistById(id) {
         try {
@@ -143,6 +159,7 @@ function artistService() {
 
     return {
         getAllArtists,
+        getAllArtistsWithPinnedPost,
         getArtistById,
         createArtist,
         modifyArtist,
