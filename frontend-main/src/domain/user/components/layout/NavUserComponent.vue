@@ -9,7 +9,9 @@
                     <div class="md:hidden">
                         <button type="button"
                             class="text-gray-500 hover:text-gray-600 focus:text-gray-600 focus:outline-none"
-                            @click="toggleOpen">
+                            @click="toggleOpen"
+                            ref= "elementClickOutsideMobile"
+                            >
                             <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
                                 <path
                                     d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z">
@@ -44,7 +46,7 @@
                     <CustomLinkComponent :to="{ name: 'about' }" text="Se deconnecter" class="md:hidden md:mx-4 pb-3" />
                     <!-- Profile section - desktop mode -->
                     <div class=" relative flex justify-center
-                        align-center hidden sm:flex" @click="toggleProfileMenu">
+                        align-center hidden sm:flex" @click="toggleProfileMenu" ref="elementClickOutsideDesktop">
                         <button type="button ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                                 class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -80,11 +82,14 @@
 import { ref, watchEffect, onUnmounted } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
+import useClickOutside from '@/composable/useClickOutside';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useGlobalStore } from '@/store/GlobalStore';
 
 const { logout } = useAuth0();
 const globalStore = useGlobalStore()
+const elementClickOutsideMobile = ref(null)
+const elementClickOutsideDesktop = ref(null)
 
 // opens the menu in mobile mode
 const isOpen = ref(false);
@@ -101,5 +106,11 @@ const logoutApp = () => {
     logout()
 }
 
-// TODO: ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors
+// ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors
+const handleClickOutside = () => {
+    isProfileMenuOpen.value=false
+    isOpen.value=false
+}
+useClickOutside([elementClickOutsideDesktop, elementClickOutsideMobile], handleClickOutside);
+
 </script>

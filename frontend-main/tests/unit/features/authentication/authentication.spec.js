@@ -33,11 +33,11 @@ describe('Authentication unit testing', () => {
         wrapper.vm.isProfileMenuOpen = true
         await wrapper.vm.$nextTick();
 
-        // const logoutApp = jest.spyOn(wrapper.vm, 'logoutApp');
+        const logoutApp = jest.spyOn(wrapper.vm, 'logoutApp');
     
         const signOutLink = wrapper.find('p[role="button"]');
         await signOutLink.trigger('click');
-        // expect(logoutApp).toHaveBeenCalled();
+        expect(logoutApp).toHaveBeenCalled();
         expect(useAuth0().logout).toHaveBeenCalled();
 
     });
