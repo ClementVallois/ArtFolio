@@ -4,7 +4,7 @@ import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
-import { AssignCategoriesToArtistUseCase } from '../../category/use-cases/assignCategoriesToArtist.useCase';
+import { AssignCategoriesToArtistUseCase } from '../../../shared/modules/category/use-cases/assignCategoriesToArtist.useCase';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { FileUploadDto } from 'src/presentation/dto/artist/fileUpload.dto';

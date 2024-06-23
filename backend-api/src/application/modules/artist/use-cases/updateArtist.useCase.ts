@@ -3,7 +3,7 @@ import { User } from 'src/domain/entities/user.entity';
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { File } from '@nest-lab/fastify-multer';
-import { GetArtistByIdUseCase } from './getArtistById.useCase';
+import { GetArtistByIdUseCase } from '../../../shared/modules/artist/use-cases/getArtistById.useCase';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 

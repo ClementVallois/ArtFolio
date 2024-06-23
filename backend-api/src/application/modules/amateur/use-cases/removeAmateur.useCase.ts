@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
-import { GetAmateurByIdUseCase } from './getAmateurById.useCase';
+import { GetAmateurByIdUseCase } from '../../../shared/modules/amateur/use-cases/getAmateurById.useCase';
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 

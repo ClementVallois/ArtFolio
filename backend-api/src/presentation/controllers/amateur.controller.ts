@@ -16,7 +16,6 @@ import { File } from '@nest-lab/fastify-multer';
 import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
 import { CreateAmateurUseCase } from 'src/application/modules/amateur/use-cases/createAmateur.useCase';
 import { GetAllAmateursUseCase } from 'src/application/modules/amateur/use-cases/getAllAmateurs.useCase';
-import { GetAmateurByIdUseCase } from 'src/application/modules/amateur/use-cases/getAmateurById.useCase';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { UpdateAmateurUseCase } from 'src/application/modules/amateur/use-cases/updateAmateur.useCase';
 import { RemoveAmateurUseCase } from 'src/application/modules/amateur/use-cases/removeAmateur.useCase';
@@ -35,6 +34,7 @@ import { User as Amateur } from 'src/domain/entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
 import { Permissions } from '../decorators/permissions/permissions.decorator';
+import { GetAmateurByIdUseCase } from 'src/application/shared/modules/amateur/use-cases/getAmateurById.useCase';
 
 @ApiTags('Amateurs')
 @ApiBearerAuth()

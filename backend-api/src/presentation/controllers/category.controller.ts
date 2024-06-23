@@ -13,7 +13,7 @@ import { UpdateCategoryDto } from '../dto/category/update-category.dto';
 import { FindIdParams } from '../utils/params.dto';
 import { CreateCategoryUseCase } from 'src/application/modules/category/use-cases/createCategory.useCase';
 import { GetAllCategoriesUseCase } from 'src/application/modules/category/use-cases/getAllCategories.useCase';
-import { GetCategoryByIdUseCase } from 'src/application/modules/category/use-cases/getCategoryById.useCase';
+import { GetCategoryByIdUseCase } from 'src/application/shared/modules/category/use-cases/getCategoryById.useCase';
 import { UpdateCategoryUseCase } from 'src/application/modules/category/use-cases/updateCategory.useCase';
 import { RemoveCategoryUseCase } from 'src/application/modules/category/use-cases/removeCategory.useCase';
 import {

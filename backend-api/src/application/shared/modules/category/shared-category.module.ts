@@ -1,8 +1,8 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AssignCategoriesToArtistUseCase } from 'src/application/modules/category/use-cases/assignCategoriesToArtist.useCase';
-import { GetArtistCategoriesUseCase } from 'src/application/modules/category/use-cases/getArtistCategories.useCase';
-import { GetCategoryByIdUseCase } from 'src/application/modules/category/use-cases/getCategoryById.useCase';
+import { AssignCategoriesToArtistUseCase } from 'src/application/shared/modules/category/use-cases/assignCategoriesToArtist.useCase';
+import { GetArtistCategoriesUseCase } from 'src/application/shared/modules/category/use-cases/getArtistCategories.useCase';
+import { GetCategoryByIdUseCase } from 'src/application/shared/modules/category/use-cases/getCategoryById.useCase';
 import { Category } from 'src/domain/entities/category.entity';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { SharedArtistModule } from '../artist/shared-artist.module';

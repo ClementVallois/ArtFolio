@@ -30,7 +30,6 @@ import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPo
     GetOneArtistPostUseCase,
   ],
   exports: [
-    'IPostRepository',
     CreatePostUseCase,
     GetPostByIdUseCase,
     GetAllPostsUseCase,

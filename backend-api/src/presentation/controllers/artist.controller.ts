@@ -35,14 +35,14 @@ import {
   ApiConsumes,
 } from '@nestjs/swagger';
 import { GetAllArtistPostsUseCase } from 'src/application/shared/modules/post/use-cases/getAllArtistPosts.useCase';
-import { GetArtistCategoriesUseCase } from 'src/application/modules/category/use-cases/getArtistCategories.useCase';
+import { GetArtistCategoriesUseCase } from 'src/application/shared/modules/category/use-cases/getArtistCategories.useCase';
 import { GetOneArtistPostUseCase } from 'src/application/shared/modules/post/use-cases/getOneArtistPost.useCase';
 import { GetLastRegisteredArtistsPostsUseCase } from 'src/application/modules/artist/use-cases/getLastRegisteredArtistsPosts.useCase';
 import { CreateArtistUseCase } from 'src/application/modules/artist/use-cases/createArtist.useCase';
 import { UpdateArtistUseCase } from 'src/application/modules/artist/use-cases/updateArtist.useCase';
 import { RemoveArtistUseCase } from 'src/application/modules/artist/use-cases/removeArtist.useCase';
 import { GetAllArtistsUseCase } from 'src/application/modules/artist/use-cases/getAllArtists.useCase';
-import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
+import { GetArtistByIdUseCase } from 'src/application/shared/modules/artist/use-cases/getArtistById.useCase';
 import { User as Artist } from 'src/domain/entities/user.entity';
 import { Post as PostEntity } from 'src/domain/entities/post.entity';
 import { Asset } from 'src/domain/entities/asset.entity';

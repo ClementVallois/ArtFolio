@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { Logger } from 'src/infrastructure/logger/services/logger.service';
 import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
-import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
+import { GetArtistByIdUseCase } from 'src/application/shared/modules/artist/use-cases/getArtistById.useCase';
 import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';

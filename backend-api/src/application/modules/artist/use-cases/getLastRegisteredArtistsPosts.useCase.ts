@@ -5,9 +5,9 @@ import { Post } from 'src/domain/entities/post.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';
-import { GetPostAssetsUseCase } from '../../asset/use-cases/getPostAssets.useCase';
+import { GetPostAssetsUseCase } from '../../../shared/modules/asset/use-cases/getPostAssets.useCase';
 import { PostId } from 'src/domain/value-objects/postId';
-import { GetUserProfilePictureAssetUseCase } from '../../asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../../../shared/modules/asset/use-cases/getUserProfilePictureAsset.useCase';
 
 @Injectable()
 export class GetLastRegisteredArtistsPostsUseCase {

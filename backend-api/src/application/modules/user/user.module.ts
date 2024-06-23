@@ -14,13 +14,13 @@ import { AssetRepository } from 'src/infrastructure/repositories/asset.repositor
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { Category } from 'src/domain/entities/category.entity';
-import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
+import { GetCategoryByIdUseCase } from '../../shared/modules/category/use-cases/getCategoryById.useCase';
 import { GetUserByIdUseCase } from './use-cases/getUserById.useCase';
-import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
-import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
-import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
-import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
-import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
+import { SaveAssetUseCase } from '../../shared/modules/asset/use-cases/saveAsset.useCase';
+import { CreateAssetUseCase } from '../../shared/modules/asset/use-cases/createAsset.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../../shared/modules/asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetPostPictureAssetsUseCase } from '../../shared/modules/asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from '../../shared/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
 import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
 import { CommonModule } from 'src/application/common/common.module';
 

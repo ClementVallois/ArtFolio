@@ -3,7 +3,7 @@ import { File } from '@nest-lab/fastify-multer';
 import { User } from 'src/domain/entities/user.entity';
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
-import { GetUserProfilePictureAssetUseCase } from '../modules/asset/use-cases/getUserProfilePictureAsset.useCase';
+import { GetUserProfilePictureAssetUseCase } from '../shared/modules/asset/use-cases/getUserProfilePictureAsset.useCase';
 
 @Injectable()
 export class ProfilePictureHandler {

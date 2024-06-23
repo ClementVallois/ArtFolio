@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { User } from 'src/domain/entities/user.entity';
 import { ArtistId } from 'src/domain/value-objects/artistId';
-import { GetArtistByIdUseCase } from './getArtistById.useCase';
+import { GetArtistByIdUseCase } from '../../../shared/modules/artist/use-cases/getArtistById.useCase';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';

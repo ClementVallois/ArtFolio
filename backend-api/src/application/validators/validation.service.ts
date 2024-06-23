@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { CategoryId } from 'src/domain/value-objects/categoryId';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
-import { GetCategoryByIdUseCase } from '../modules/category/use-cases/getCategoryById.useCase';
+import { GetCategoryByIdUseCase } from '../shared/modules/category/use-cases/getCategoryById.useCase';
 
 @Injectable()
 export class ValidationService {

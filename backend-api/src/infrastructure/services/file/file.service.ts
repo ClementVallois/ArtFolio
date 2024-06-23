@@ -2,8 +2,8 @@ import { File } from '@nest-lab/fastify-multer';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
-import { GetArtistPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
-import { GetPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostPictureAssets.useCase';
+import { GetArtistPostPictureAssetsUseCase } from 'src/application/shared/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
+import { GetPostPictureAssetsUseCase } from 'src/application/shared/modules/asset/use-cases/getPostPictureAssets.useCase';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { PostId } from 'src/domain/value-objects/postId';
 
