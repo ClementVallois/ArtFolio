@@ -75,6 +75,7 @@ const config = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/src/$1",
+        '^@auth0/auth0-vue$': '<rootDir>/tests/__mocks__/auth0-vue.js',
     },
 
 
@@ -120,7 +121,7 @@ const config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+  // setupFiles: ['./tests/__mocks__/jest.setup.js'],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],

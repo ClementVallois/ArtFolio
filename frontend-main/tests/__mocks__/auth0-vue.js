@@ -15,4 +15,6 @@ const useAuth0 = () => {
     };
 };
 
-export { useAuth0 };
+const createAuth0 = jest.fn()
+
+export { useAuth0, createAuth0 };

@@ -69,9 +69,9 @@
                                 <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
                                 <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
-                                <p  type="button"
+                                <p role="button"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                                    @click="logout">
+                                    @click="logoutApp">
                                     Se déconnecter
                                 </p>
                             </div>
@@ -91,10 +91,11 @@ import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useGlobalStore } from '@/store/GlobalStore';
 
 const { logout } = useAuth0();
 const artistStore = useStoreArtist();
-
+const globalStore = useGlobalStore()
 const artistId = artistStore.artistId;
 
 // opens the menu in mobile mode
@@ -106,6 +107,10 @@ const isProfileMenuOpen = ref(false);
 const toggleProfileMenu = () => {
     isProfileMenuOpen.value = !isProfileMenuOpen.value;
 };
+
+const logoutApp = () => {
+    logout(); 
+}
 
 
 
