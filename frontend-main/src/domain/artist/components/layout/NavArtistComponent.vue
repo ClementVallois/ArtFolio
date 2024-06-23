@@ -48,7 +48,7 @@
                             class="md:hidden md:mx-4 pb-4" />
                         <!-- méthode pour se déconnecter -->
                         <p role="button"
-                            class="block pb-4 text-sm text-gray-700"
+                            class="md:hidden block pb-4 text-sm text-gray-700"
                             @click="logoutApp">
                             Se déconnecter
                         </p>
