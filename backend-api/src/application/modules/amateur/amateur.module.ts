@@ -1,60 +1,30 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
-import { Asset } from 'src/domain/entities/asset.entity';
-import { ErrorService } from 'src/infrastructure/common/filter/error.service';
-import { Post } from 'src/domain/entities/post.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
-import { ValidationService } from 'src/application/validators/validation.service';
-import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { CreateAmateurUseCase } from './use-cases/createAmateur.useCase';
 import { GetAllAmateursUseCase } from './use-cases/getAllAmateurs.useCase';
 import { AmateurController } from 'src/presentation/controllers/amateur.controller';
-import { GetAmateurByIdUseCase } from './use-cases/getAmateurById.useCase';
 import { UpdateAmateurUseCase } from './use-cases/updateAmateur.useCase';
 import { RemoveAmateurUseCase } from './use-cases/removeAmateur.useCase';
-import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
-import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
-import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
-import { Category } from 'src/domain/entities/category.entity';
-import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
-import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
-import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
-import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
-import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
-import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
-import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
-import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
+import { CommonModule } from 'src/application/common/common.module';
+import { SharedAmateurModule } from 'src/application/shared/modules/amateur/shared-amateur.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Asset, Post, Category])],
+  imports: [
+    TypeOrmModule.forFeature([User]),
+    forwardRef(() => CommonModule),
+    forwardRef(() => SharedAmateurModule),
+  ],
   controllers: [AmateurController],
   providers: [
     { provide: 'IAmateurRepository', useClass: AmateurRepository },
-    { provide: 'IAssetRepository', useClass: AssetRepository },
-    { provide: 'IUserRepository', useClass: UserRepository },
-    { provide: 'ICategoryRepository', useClass: CategoryRepository },
-    GetUserProfilePictureAssetUseCase,
+
+    // Use cases
     CreateAmateurUseCase,
     GetAllAmateursUseCase,
-    GetAmateurByIdUseCase,
     UpdateAmateurUseCase,
-    GetCategoryByIdUseCase,
-    GetUserByIdUseCase,
-    GetPostPictureAssetsUseCase,
-    GetArtistPostPictureAssetsUseCase,
-    RemoveAssetUseCase,
-    SaveAssetUseCase,
-    CreateAssetUseCase,
-    ProfilePictureService,
     RemoveAmateurUseCase,
-    ValidationService,
-    DatabaseErrorHandler,
-    ProfilePictureHandler,
-    ErrorService,
   ],
-  exports: [],
 })
 export class AmateurModule {}

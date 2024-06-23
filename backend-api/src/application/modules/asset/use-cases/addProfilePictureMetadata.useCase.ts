@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
 import { IAssetRepository } from 'src/domain/interfaces/asset.repository.interface';
@@ -6,7 +6,10 @@ import { UserId } from 'src/domain/value-objects/userId';
 
 @Injectable()
 export class AddProfilePictureMetadataUseCase {
-  constructor(private readonly assetRepository: IAssetRepository) {}
+  constructor(
+    @Inject('IAssetRepository')
+    private readonly assetRepository: IAssetRepository,
+  ) {}
 
   async execute(userId: UserId, fileData: FileData): Promise<Asset> {
     const existingProfilePicture =

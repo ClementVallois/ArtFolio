@@ -2,86 +2,46 @@ import { Module } from '@nestjs/common';
 import { ArtistController } from '../../../presentation/controllers/artist.controller';
 import { User } from 'src/domain/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Post } from 'src/domain/entities/post.entity';
-import { Asset } from 'src/domain/entities/asset.entity';
-import { Category } from 'src/domain/entities/category.entity';
-import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
-import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
 import { GetAllArtistsUseCase } from './use-cases/getAllArtists.useCase';
-import { GetArtistByIdUseCase } from './use-cases/getArtistById.useCase';
-import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
-import { GetArtistCategoriesUseCase } from '../category/use-cases/getArtistCategories.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
-import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { CreateArtistUseCase } from './use-cases/createArtist.useCase';
-import { AssignCategoriesToArtistUseCase } from '../category/use-cases/assignCategoriesToArtist.useCase';
-import { ValidationService } from 'src/application/validators/validation.service';
-import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
-import { GetCategoryByIdUseCase } from '../category/use-cases/getCategoryById.useCase';
-import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
-import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
-import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { SaveAssetUseCase } from '../asset/use-cases/saveAsset.useCase';
-import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
-import { CreateAssetUseCase } from '../asset/use-cases/createAsset.useCase';
 import { UpdateArtistUseCase } from './use-cases/updateArtist.useCase';
 import { RemoveArtistUseCase } from './use-cases/removeArtist.useCase';
 import { GetRandomArtistsPostUseCase } from './use-cases/getRandomArtistsPost.useCase';
-import { GetPostAssetsUseCase } from '../asset/use-cases/getPostAssets.useCase';
-import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserProfilePictureAsset.useCase';
-import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
-import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
-import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
-import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
-import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
-import { GetPostByIdUseCase } from '../post/use-cases/getPostById.useCase';
-import { PostRepository } from 'src/infrastructure/repositories/post.repository';
-import { Logger } from 'src/infrastructure/logger/logger.service';
-import { LogConfigService } from 'config/log-config.service';
-import { LogFileService } from 'src/infrastructure/logger/log-file.service';
+import { GetLastRegisteredArtistsPostsUseCase } from './use-cases/getLastRegisteredArtistsPosts.useCase';
+import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
+import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
+import { CommonModule } from 'src/application/common/common.module';
+import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
+import { SharedAssetModule } from 'src/application/shared/modules/asset/shared-asset.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Post, Asset, Category]),
-    SharedPostModule,
+    TypeOrmModule.forFeature([User]),
+    CommonModule,
     SharedArtistModule,
+    SharedAssetModule,
     SharedCategoryModule,
+    SharedPostModule,
   ],
   controllers: [ArtistController],
   providers: [
     { provide: 'IArtistRepository', useClass: ArtistRepository },
-    { provide: 'ICategoryRepository', useClass: CategoryRepository },
-    { provide: 'IUserRepository', useClass: UserRepository },
-    { provide: 'IAssetRepository', useClass: AssetRepository },
-    { provide: 'IPostRepository', useClass: PostRepository },
     GetAllArtistsUseCase,
     CreateArtistUseCase,
-    AssignCategoriesToArtistUseCase,
-    ValidationService,
-    RemoveAssetUseCase,
-    DatabaseErrorHandler,
     UpdateArtistUseCase,
     RemoveArtistUseCase,
     GetRandomArtistsPostUseCase,
-    GetPostPictureAssetsUseCase,
-    GetArtistPostPictureAssetsUseCase,
-    GetPostAssetsUseCase,
-    ProfilePictureHandler,
-    GetUserByIdUseCase,
-    Logger,
-    LogConfigService,
-    LogFileService,
-    PostPictureService,
-    GetPostByIdUseCase,
-    GetCategoryByIdUseCase,
-    CreateAssetUseCase,
-    SaveAssetUseCase,
-    PostPictureHandler,
-    ProfilePictureService,
-    GetUserProfilePictureAssetUseCase,
-    GetArtistByIdUseCase,
-    GetArtistCategoriesUseCase,
+    GetLastRegisteredArtistsPostsUseCase,
+  ],
+  exports: [
+    'IArtistRepository',
+    GetAllArtistsUseCase,
+    CreateArtistUseCase,
+    UpdateArtistUseCase,
+    RemoveArtistUseCase,
+    GetRandomArtistsPostUseCase,
+    GetLastRegisteredArtistsPostsUseCase,
   ],
 })
 export class ArtistModule {}

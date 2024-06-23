@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { Logger } from './logger.service';
+import { Logger } from '../services/logger.service';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -19,14 +19,14 @@ export class LoggingInterceptor implements NestInterceptor {
 
     return next.handle().pipe(
       tap({
-        next: async () => {
+        next: () => {
           const responseTime = Date.now() - now;
-          await this.logger.info(`[${method}] ${url} ${responseTime}ms`, 4);
+          this.logger.info(`[${method}] ${url} ${responseTime}ms`, 4);
         },
-        error: async (error) => {
+        error: (error) => {
           const responseTime = Date.now() - now;
           const errorMessage = this.extractErrorMessage(error);
-          await this.logger.error(
+          this.logger.error(
             `[${method}] ${url} ${responseTime}ms - Error: ${errorMessage}`,
             error,
             6,

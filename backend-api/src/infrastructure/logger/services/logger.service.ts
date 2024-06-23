@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { ILogger } from './logger.interface';
-import { LogConfigService } from 'config/log-config.service';
+import { ILogger } from '../interfaces/logger.interface';
 import * as path from 'path';
 import { LogFileService } from './log-file.service';
+import { LogConfigService } from './log-config.service';
 
 @Injectable()
 export class Logger implements ILogger {

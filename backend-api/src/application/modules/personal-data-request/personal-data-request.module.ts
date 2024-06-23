@@ -2,16 +2,14 @@ import { Module } from '@nestjs/common';
 import { PersonalDataRequestController } from '../../../presentation/controllers/personal-data-request.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
-import { User } from 'src/domain/entities/user.entity';
 import { PersonalDataRequestRepository } from 'src/infrastructure/repositories/personal-data-request.repository';
 import { GetAllPersonalDataRequestUseCase } from './use-cases/getAllPersonalDataRequests.useCase';
 import { GetOnePersonalDataRequestUseCase } from './use-cases/getOnePersonalDataRequest.useCase';
 import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalDataRequest.useCase';
-import { UserRepository } from 'src/infrastructure/repositories/user.repository';
-import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
+import { UserModule } from '../user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PersonalDataRequest, User])],
+  imports: [TypeOrmModule.forFeature([PersonalDataRequest]), UserModule],
   controllers: [PersonalDataRequestController],
   providers: [
     PersonalDataRequestRepository,
@@ -19,11 +17,7 @@ import { GetUserByIdUseCase } from '../user/use-cases/getUserById.useCase';
       provide: 'IPersonalDataRequestRepository',
       useClass: PersonalDataRequestRepository,
     },
-    {
-      provide: 'IUserRepository',
-      useClass: UserRepository,
-    },
-    GetUserByIdUseCase,
+
     GetAllPersonalDataRequestUseCase,
     GetOnePersonalDataRequestUseCase,
     CreatePersonalDataRequestUseCase,

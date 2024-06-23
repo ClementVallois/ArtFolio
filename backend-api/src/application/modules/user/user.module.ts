@@ -1,18 +1,14 @@
-import { Module } from '@nestjs/common';
+import { Module, forwardRef } from '@nestjs/common';
 import { UserService } from '../../services/user.service';
 import { UserController } from 'src/presentation/controllers/user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
-import { ErrorService } from 'src/infrastructure/common/filter/error.service';
 import { FileService } from 'src/infrastructure/services/file/file.service';
 import { AssetService } from 'src/application/services/asset.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
-import { ValidationService } from 'src/application/validators/validation.service';
-import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
 import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
 import { UserRepository } from 'src/infrastructure/repositories/user.repository';
@@ -26,6 +22,7 @@ import { GetUserProfilePictureAssetUseCase } from '../asset/use-cases/getUserPro
 import { GetPostPictureAssetsUseCase } from '../asset/use-cases/getPostPictureAssets.useCase';
 import { GetArtistPostPictureAssetsUseCase } from '../asset/use-cases/getArtistPostPictureAssets.useCase';
 import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
+import { CommonModule } from 'src/application/common/common.module';
 
 @Module({
   imports: [
@@ -36,6 +33,7 @@ import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
       Post,
       Category,
     ]),
+    forwardRef(() => CommonModule),
   ],
   controllers: [UserController],
   providers: [
@@ -53,13 +51,17 @@ import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
     GetUserByIdUseCase,
     SaveAssetUseCase,
     CreateAssetUseCase,
-    ValidationService,
-    DatabaseErrorHandler,
-    ProfilePictureHandler,
-    ErrorService,
     FileService,
     AssetService,
   ],
-  exports: [UserService],
+  exports: [
+    UserService,
+    GetUserProfilePictureAssetUseCase,
+    GetPostPictureAssetsUseCase,
+    GetArtistPostPictureAssetsUseCase,
+    RemoveAssetUseCase,
+    GetCategoryByIdUseCase,
+    GetUserByIdUseCase,
+  ],
 })
 export class UserModule {}

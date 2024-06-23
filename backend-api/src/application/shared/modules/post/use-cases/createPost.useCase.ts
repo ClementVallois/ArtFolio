@@ -6,7 +6,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { Logger } from 'src/infrastructure/logger/logger.service';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
 import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
 import { GetArtistByIdUseCase } from 'src/application/modules/artist/use-cases/getArtistById.useCase';
 import { Post } from 'src/domain/entities/post.entity';

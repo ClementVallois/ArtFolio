@@ -15,8 +15,9 @@ import { SeederService } from './infrastructure/services/faker/seeder/seeder.ser
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 import { AmateurModule } from './application/modules/amateur/amateur.module';
 import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
-import { Logger } from 'src/infrastructure/logger/logger.service';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
 import { LoggerModule } from './infrastructure/logger/logger.module';
+import { CommonModule } from './application/common/common.module';
 
 @Module({
   imports: [
@@ -28,7 +29,7 @@ import { LoggerModule } from './infrastructure/logger/logger.module';
       },
       isGlobal: true,
     }),
-
+    CommonModule,
     AssetModule,
     AuthModule,
     CategoryModule,

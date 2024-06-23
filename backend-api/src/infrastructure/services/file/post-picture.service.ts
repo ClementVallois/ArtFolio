@@ -12,7 +12,6 @@ import { CreateAssetUseCase } from 'src/application/modules/asset/use-cases/crea
 import { GetArtistPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
 import { GetPostPictureAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostPictureAssets.useCase';
 import { RemoveAssetUseCase } from 'src/application/modules/asset/use-cases/removeAsset.useCase';
-import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { PostId } from 'src/domain/value-objects/postId';
@@ -20,7 +19,8 @@ import { FileData } from 'src/infrastructure/common/types/file.interface';
 import { FastifyReply } from 'fastify';
 import { GetPostAssetsUseCase } from 'src/application/modules/asset/use-cases/getPostAssets.useCase';
 import { join } from 'path';
-import { Logger } from 'src/infrastructure/logger/logger.service';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
+import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
 
 @Injectable()
 export class PostPictureService {

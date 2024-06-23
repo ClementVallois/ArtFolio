@@ -6,10 +6,10 @@ import {
 } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { ISwaggerConfig } from './presentation/swagger/swagger.module';
-import { LogConfigService } from 'config/log-config.service';
-import { LogFileService } from './infrastructure/logger/log-file.service';
-import { Logger } from './infrastructure/logger/logger.service';
-import { LoggingInterceptor } from './infrastructure/logger/logger.interceptor';
+import { LogFileService } from './infrastructure/logger/services/log-file.service';
+import { Logger } from './infrastructure/logger/services/logger.service';
+import { LoggingInterceptor } from './infrastructure/logger/interceptors/logger.interceptor';
+import { LogConfigService } from './infrastructure/logger/services/log-config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
