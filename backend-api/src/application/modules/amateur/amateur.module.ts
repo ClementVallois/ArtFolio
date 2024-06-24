@@ -19,8 +19,6 @@ import { SharedAmateurModule } from 'src/application/shared/modules/amateur/shar
   controllers: [AmateurController],
   providers: [
     { provide: 'IAmateurRepository', useClass: AmateurRepository },
-
-    // Use cases
     CreateAmateurUseCase,
     GetAllAmateursUseCase,
     UpdateAmateurUseCase,

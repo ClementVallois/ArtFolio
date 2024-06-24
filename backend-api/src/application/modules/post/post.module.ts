@@ -6,7 +6,6 @@ import { RemovePostUseCase } from 'src/application/modules/post/use-cases/remove
 import { UpdatePostUseCase } from 'src/application/modules/post/use-cases/updatePost.useCase';
 import { PostRepository } from 'src/infrastructure/repositories/post.repository';
 import { CommonModule } from 'src/application/common/common.module';
-import { LoggerModule } from 'src/infrastructure/logger/logger.module';
 import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
 import { SharedFileModule } from 'src/application/handlers/shared-file.module';
 
@@ -14,7 +13,6 @@ import { SharedFileModule } from 'src/application/handlers/shared-file.module';
   imports: [
     TypeOrmModule.forFeature([Post]),
     CommonModule,
-    LoggerModule,
     SharedPostModule,
     SharedFileModule,
   ],
