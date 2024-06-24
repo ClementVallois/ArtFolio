@@ -49,6 +49,7 @@ import { Asset } from 'src/domain/entities/asset.entity';
 import { GetRandomArtistsPostUseCase } from 'src/application/modules/artist/use-cases/getRandomArtistsPost.useCase';
 import { Category } from 'src/domain/entities/category.entity';
 import { FileUploadDto } from '../dto/artist/fileUpload.dto';
+import { GetAllArtistsWithPinnedPostUseCase } from 'src/application/modules/artist/use-cases/getAllArtistsWithPinnedPost.useCase';
 
 @ApiTags('Artists')
 @Controller(['artists'])
@@ -64,6 +65,7 @@ export class ArtistController {
     private readonly updateArtistUseCase: UpdateArtistUseCase,
     private readonly removeArtistUseCase: RemoveArtistUseCase,
     private readonly getRandomArtistsPostUseCase: GetRandomArtistsPostUseCase,
+    private readonly getAllArtistsWithPinnedPostUseCase: GetAllArtistsWithPinnedPostUseCase, 
   ) {}
 
   /**
@@ -80,6 +82,28 @@ export class ArtistController {
   async getAllArtists(): Promise<Artist[]> {
     return this.getAllArtistsUseCase.execute();
   }
+
+  /**
+   * Get all artists with pinned posts
+   * @returns {Promise<{artist: Artist; pinnedPost: PostEntity; postAssets: Asset[]; artistAsset: Asset}[]>} All artists with pinned posts
+   */
+  @ApiOperation({ summary: "Get all artists with pinned post" })
+  @ApiResponse({
+    status: 200,
+    description: "All artists with pinned post.",
+  })
+  @Get('withPinnedPost')
+  async getAllArtistsWithPinnedPost(): Promise<
+    {
+      artist: Artist;
+      pinnedPost: PostEntity;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[]
+  > {
+    return this.getAllArtistsWithPinnedPostUseCase.execute();
+  }
+
 
   /**
    * Get an artist by ID

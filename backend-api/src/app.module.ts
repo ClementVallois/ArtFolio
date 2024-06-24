@@ -73,7 +73,7 @@ export class AppModule implements OnModuleInit {
       this.logger.info('Env file is configured for production environment', 4);
     }
     // Uncomment to seed fake data
-    // await this.seederService.seedAll();
+    await this.seederService.seedAll();
 
     //Uncomment to clear fake data
     // await this.seederService.clearAll();
