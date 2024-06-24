@@ -65,7 +65,7 @@ export class ArtistController {
     private readonly updateArtistUseCase: UpdateArtistUseCase,
     private readonly removeArtistUseCase: RemoveArtistUseCase,
     private readonly getRandomArtistsPostUseCase: GetRandomArtistsPostUseCase,
-    private readonly getAllArtistsWithPinnedPostUseCase: GetAllArtistsWithPinnedPostUseCase, 
+    private readonly getAllArtistsWithPinnedPostUseCase: GetAllArtistsWithPinnedPostUseCase,
   ) {}
 
   /**
@@ -87,11 +87,12 @@ export class ArtistController {
    * Get all artists with pinned posts
    * @returns {Promise<{artist: Artist; pinnedPost: PostEntity; postAssets: Asset[]; artistAsset: Asset}[]>} All artists with pinned posts
    */
-  @ApiOperation({ summary: "Get all artists with pinned post" })
+  @ApiOperation({ summary: 'Get all artists with pinned post' })
   @ApiResponse({
     status: 200,
-    description: "All artists with pinned post.",
+    description: 'All artists with pinned post.',
   })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
   @Get('withPinnedPost')
   async getAllArtistsWithPinnedPost(): Promise<
     {
@@ -103,7 +104,6 @@ export class ArtistController {
   > {
     return this.getAllArtistsWithPinnedPostUseCase.execute();
   }
-
 
   /**
    * Get an artist by ID

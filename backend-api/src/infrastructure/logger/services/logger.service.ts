@@ -1,67 +1,77 @@
 import { Injectable } from '@nestjs/common';
 import { ILogger } from '../interfaces/logger.interface';
-import * as path from 'path';
 import { LogFileService } from './log-file.service';
 import { LogConfigService } from './log-config.service';
+import { LogFormatterService } from './log-formatter.service';
+import * as path from 'path';
+import { LogLevel } from '../log-level.enum';
 
 @Injectable()
 export class Logger implements ILogger {
-  private readonly logFilePath: string;
+  private readonly logDirectory: string;
 
   constructor(
     private readonly logConfigService: LogConfigService,
     private readonly logFileService: LogFileService,
+    private readonly logFormatterService: LogFormatterService,
   ) {
-    this.logFilePath = path.join('logs', 'app.log');
-    const logDir = path.join('logs');
-    this.logFileService.ensureDirectoryExists(logDir);
+    this.logDirectory = 'logs';
+    this.logFileService.ensureDirectoryExists(this.logDirectory);
   }
 
-  async log(message: string, level: number): Promise<void> {
+  private getLogFilePath(): string {
+    const date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    return path.join(this.logDirectory, `app-${date}.log`);
+  }
+
+  async log(message: string, level: LogLevel): Promise<void> {
     if (level >= this.logConfigService.logLevel) {
       const timestamp = new Date().toISOString();
-      const logMessage = `[${timestamp}] [${this.getLogLevelName(level).toUpperCase()}] ${message}`;
+      const logMessage = this.logFormatterService.formatMessage(
+        message,
+        this.logFormatterService.getLogLevelName(level),
+        timestamp,
+      );
       await this.logFileService.appendToFile(
-        this.logFilePath,
+        this.getLogFilePath(),
         `${logMessage}\n`,
       );
     }
   }
 
-  async error(message: string, error: any, level: number = 6): Promise<void> {
+  async error(
+    message: string,
+    error: any,
+    level: LogLevel = LogLevel.ERROR,
+  ): Promise<void> {
     await this.log(message, level);
     if (error) {
-      await this.logFileService.appendToFile(this.logFilePath, `${error}\n`);
+      await this.logFileService.appendToFile(
+        this.getLogFilePath(),
+        `${error.stack || error}\n`,
+      );
     }
   }
 
-  async warn(message: string, level: number = 5): Promise<void> {
+  async warn(message: string, level: LogLevel = LogLevel.WARN): Promise<void> {
     await this.log(message, level);
   }
 
-  async info(message: string, level: number = 4): Promise<void> {
+  async info(message: string, level: LogLevel = LogLevel.INFO): Promise<void> {
     await this.log(message, level);
   }
 
-  async debug(message: string, level: number = 3): Promise<void> {
+  async debug(
+    message: string,
+    level: LogLevel = LogLevel.DEBUG,
+  ): Promise<void> {
     await this.log(message, level);
   }
 
-  async trace(message: string, level: number = 2): Promise<void> {
+  async trace(
+    message: string,
+    level: LogLevel = LogLevel.TRACE,
+  ): Promise<void> {
     await this.log(message, level);
-  }
-
-  private getLogLevelName(level: number): string {
-    const logLevelNames = {
-      7: 'Fatal',
-      6: 'Error',
-      5: 'Warn',
-      4: 'Info',
-      3: 'Debug',
-      2: 'Trace',
-      1: 'All',
-    };
-
-    return logLevelNames[level];
   }
 }

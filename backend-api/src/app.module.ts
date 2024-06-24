@@ -15,9 +15,9 @@ import { SeederService } from './infrastructure/services/faker/seeder/seeder.ser
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 import { AmateurModule } from './application/modules/amateur/amateur.module';
 import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
-import { Logger } from 'src/infrastructure/logger/services/logger.service';
 import { LoggerModule } from './infrastructure/logger/logger.module';
 import { CommonModule } from './application/common/common.module';
+import { Logger } from './infrastructure/logger/services/logger.service';
 
 @Module({
   imports: [
@@ -57,23 +57,23 @@ export class AppModule implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
-      this.logger.info('Env file is configured for development database', 4);
+      this.logger.log('Env file is configured for development database', 4);
     } else if (
       this.configService.get<string>('DB_ENV').toLowerCase() === 'prod'
     ) {
-      this.logger.info('Env file is configured for production database', 4);
+      this.logger.log('Env file is configured for production database', 4);
     }
     if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'development'
     ) {
-      this.logger.info('Env file is configured for development environment', 4);
+      this.logger.log('Env file is configured for development environment', 4);
     } else if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'production'
     ) {
-      this.logger.info('Env file is configured for production environment', 4);
+      this.logger.log('Env file is configured for production environment', 4);
     }
     // Uncomment to seed fake data
-    await this.seederService.seedAll();
+    // await this.seederService.seedAll();
 
     //Uncomment to clear fake data
     // await this.seederService.clearAll();

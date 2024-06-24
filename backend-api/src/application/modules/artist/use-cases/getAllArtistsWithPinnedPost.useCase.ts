@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GetArtistPinnedPostUseCase } from 'src/application/shared/modules/post/use-cases/getArtistPinnedPost.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Post } from 'src/domain/entities/post.entity';
@@ -27,8 +27,7 @@ export class GetAllArtistsWithPinnedPostUseCase {
       artistAsset: Asset;
     }[]
   > {
-    const allArtists =
-      await this.artistRepository.findAllArtists();
+    const allArtists = await this.artistRepository.findAllArtists();
 
     const artistWithPostsList: {
       artist: User;

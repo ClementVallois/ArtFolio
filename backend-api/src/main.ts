@@ -10,6 +10,8 @@ import { LogFileService } from './infrastructure/logger/services/log-file.servic
 import { Logger } from './infrastructure/logger/services/logger.service';
 import { LoggingInterceptor } from './infrastructure/logger/interceptors/logger.interceptor';
 import { LogConfigService } from './infrastructure/logger/services/log-config.service';
+import { LogFormatterService } from './infrastructure/logger/services/log-formatter.service';
+import { LogLevel } from './infrastructure/logger/log-level.enum';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -18,7 +20,12 @@ async function bootstrap() {
   );
   const logConfigService = app.get(LogConfigService);
   const logFileService = app.get(LogFileService);
-  const logger = new Logger(logConfigService, logFileService);
+  const logFormatterService = app.get(LogFormatterService);
+  const logger = new Logger(
+    logConfigService,
+    logFileService,
+    logFormatterService,
+  );
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
   app.enableCors();
   app.useGlobalPipes(
@@ -34,6 +41,7 @@ async function bootstrap() {
   swaggerConfig.setup(app);
 
   await app.listen(3000, '0.0.0.0');
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  const appUrl = await app.getUrl();
+  await logger.info(`Application is running on: ${appUrl}`, LogLevel.INFO);
 }
 bootstrap();

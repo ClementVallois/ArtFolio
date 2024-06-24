@@ -7,6 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Logger } from '../services/logger.service';
+import { LogLevel } from '../log-level.enum';
 
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
@@ -21,7 +22,10 @@ export class LoggingInterceptor implements NestInterceptor {
       tap({
         next: () => {
           const responseTime = Date.now() - now;
-          this.logger.info(`[${method}] ${url} ${responseTime}ms`, 4);
+          this.logger.info(
+            `[${method}] ${url} ${responseTime}ms`,
+            LogLevel.INFO,
+          );
         },
         error: (error) => {
           const responseTime = Date.now() - now;
@@ -29,7 +33,7 @@ export class LoggingInterceptor implements NestInterceptor {
           this.logger.error(
             `[${method}] ${url} ${responseTime}ms - Error: ${errorMessage}`,
             error,
-            6,
+            LogLevel.ERROR,
           );
         },
       }),
