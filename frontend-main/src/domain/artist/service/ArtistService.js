@@ -30,10 +30,8 @@ function artistService() {
     async function getAllArtistsWithPinnedPost() {
         try {
             const response = await apiArtist.getAllArtistsWithPinnedPost();
-            console.log(response)
-
             if (Array.isArray(response)) {
-                return response.map(jsonUser => User.fromJson(jsonUser));
+                return response
             } else {
                 storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
                 return [];
@@ -143,7 +141,8 @@ function artistService() {
                 await artistStore.getAllArtists()
                 allArtist=toRaw(artistStore.allArtistData)
             }
-            return allArtist.filter(user => isStringInUser(searchString, user));
+            return allArtist.filter(user => {
+                return isStringInUser(searchString, user.artist)});
         } catch (error) {
             storeGlobal.logError('error in Search Artist Service'+ error, 6)
         }
@@ -154,7 +153,8 @@ function artistService() {
         // Échappe les caractères spéciaux dans la chaîne de recherche pour éviter les erreurs de syntaxe regex
         const escapedSearchString = searchString.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const regex = new RegExp(escapedSearchString, 'i'); // 'i' pour insensible à la casse
-        return ['firstname', 'lastname', 'username'].some((key) => regex.test(user[key]));
+        const response =  ['firstName', 'lastName', 'username'].some((key) => regex.test(user[key]));
+        return response
     }
 
     return {

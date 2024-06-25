@@ -19,6 +19,7 @@ import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 const artistStore = useStoreArtist()
 
 const searchFor = async (event) => {
+    artistStore.isSearchArtist = event.target.value != null ? true : false
     await artistStore.searchArtists(event.target.value)
 }
 

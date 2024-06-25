@@ -16,6 +16,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
     const lastRegisteredArtist = ref([]);
     const randomArtist = ref([]);
     const resultSearchArtist = ref([])
+    const isSearchArtist = ref(false)
 
     const serviceArtist = artistService();
 
@@ -98,6 +99,7 @@ export const useStoreArtist = defineStore('artistStore', () => {
         lastRegisteredArtist,
         randomArtist,
         resultSearchArtist,
+        isSearchArtist,
         getAllArtists,
         getArtistById,
         createArtist,

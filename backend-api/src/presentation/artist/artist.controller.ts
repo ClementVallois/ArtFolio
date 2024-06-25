@@ -34,9 +34,21 @@ export class ArtistController {
   }
 
   @UseGuards(AuthGuard('jwt'))
+  @Get('/withPinnedPost')
+  async getAllArtistsWithPinnedPost() {
+    return this.artistService.getAllArtistsWithPinnedPost();
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   async getArtistById(@Param() { id }: FindIdParams) {
     return this.artistService.getArtistById(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id/withPinnedPost')
+  async getArtistWithPinnedPost(@Param() { id }: FindIdParams) {
+    return this.artistService.getArtistWithPinnedPost(id);
   }
 
   @UseGuards(AuthGuard('jwt'))

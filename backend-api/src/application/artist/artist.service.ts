@@ -47,6 +47,42 @@ export class ArtistService {
     }
   }
 
+  async getAllArtistsWithPinnedPost(): Promise<
+    {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[]
+  > {
+    const artists = await this.getAllArtists()
+
+    const artistsWithPinPost: {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[] = [];
+
+    for (const artist of artists) {
+      const pinnedPost = await this.postService.getArtistPinnedPost(artist.id);
+      const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
+      const artistAsset = await this.assetService.getArtistProfilePicture(
+        artist.id,
+      );
+
+      artistsWithPinPost.push({
+        artist,
+        pinnedPost,
+        postAssets: postAssets,
+        artistAsset: artistAsset,
+      });
+    }
+
+    return artistsWithPinPost;
+  }
+
+
   async getArtistById(id: string): Promise<User> {
     const artist = await this.userRepository.findOne({
       where: { id: id, role: 'artist' },
@@ -154,6 +190,38 @@ export class ArtistService {
         artistAsset: artistAsset,
       });
     }
+
+    return selectedArtists;
+  }
+
+  async getArtistWithPinnedPost(id: string): Promise<
+    {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[]
+  > {
+    const artist = await this.getArtistById(id)
+
+    const selectedArtists: {
+      artist: User;
+      pinnedPost: Post;
+      postAssets: Asset[];
+      artistAsset: Asset;
+    }[] = [];
+
+    const pinnedPost = await this.postService.getArtistPinnedPost(id);
+    const postAssets = await this.assetService.getPostAssets(pinnedPost.id);
+
+    const artistAsset = await this.assetService.getArtistProfilePicture(id);
+
+    selectedArtists.push({
+      artist: artist,
+      pinnedPost: pinnedPost,
+      postAssets: postAssets,
+      artistAsset: artistAsset,
+    });
 
     return selectedArtists;
   }
