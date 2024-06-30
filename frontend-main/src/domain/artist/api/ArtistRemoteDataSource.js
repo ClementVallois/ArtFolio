@@ -16,6 +16,10 @@ function artistApi() {
         return await CRUDapi('GET', 'artists');
     }
 
+    async function getAllArtistsWithPinnedPost() {
+        return await CRUDapi('GET', 'artists/withPinnedPost');
+    }
+
     async function getArtistById(id) {
         return await CRUDapi('GET', `artists/${id}`);
     }
@@ -57,6 +61,7 @@ function artistApi() {
 
     return {
         getAllArtists,
+        getAllArtistsWithPinnedPost,
         getArtistById,
         createArtist,
         modifyArtist,

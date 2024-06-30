@@ -4,11 +4,11 @@
 
     <ul class="steps mt-10 mb-2">
         <li class="step step-secondary">Créer un compte</li>
-        <li class="step step-secondary">Se connecter</li>
+        <!-- <li class="step step-secondary">Se connecter</li> -->
         <li class="step step-secondary">Compléter son profil </li>
     </ul>
 
-    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
+    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
     <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
 
@@ -54,6 +54,8 @@ import { useStoreUser } from '@/domain/user/store/UserStore';
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { ref,  computed, onMounted, watch, toRaw } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
+import { useRouter } from 'vue-router';
+import { createPinia } from 'pinia';
 
 
 const { error, isAuthenticated, isLoading, user} = useAuth0();
@@ -61,7 +63,7 @@ const { error, isAuthenticated, isLoading, user} = useAuth0();
 // Store initialisation
 const storeGlobal = useGlobalStore();
 const userStore = useStoreUser();
-
+const router = useRouter();
 
 
 ///
@@ -92,6 +94,7 @@ onMounted(async () => {
 const assignUserRoleIfNeeded = () => {
     if (isAuthenticated.value) {
         authenticationService().assignUserRole(user.value.sub, 'User');
+        
     }
 };
 // Add a watch whenever there is a bit of lag in auth0
@@ -131,13 +134,12 @@ const isFormValid = computed(() => {
     try {
         if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value) {
             if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
-                const user = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "user", "Jbbgzel-nkedfneznk-ezgze");
-                user.validateUsername(username.value);  
-                user.validateName(firstName.value, 'prénom');
-                console.log(lastName.value);
-                user.validateName(lastName.value, 'nom'); 
-                user.validateBirthDate(birthDate.value);
-                newUser.value = user;
+                const amateur = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "user", user.value.sub);
+                amateur.validateUsername(username.value);  
+                amateur.validateName(firstName.value, 'prénom');
+                amateur.validateName(lastName.value, 'nom'); 
+                amateur.validateBirthDate(birthDate.value);
+                newUser.value = amateur;
                 return true;
             }else{  
                 defaultTextAlert.value = "Les images autorisées sont png, jpg, jpeg";
@@ -169,22 +171,29 @@ const submitForm = async () => {
             let data = new FormData();
             // User
             const { firstName, lastName, birthDate, username, status, role, auth0Id } = toRaw(newUser.value);
-            const randomString = Math.random().toString(36).substring(2, 12);
             data.append('firstName', firstName);
             data.append('lastName', lastName);
             data.append('birthDate', birthDate);
             data.append('username', username);
             data.append('status', status);
             data.append('role', role);
-            data.append('auth0Id', randomString)
+            data.append('auth0Id', auth0Id)
 
             /// Asset
             data.append('profilePicture',fileUserPicture.value);
 
-            return await userStore.createUser(data);
-
+            let response = await userStore.createUser(data);
+            if (response.status == 201 ) {
+                await storeGlobal.storeProfileFromAuth0Id(user.value.sub)
+                router.push({ name: 'home' });
+            }else{
+                defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
+                alertError.value = true;
+                showAlert.value = true; 
+            }
         } catch (error) {
-            if (error.message.includes("username") && error.message.includes("already exists")) {
+            if (error.code == 409) {
+            // if (error.includes("username") && error.message.includes("already exists")) {
                 defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
                 alertError.value = true;
                 showAlert.value = true;

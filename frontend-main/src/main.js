@@ -6,6 +6,7 @@ import App from './App.vue'
 import router from './router/router'
 import { auth0 } from './domain/authentification'
 
+
 const app = createApp(App)
 app.use(auth0)
 app.use(router)

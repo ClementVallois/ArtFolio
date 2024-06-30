@@ -37,8 +37,6 @@ const loginAuth0 = () => {
 
 onMounted(async () => {
     assignUserRoleIfNeeded()
-    await categoryStore.getAllCategories();
-    categories.value = categoryStore.allCategoriesData;
 });
 
 //Assign Artist Role

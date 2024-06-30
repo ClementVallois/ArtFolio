@@ -9,7 +9,9 @@
                     <div class="md:hidden">
                         <button type="button"
                             class="text-gray-500 hover:text-gray-600 focus:text-gray-600 focus:outline-none"
-                            @click="toggleOpen">
+                            @click="toggleOpen"
+                            ref= "elementClickOutsideMobile"
+                            >
                             <svg viewBox="0 0 24 24" class="h-6 w-6 fill-current">
                                 <path
                                     d="M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z">
@@ -21,7 +23,7 @@
                 </div>
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
                     <!-- menu desktop + mobile-->
-                    <router-link :to="{ name: 'login' }" class="text-gray-800 text-sm  md:mx-4">
+                    <router-link :to="{ name: 'search' }" class="text-gray-800 text-sm  md:mx-4">
                         <SearchComponent></SearchComponent>
                     </router-link>
                     <router-link :to="{ name: 'chat' }" class="text-sm  md:mx-4 md:flex md:justify-center
@@ -36,20 +38,24 @@
 
                     <!--  Profil section -  mobile mode -->
                     <hr class="md:hidden border-t border-gray-200 my-4 w-full">
-                    <CustomLinkComponent :to="{ name: 'ArtistInfoPage' }" text="Modifier mon profil"
-                        class="md:hidden md:mx-4  pb-4" />
-                    <!-- <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Accéder à mon profil"
-                        class="md:hidden md:mx-4 pb-4" /> -->
-                        <router-link :to="{ name: 'artist', params: { artistId: artistId } }" class="md:hidden md:mx-4 pb-4 text-sm">Accéder à mon profil </router-link>
-                    <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
-                    <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
-                        class="md:hidden md:mx-4 pb-4" />
-                    <!-- TODO: faire la méthode pour se déconnecter -->
-                    <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Se deconnecter"
-                        class="md:hidden md:mx-4 pb-3" />
+                        <CustomLinkComponent :to="{ name: 'ArtistInfoPage' }" text="Modifier mon profil"
+                            class="md:hidden md:mx-4  pb-4" />
+                        <!-- <CustomLinkComponent :to="{ name: 'legalNotion' }" text="Accéder à mon profil"
+                            class="md:hidden md:mx-4 pb-4" /> -->
+                            <router-link :to="{ name: 'artist', params: { artistId: artistId } }" class="md:hidden md:mx-4 pb-4 text-sm">Accéder à mon profil </router-link>
+                        <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
+                        <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
+                            class="md:hidden md:mx-4 pb-4" />
+                        <!-- méthode pour se déconnecter -->
+                        <p role="button"
+                            class="md:hidden block pb-4 text-sm text-gray-700"
+                            @click="logoutApp">
+                            Se déconnecter
+                        </p>
+
                     <!-- Profile section - desktop mode -->
                     <div class=" relative flex justify-center
-                        align-center hidden sm:flex" @click="toggleProfileMenu">
+                        align-center hidden sm:flex" @click="toggleProfileMenu" ref="elementClickOutsideDesktop">
                         <button type="button ">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
                                 class="bi bi-person-circle" viewBox="0 0 16 16">
@@ -59,8 +65,9 @@
                             </svg>
                         </button>
                         <!-- Profile dropdown menu content -->
-                        <div v-if="isProfileMenuOpen"
-                            class="origin-top-right absolute top-[60px] right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
+                        <div v-if="isProfileMenuOpen" 
+                            class="origin-top-right absolute top-[60px] right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10"
+                            >
                             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
                                 <CustomLinkComponent :to="{ name: 'ArtistInfoPage' }" text="Modifier mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
@@ -69,9 +76,9 @@
                                 <!-- TODO: faire la méthode pour afficher la modal de création de publication -->
                                 <CustomLinkComponent :to="{ name: 'PostFormPage' }" text="Ajouter une publication"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
-                                <p  type="button"
+                                <p role="button"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 cursor-pointer"
-                                    @click="logout">
+                                    @click="logoutApp">
                                     Se déconnecter
                                 </p>
                             </div>
@@ -89,13 +96,17 @@
 import { ref } from 'vue';
 import CustomLinkComponent from '@/components/toolBox/CustomLinkComponent.vue';
 import SearchComponent from '@/components/toolBox/SearchComponent.vue';
+import useClickOutside from '@/composable/useClickOutside';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useGlobalStore } from '@/store/GlobalStore';
 
 const { logout } = useAuth0();
 const artistStore = useStoreArtist();
-
+const globalStore = useGlobalStore()
 const artistId = artistStore.artistId;
+const elementClickOutsideMobile = ref(null)
+const elementClickOutsideDesktop = ref(null)
 
 // opens the menu in mobile mode
 const isOpen = ref(false);
@@ -108,6 +119,18 @@ const toggleProfileMenu = () => {
 };
 
 
+const logoutApp = () => {
+    logout(); 
+}
 
-// TODO: ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors
+// ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors
+const handleClickOutside = () => {
+    isProfileMenuOpen.value=false
+    isOpen.value=false
+}
+
+useClickOutside([elementClickOutsideDesktop, elementClickOutsideMobile], handleClickOutside);
+
+
+
 </script>
