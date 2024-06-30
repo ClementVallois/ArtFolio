@@ -21,6 +21,8 @@ import { GetPostAssetsUseCase } from 'src/application/shared/modules/asset/use-c
 import { join } from 'path';
 import { Logger } from 'src/infrastructure/logger/services/logger.service';
 import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class PostPictureService {
@@ -37,6 +39,7 @@ export class PostPictureService {
     private readonly logger: Logger,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async savePostPicture(
     postId: string,
     file: File,
@@ -44,8 +47,6 @@ export class PostPictureService {
     filePath: string;
     fileType: string;
   }> {
-    this.logger.info(`Saving post picture for postId: ${postId}`, 4);
-
     const cleanFilename = file.originalname.replace(/\s+/g, '_');
     const fileName = `${postId}-${Date.now()}-${cleanFilename}`;
     const fileType = file.mimetype;
@@ -53,13 +54,7 @@ export class PostPictureService {
 
     try {
       await fs.promises.writeFile(filePath, file.buffer);
-      this.logger.debug(`Saved post picture to ${filePath}`, 3);
     } catch (error) {
-      this.logger.error(
-        `Error saving post picture for postId: ${postId}`,
-        error,
-        6,
-      );
       throw new HttpException(
         'Error saving profile picture',
         HttpStatus.BAD_REQUEST,
@@ -69,16 +64,12 @@ export class PostPictureService {
     return { filePath, fileType };
   }
 
+  @LogMethod(LogLevel.DEBUG)
   async addPostPictureMetadata(
     postId: PostId,
     artistId: ArtistId,
     fileData: FileData,
   ): Promise<Asset> {
-    this.logger.info(
-      `Adding post picture metadata for postId: ${postId} and artistId: ${artistId}`,
-      4,
-    );
-
     try {
       const post = await this.getPostByIdUseCase.execute(postId);
       const artist = await this.getArtistByIdUseCase.execute(artistId);
@@ -92,29 +83,28 @@ export class PostPictureService {
       };
 
       const createdAsset = await this.createAssetUseCase.execute(assetToCreate);
-      this.logger.debug(`Created asset with id: ${createdAsset.id}`, 3);
+      this.logger.debug(`Created asset with id: ${createdAsset.id}`);
       return createdAsset;
     } catch (error) {
-      this.logger.error(
-        `Error adding post picture metadata for postId: ${postId} and artistId: ${artistId}`,
-        error,
-        6,
+      throw new HttpException(
+        'Error adding post picture metadata',
+        HttpStatus.BAD_REQUEST,
       );
-      throw error;
     }
   }
 
+  @LogMethod(LogLevel.DEBUG)
   async streamPostAssets(
     postId: PostId,
     response: FastifyReply,
   ): Promise<StreamableFile> {
-    this.logger.info(`Streaming post assets for postId: ${postId}`, 4);
+    this.logger.info(`Streaming post assets for postId: ${postId}`);
 
     try {
       const postAssets = await this.getPostAssetsUseCase.execute(postId);
 
       if (!postAssets || postAssets.length === 0) {
-        this.logger.warn(`No assets found for postId: ${postId}`, 5);
+        this.logger.warn(`No assets found for postId: ${postId}`);
         return;
       }
 
@@ -126,20 +116,20 @@ export class PostPictureService {
         'Content-Type': `${asset.mimetype}`,
       });
 
-      this.logger.debug(`Streaming asset with id: ${asset.id}`, 3);
+      this.logger.debug(`Streaming asset with id: ${asset.id}`);
       return new StreamableFile(stream);
     } catch (error) {
       this.logger.error(
         `Error streaming post assets for postId: ${postId}`,
         error,
-        6,
       );
       throw error;
     }
   }
 
+  @LogMethod(LogLevel.DEBUG)
   async removePostPictureMetadata(postId: PostId): Promise<void> {
-    this.logger.info(`Removing post picture metadata for postId: ${postId}`, 4);
+    this.logger.info(`Removing post picture metadata for postId: ${postId}`);
 
     try {
       const existingPostPicture =
@@ -150,41 +140,39 @@ export class PostPictureService {
         }
         this.logger.debug(
           `Removed post picture metadata for postId: ${postId}`,
-          3,
         );
       }
     } catch (error) {
       this.logger.error(
         `Error removing post picture metadata for postId: ${postId}`,
         error,
-        6,
       );
       throw error;
     }
   }
 
+  @LogMethod(LogLevel.DEBUG)
   async deletePostsPictures(postId: PostId): Promise<void> {
-    this.logger.info(`Deleting post pictures for postId: ${postId}`, 4);
+    this.logger.info(`Deleting post pictures for postId: ${postId}`);
 
     try {
       const postPictures =
         await this.getPostPictureAssetsUseCase.execute(postId);
 
       if (!postPictures) {
-        this.logger.warn(`No post pictures found for postId: ${postId}`, 5);
+        this.logger.warn(`No post pictures found for postId: ${postId}`);
         return;
       }
 
       for (const postPicture of postPictures) {
         await fs.promises.unlink(postPicture.url);
       }
-      this.logger.debug(`Deleted post pictures for postId: ${postId}`, 3);
+      this.logger.debug(`Deleted post pictures for postId: ${postId}`);
     } catch (error) {
       if (error.code === 'ENOENT') {
         this.logger.error(
           `No such file or directory for postId: ${postId}`,
           error,
-          6,
         );
         throw new HttpException(
           'Error deleting post picture : No such file or directory',
@@ -194,7 +182,6 @@ export class PostPictureService {
       this.logger.error(
         `Error deleting post pictures for postId: ${postId}`,
         error,
-        6,
       );
       throw new HttpException(
         'Error deleting post picture',
@@ -203,10 +190,10 @@ export class PostPictureService {
     }
   }
 
+  @LogMethod(LogLevel.DEBUG)
   async deleteArtistPostsPictures(artistId: ArtistId): Promise<void> {
     this.logger.info(
       `Deleting artist posts pictures for artistId: ${artistId}`,
-      4,
     );
 
     try {
@@ -214,7 +201,7 @@ export class PostPictureService {
         await this.getArtistPostPictureAssetsUseCase.execute(artistId);
 
       if (!postPictures) {
-        this.logger.warn(`No post pictures found for artistId: ${artistId}`, 5);
+        this.logger.warn(`No post pictures found for artistId: ${artistId}`);
         return;
       }
 
@@ -223,13 +210,11 @@ export class PostPictureService {
       }
       this.logger.debug(
         `Deleted artist posts pictures for artistId: ${artistId}`,
-        3,
       );
     } catch (error) {
       this.logger.error(
         `Error deleting artist posts pictures for artistId: ${artistId}`,
         error,
-        6,
       );
       throw new HttpException(
         'Error deleting posts pictures',

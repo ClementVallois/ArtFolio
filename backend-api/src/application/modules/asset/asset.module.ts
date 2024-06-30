@@ -22,12 +22,10 @@ import { UpdateProfilePictureMetadataUseCase } from './use-cases/updateProfilePi
     GetArtistPostPictureAssetsUseCase,
     GetPostPictureAssetsUseCase,
     GetUserAssetsUseCase,
-
     RemoveAssetUseCase,
     UpdateProfilePictureMetadataUseCase,
   ],
   exports: [
-    'IAssetRepository',
     SaveAssetUseCase,
     AddProfilePictureMetadataUseCase,
     CreateAssetUseCase,

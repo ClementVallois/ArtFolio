@@ -12,6 +12,7 @@ import { LoggingInterceptor } from './infrastructure/logger/interceptors/logger.
 import { LogConfigService } from './infrastructure/logger/services/log-config.service';
 import { LogFormatterService } from './infrastructure/logger/services/log-formatter.service';
 import { LogLevel } from './infrastructure/logger/log-level.enum';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -21,10 +22,12 @@ async function bootstrap() {
   const logConfigService = app.get(LogConfigService);
   const logFileService = app.get(LogFileService);
   const logFormatterService = app.get(LogFormatterService);
+  const configService = app.get(ConfigService);
   const logger = new Logger(
     logConfigService,
     logFileService,
     logFormatterService,
+    configService,
   );
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
   app.enableCors();

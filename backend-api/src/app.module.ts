@@ -57,20 +57,20 @@ export class AppModule implements OnModuleInit {
 
   async onModuleInit(): Promise<void> {
     if (this.configService.get<string>('DB_ENV').toLowerCase() === 'dev') {
-      this.logger.log('Env file is configured for development database', 4);
+      this.logger.info('Env file is configured for development database');
     } else if (
       this.configService.get<string>('DB_ENV').toLowerCase() === 'prod'
     ) {
-      this.logger.log('Env file is configured for production database', 4);
+      this.logger.info('Env file is configured for production database');
     }
     if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'development'
     ) {
-      this.logger.log('Env file is configured for development environment', 4);
+      this.logger.info('Env file is configured for development environment');
     } else if (
       this.configService.get<string>('NODE_ENV').toLowerCase() === 'production'
     ) {
-      this.logger.log('Env file is configured for production environment', 4);
+      this.logger.info('Env file is configured for production environment');
     }
     // Uncomment to seed fake data
     // await this.seederService.seedAll();

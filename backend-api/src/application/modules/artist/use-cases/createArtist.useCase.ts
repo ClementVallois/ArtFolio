@@ -26,10 +26,10 @@ export class CreateArtistUseCase {
     artistData: CreateArtistDto,
     files: FileUploadDto,
   ): Promise<User> {
-    // TODO : Try to use validateFilesAndData method instead of individual methods
     await this.validationService.validateArtistCategories(artistData);
     await this.validationService.validateProfilePicture(files);
     await this.validationService.validatePostPicture(files);
+
     const profilePicture = files.profilePicture[0];
     const postPicture = files.postPicture[0];
     let artist: User;

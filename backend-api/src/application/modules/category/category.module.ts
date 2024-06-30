@@ -27,7 +27,6 @@ import { SharedCategoryModule } from 'src/application/shared/modules/category/sh
     RemoveCategoryUseCase,
   ],
   exports: [
-    'ICategoryRepository',
     CreateCategoryUseCase,
     GetAllCategoriesUseCase,
     UpdateCategoryUseCase,

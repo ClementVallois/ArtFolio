@@ -8,6 +8,7 @@ import { Post } from 'src/domain/entities/post.entity';
 import * as fs from 'fs';
 import * as path from 'path';
 import { ConfigService } from '@nestjs/config';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
 
 @Injectable()
 export class AssetSeederService {
@@ -19,6 +20,7 @@ export class AssetSeederService {
     @InjectRepository(Post)
     private readonly postRepository: Repository<Post>,
     private readonly configService: ConfigService,
+    private readonly logger: Logger,
   ) {}
 
   async clear(): Promise<void> {
@@ -47,6 +49,16 @@ export class AssetSeederService {
     ];
 
     for (const post of posts) {
+      const existingAsset = await this.assetRepository.findOne({
+        where: { postId: { id: post.id }, type: 'post_picture' },
+      });
+
+      if (existingAsset) {
+        this.logger.warn(
+          `Asset already exists for post ${post.id}, skipping...`,
+        );
+        continue;
+      }
       const artistUsers = users.filter((user) => user.role === 'artist');
       const randomArtist = faker.helpers.arrayElement(artistUsers);
       const randomFolder = faker.helpers.arrayElement(assetFolders);

@@ -5,6 +5,7 @@ import { LogConfigService } from './log-config.service';
 import { LogFormatterService } from './log-formatter.service';
 import * as path from 'path';
 import { LogLevel } from '../log-level.enum';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class Logger implements ILogger {
@@ -14,8 +15,9 @@ export class Logger implements ILogger {
     private readonly logConfigService: LogConfigService,
     private readonly logFileService: LogFileService,
     private readonly logFormatterService: LogFormatterService,
+    private readonly configService: ConfigService,
   ) {
-    this.logDirectory = 'logs';
+    this.logDirectory = this.configService.get<string>('LOG_DIRECTORY');
     this.logFileService.ensureDirectoryExists(this.logDirectory);
   }
 

@@ -163,8 +163,8 @@ export class PostController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Post not found' })
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('update:post')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('update:post')
   @Patch(':id')
   async updatePost(
     @Param() params: FindIdParams,

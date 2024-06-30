@@ -10,7 +10,7 @@ export class LogConfigService {
     const env = this.configService.get<string>('NODE_ENV') || 'development';
     const logLevels: { [key: string]: LogLevel } = {
       development: LogLevel.DEBUG,
-      production: LogLevel.WARN,
+      production: LogLevel.INFO,
     };
     return logLevels[env];
   }

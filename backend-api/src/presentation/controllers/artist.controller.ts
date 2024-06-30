@@ -76,8 +76,8 @@ export class ArtistController {
   @ApiResponse({ status: 200, description: 'Return all artists.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:allArtist')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:allArtist')
   @Get()
   async getAllArtists(): Promise<Artist[]> {
     return this.getAllArtistsUseCase.execute();
@@ -93,6 +93,8 @@ export class ArtistController {
     description: 'All artists with pinned post.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:allArtist')
   @Get('withPinnedPost')
   async getAllArtistsWithPinnedPost(): Promise<
     {
