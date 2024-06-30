@@ -57,7 +57,7 @@
         <TitleComponent title="Mes catégories" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
         <div class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem] lg:items-start">
             <div class="flex  flex-wrap pb-[1rem] pt-[2rem] w-[90vw] lg:w-[55vw] lg:p-[3rem]">    
-                <CategoryTagComponent v-for="(category, index) in categories" :key="index" :textTag="category.name" :categoryId="category.id"  @categoryClicked="handleCategoryClicked"></CategoryTagComponent>
+                <CategoryTagComponent v-for="(category, index) in categoryStore.allCategoriesData" :key="index" :textTag="category.name" :categoryId="category.id"  @categoryClicked="handleCategoryClicked"></CategoryTagComponent>
             </div>
         </div>
     
@@ -142,8 +142,6 @@ const newPost = ref(null);
 
 // Category
 const selectedCategories = ref([]);
-const categories = ref(null);
-
 
 
 ////
@@ -164,7 +162,6 @@ onMounted(async () => {
 
     assignUserRoleIfNeeded()
     await categoryStore.getAllCategories();
-    categories.value = categoryStore.allCategoriesData;
 });
 
 //Assign Artist Role

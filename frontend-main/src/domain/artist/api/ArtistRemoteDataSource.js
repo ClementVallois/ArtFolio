@@ -13,7 +13,7 @@ function artistApi() {
     ////
 
     async function getAllArtists() {
-        return await CRUDapi('GET', 'artists');
+        return CRUDapi('GET', 'artists');
     }
 
     async function getAllArtistsWithPinnedPost() {
@@ -21,19 +21,19 @@ function artistApi() {
     }
 
     async function getArtistById(id) {
-        return await CRUDapi('GET', `artists/${id}`);
+        return CRUDapi('GET', `artists/${id}`);
     }
 
     async function createArtist(data) {
-        return await CRUDapi('POST', 'artists', data)
+        return CRUDapi('POST', 'artists', data)
     }
 
     async function modifyArtist(id, data) {
-        return await CRUDapi('PATCH', `artists/${id}`, data)
+        return CRUDapi('PATCH', `artists/${id}`, data)
     }
 
     async function deleteArtist(id) {
-        return await CRUDapi('DELETE', `artists/${id}`)
+        return CRUDapi('DELETE', `artists/${id}`)
     }
 
 
@@ -42,11 +42,11 @@ function artistApi() {
     ////
 
     async function getLastRegisteredArtist(number) {
-        return await CRUDapi('GET', `artists/last/${number}`)
+        return CRUDapi('GET', `artists/last/${number}`)
     }
 
     async function getRandomArtist(number) {
-        return await CRUDapi('GET', `artists/random/${number}`)
+        return CRUDapi('GET', `artists/random/${number}`)
     }
 
 
@@ -55,7 +55,7 @@ function artistApi() {
     ////
 
     async function getArtistPosts(id) {
-        return await CRUDapi('GET', `artists/${id}/posts`)
+        return CRUDapi('GET', `artists/${id}/posts`)
     }
 
 

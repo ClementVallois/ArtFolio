@@ -14,9 +14,20 @@ function userApi() {
     // basique CRUD for users
     ////
     async function createUser(data) {
-        return await CRUDapi('POST', 'users', data)
+        return CRUDapi('POST', 'users', data)
     }
 
+    async function getUserById(id) {
+        return CRUDapi('GET', `users/${id}`);
+    }
+
+    async function deleteUser(id) {
+        return CRUDapi('DELETE', `users/${id}`)
+    }
+
+    ////
+    // Auth0
+    ////
     async function getUserWithAuth0Id(auth0Id) {
         try {
             const response = await CRUDapi('GET', `users/auth0Id/${auth0Id}`)
@@ -31,6 +42,8 @@ function userApi() {
     return {
         createUser,
         getUserWithAuth0Id,
+        getUserById,
+        deleteUser,
     };
 }
 

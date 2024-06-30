@@ -12,27 +12,21 @@
 
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom d'utilisateur</label>
-        <input type="text"  v-model="artistStore.artist.username" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="userStore.user.username" class="input input-bordered w-full max-w-xs" />
     </div>
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre prénom</label>
-        <input type="text"  v-model="artistStore.artist.firstName" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="userStore.user.firstName" class="input input-bordered w-full max-w-xs" />
     </div>
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom</label>
-        <input type="text"  v-model="artistStore.artist.lastName" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="userStore.user.lastName" class="input input-bordered w-full max-w-xs" />
      </div>
 
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre date de naissance</label>
-        <input type="date"  v-model="artistStore.artist.birthDate" class="input input-bordered w-full max-w-xs lg:w-[40%]" />
+        <input type="date"  v-model="userStore.user.birthDate" class="input input-bordered w-full max-w-xs lg:w-[40%]" />
      </div>
-
-     <div class="flex flex-col w-[90vw] pb-[1rem]">
-        <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
-        <textarea  v-model="artistStore.artist.description" class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " placeholder="Bio"></textarea>   
-     </div>
-
      <div class="pt-[2rem] flex justify-center w-full ">
         <ButtonComponent textButton="Modifier" class="lg:self-end"></ButtonComponent>
     </div>
@@ -48,7 +42,6 @@
             <ButtonComponent @click="openModal" textButton="Supprimer" class=" lg:self-end"></ButtonComponent>
         </div>
    </div>
-   <ModalComponent v-if="showModal" @closeModals="closeModal" @deleteData="handleDelete" textModal="Voulez-vous vraiment supprimer cette publication ?"></ModalComponent>
 
 </template>
 
@@ -57,13 +50,13 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue'; 
-import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useStoreUser } from '@/domain/user/store/UserStore';
 import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue';
 import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { onMounted, toRaw, ref} from 'vue';
 
-const artistStore = useStoreArtist();
+const userStore = useStoreUser();
 const storeGlobal = useGlobalStore();
 let originalData; 
 const showAlert = ref(false);
@@ -81,8 +74,8 @@ const handleCloseAlert = () => {
 };
 
 onMounted(async () => {
-    const artistData = await artistStore.getArtistById(artistStore.artistId);
-    originalData = {... artistData} ; 
+    const userData = await userStore.getUserById(userStore.userId);
+    originalData = {... userData} ; 
 });
 
 // Fonctionnement modal delete
@@ -104,7 +97,7 @@ async function handleDelete(deleteStatus) {
             showModal.value = false;
             document.body.style.overflow = '';
             console.log('yes');
-             let response =  await artistStore.deleteArtist(storeGlobal.artistId);
+             let response =  await userStore.deleteUser(userStore.userId);
             if (response.status == 200) {
                 alertError.value = false;
                 showAlert.value = true;
@@ -120,19 +113,18 @@ async function handleDelete(deleteStatus) {
 const submitForm = async () => {
     const modifiedData = {};
     let isModified = false; 
-    console.log(artistStore.artist);
-    for (const key in artistStore.artist) {
+    for (const key in userStore.user) {
     //     console.log(key);
     //    console.log(artistStore.artist[key], originalData[key]);
-        if (artistStore.artist[key] !== originalData[key]) {
-            modifiedData[key] = artistStore.artist[key];
+        if (userStore.user[key] !== originalData[key]) {
+            modifiedData[key] = userStore.user[key];
             isModified = true; 
         }
     }
     if (isModified) {
-        console.log(toRaw(artistStore.artistId));
+        console.log(toRaw(userStore.userId));
         console.log('Champs modifiés :', modifiedData);
-        let response = await artistStore.modifyArtist(artistStore.artistId, JSON.stringify(modifiedData));
+        let response = await artistStore.modifyArtist(userStore.userId, JSON.stringify(modifiedData));
         // TODO: fonctionnel mais reste à déconnecter de Auth0 et suppression d'auth0 
     
     } else {

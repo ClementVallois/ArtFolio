@@ -11,15 +11,15 @@ function postService() {
     // TODO: faire le lien et modifier le store
     async function getAssetForPost() {
         try {
-            const response = await apiPost.getAssetForPost();
-            if (Array.isArray(response)) {
-                return response.map(jsonAssets => Asset.fromJson(jsonAssets));
+            const { data } = await apiPost.getAssetForPost();
+            if (Array.isArray(data)) {
+                return data.map(jsonAssets => Asset.fromJson(jsonAssets));
             }
-            if (!Array.isArray(response)) {
-                console.log(response);
-                return Asset.fromJson(response);
+            if (!Array.isArray(data)) {
+                console.log(data);
+                return Asset.fromJson(data);
             } else {
-                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
             }
         } catch (error) {
@@ -29,8 +29,8 @@ function postService() {
 
     async function createPost(data) {
         try {
-            const response = await apiPost.createPost(data);
-            return response;
+            return await apiPost.createPost(data);
+
         } catch (error) {
             storeGlobal.logError("Erreur lors de l'enregistrement d'un post' : " + error.message, 6);
             throw new Error(error.message);
@@ -39,8 +39,7 @@ function postService() {
 
     async function deletePost(id) {
         try {
-            const response = await apiPost.deletePost(id);
-            return response;
+            return await apiPost.deletePost(id);
         } catch (error) {
             storeGlobal.logError("Erreur lors de la suppression du post' : " + error.message, 6);
             throw new Error(error.message);
