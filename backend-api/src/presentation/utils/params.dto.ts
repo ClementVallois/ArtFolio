@@ -12,10 +12,10 @@ export class FindAuth0IdParams {
   auth0Id: string;
 }
 
-export class FindUserPostParams {
+export class FindArtistPostParams {
   @IsUUID('4', { message: '$property must be an UUID' })
   @IsNotEmpty({ message: '$property must not be empty' })
-  userId: string;
+  artistId: string;
 
   @IsUUID('4', { message: '$property must be an UUID' })
   @IsNotEmpty({ message: '$property must not be empty' })

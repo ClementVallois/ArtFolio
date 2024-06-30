@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { faker } from '@faker-js/faker';
-import { Category } from 'src/infrastructure/entities/category.entity';
-import { User } from 'src/infrastructure/entities/user.entity';
-import { Post } from 'src/infrastructure/entities/post.entity';
+import { Category } from 'src/domain/entities/category.entity';
+import { User } from 'src/domain/entities/user.entity';
+import { Post } from 'src/domain/entities/post.entity';
 
 @Injectable()
 export class CategorySeederService {

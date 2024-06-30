@@ -1,22 +1,16 @@
-# Set the base image to node:lts-alpine
 FROM node:lts-alpine
 
-# Set the working directory inside the container
 WORKDIR /app/backend-api
 
-# Copy the package.json and tsconfig.json files from the host to the container
-COPY ../backend-api/package*.json .
-COPY ../backend-api/tsconfig*.json .
+COPY backend-api/package*.json ./
+COPY backend-api/tsconfig*.json ./
 
-# Install the dependencies specified in the package.json file
 RUN npm install
 
-# Copy the code from the host to the container
-COPY backend-api .
+COPY backend-api ./
+# COPY ./.env /app/backend-api/.env
+# COPY ./entrypoint.sh /app/backend-api/entrypoint.sh
+# RUN chmod +x /app/backend-api/entrypoint.sh
 
-# Expose port 3010 to allow incoming connections
 EXPOSE 3000
-
-# Set the command to run when the container starts
-# It runs the "start:dev" script specified in the package.json file
 CMD ["npm", "run", "start:dev"]

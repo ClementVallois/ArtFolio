@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { CreateArtistDto } from 'src/presentation/artist/dto/create-artist.dto';
-import { CreateUserDto } from 'src/presentation/user/dto/create-user.dto';
 
 @Injectable()
 export class ErrorService {
-  parseDatabaseError(
-    error: any,
-    data: CreateArtistDto | CreateUserDto,
-  ): string {
+  parseDatabaseError(error: any, data: any): string {
     if (error.code === '23505') {
       if (error.detail.includes('username')) {
         return `Artist with username ${data.username} already exists`;

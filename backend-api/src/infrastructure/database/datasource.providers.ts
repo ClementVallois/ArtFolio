@@ -15,7 +15,7 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       username: this.configService.get<string>('DB_API_USER'),
       password: this.configService.get<string>('DB_API_PASSWORD'),
       database: this.configService.get<string>('DB_API_NAME'),
-      entities: [__dirname + '../../../**/infrastructure/**/*.entity{.ts,.js}'],
+      entities: [__dirname + '../../../**/domain/**/*.entity{.ts,.js}'],
       synchronize: true,
       logging: false,
       migrationsRun: true,
