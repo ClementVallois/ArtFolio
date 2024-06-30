@@ -11,13 +11,12 @@ import {
   BadRequestException,
   Res,
   StreamableFile,
-  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { CreatePostDto } from '../dto/post/create-post.dto';
 import { UpdatePostDto } from '../dto/post/update-post.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FindIdParams } from '../utils/params.dto';
-import { File, FileInterceptor } from '@nest-lab/fastify-multer';
 import { FastifyReply } from 'fastify';
 
 import {
@@ -40,6 +39,8 @@ import { RemovePostUseCase } from 'src/application/modules/post/use-cases/remove
 import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
 import { Permissions } from '../decorators/permissions/permissions.decorator';
 import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
+import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
+import { FileUploadDto } from '../dto/artist/fileUpload.dto';
 
 @ApiTags('Posts')
 @ApiBearerAuth()
@@ -118,7 +119,7 @@ export class PostController {
   /**
    * Create a new post.
    *
-   * @param {File} file - The uploaded file for the post picture.
+   * @param {FileUploadDto} files - The uploaded files for the post.
    * @param {CreatePostDto} postData - The data for creating a new post.
    * @returns {Promise<PostEntity>} A promise that resolves to the newly created post.
    */
@@ -134,15 +135,31 @@ export class PostController {
   // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   // @Permissions('create:post')
   @Post()
-  @UseInterceptors(FileInterceptor('postPicture'))
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldNames: [{ name: 'postPicture', maxCount: 1 }],
+      limits: { fileSize: 10 * 1024 * 1024 },
+      fileFilter: (req, file, callback) => {
+        const acceptedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
+        if (acceptedMimeTypes.includes(file.mimetype)) {
+          callback(null, true);
+        } else {
+          callback(
+            new BadRequestException('Only image files are allowed!'),
+            false,
+          );
+        }
+      },
+    }),
+  )
   async createPost(
-    @UploadedFile() file: File,
+    @UploadedFiles() files: FileUploadDto,
     @Body() postData: CreatePostDto,
   ): Promise<PostEntity> {
-    if (!file) {
+    if (!files.postPicture) {
       throw new BadRequestException('Post picture file is required.');
     } else {
-      return this.createPostUseCase.execute(postData, file);
+      return this.createPostUseCase.execute(postData, files.postPicture[0]);
     }
   }
 
