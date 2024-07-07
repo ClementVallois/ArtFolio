@@ -20,6 +20,7 @@ import RedirectToAuthenticationPage from '@/domain/authentification/pages/Redire
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService';
 import UnauthorizedPage from '@/pages/UnauthorizedPage.vue';
 import NotFound404 from '@/pages/NotFound404.vue';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore';
 
 const routes = [
     {
@@ -136,6 +137,7 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const { isAuthenticated, isLoading, user } = useAuth0();
     const globalStore = useGlobalStore()
+    const authenticationStore = useAuthenticationPersistStore()
     const { roles } = to.meta;
 
     // Wait for Auth0 to finish loading
@@ -144,7 +146,7 @@ router.beforeEach(async (to, from, next) => {
     // }
     
     // Redirect to login page if not authenticated and route requires authentication
-    if (roles && !roles.includes(globalStore.profile?.role)) {
+    if (roles && !roles.includes(authenticationStore.profile?.role)) {
         next('/unauthorized')
     }
     else if (to.meta.requiresAuth && !isAuthenticated.value) {
