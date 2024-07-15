@@ -14,4 +14,6 @@ export const configValidationSchema = Joi.object({
   AUTH0_AUDIENCE: Joi.required(),
   DEV_POST_ASSETS_LOCATION: Joi.required(),
   DEV_PROFILE_ASSETS_LOCATION: Joi.required(),
+  DEV_PHOTO_SEED: Joi.required(),
+  LOG_DIRECTORY: Joi.required(),
 });
