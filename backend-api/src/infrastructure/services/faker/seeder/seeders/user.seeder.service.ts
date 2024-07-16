@@ -64,22 +64,22 @@ export class UserSeederService {
       if (await this.userRepository.findOneBy({ auth0Id: auth0Id })) {
         continue;
       }
-      const user = new User();
-      user.id = faker.string.uuid();
-      user.firstName = faker.person.firstName();
-      user.lastName = faker.person.lastName();
-      user.birthDate = faker.date.birthdate();
-      user.username = faker.internet.userName({
-        firstName: user.firstName,
-        lastName: user.lastName,
+      const artist = new User();
+      artist.id = faker.string.uuid();
+      artist.firstName = faker.person.firstName();
+      artist.lastName = faker.person.lastName();
+      artist.birthDate = faker.date.birthdate();
+      artist.username = faker.internet.userName({
+        firstName: artist.firstName,
+        lastName: artist.lastName,
       });
-      user.description = faker.lorem.words({ min: 10, max: 30 });
-      user.status = 'active';
-      user.auth0Id = auth0Id;
-      user.role = 'artist';
-      user.createdAt = faker.date.recent();
-      user.updatedAt = faker.date.recent();
-      await this.userRepository.save(user);
+      artist.description = faker.lorem.words({ min: 10, max: 30 });
+      artist.status = 'active';
+      artist.auth0Id = auth0Id;
+      artist.role = 'artist';
+      artist.createdAt = faker.date.recent();
+      artist.updatedAt = faker.date.recent();
+      await this.userRepository.save(artist);
     }
   }
 
