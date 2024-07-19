@@ -1,7 +1,7 @@
 <template>
 
     <NavArtistComponent v-if="globalStore.profile?.role === 'artist'" />
-    <NavUserComponent v-else-if="globalStore.profile?.role === 'user'" />
+    <NavUserComponent v-else-if="globalStore.profile?.role === 'amateur'" />
     <NavComponent v-else />
 
     <div class="w-screen flex flex-col ">
