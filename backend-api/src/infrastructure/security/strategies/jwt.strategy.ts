@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
   }
 
-  validate(payload: unknown): unknown {
-    return payload;
+  validate(payload: any): any {
+    return { auth0Id: payload.sub, ...payload };
   }
 }
