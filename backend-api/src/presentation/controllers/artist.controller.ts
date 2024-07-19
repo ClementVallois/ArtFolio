@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFiles,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { CreateArtistDto } from '../dto/artist/create-artist.dto';
 import { UpdateArtistDto } from '../dto/artist/update-artist.dto';
@@ -50,6 +51,7 @@ import { GetRandomArtistsPostUseCase } from 'src/application/modules/artist/use-
 import { Category } from 'src/domain/entities/category.entity';
 import { FileUploadDto } from '../dto/artist/fileUpload.dto';
 import { GetAllArtistsWithPinnedPostUseCase } from 'src/application/modules/artist/use-cases/getAllArtistsWithPinnedPost.useCase';
+import { GetUser } from '../decorators/permissions/getUser.decorator';
 
 @ApiTags('Artists')
 @Controller(['artists'])
@@ -127,18 +129,19 @@ export class ArtistController {
   }
 
   /**
-   * Get an artist's posts
+   * Get all artist's posts
    * @param {FindIdParams} params - Parameters to find the artist
    * @returns {Promise<PostEntity[]>} The artist's posts
    */
-  @ApiOperation({ summary: "Get an artist's posts" })
+  @ApiOperation({ summary: "Get all artist's posts" })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
   @ApiResponse({ status: 200, description: "The artist's posts." })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:posts')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:posts')
   @Get(':id/posts')
   async getArtistPosts(@Param() params: FindIdParams): Promise<PostEntity[]> {
     const artistId = new ArtistId(params.id);
@@ -153,6 +156,7 @@ export class ArtistController {
   @ApiOperation({ summary: "Get an artist's categories" })
   @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
   @ApiResponse({ status: 200, description: "The artist's categories." })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
   @ApiBearerAuth()
@@ -183,11 +187,12 @@ export class ArtistController {
     description: 'The ID of the post',
   })
   @ApiResponse({ status: 200, description: "The artist's post." })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Artist or post not found' })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:all')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('read:all')
   @Get(':artistId/posts/:postId')
   async getOneArtistPost(
     @Param() params: FindArtistPostParams,
@@ -372,6 +377,36 @@ export class ArtistController {
   @Delete(':id')
   async removeArtist(@Param() params: FindIdParams): Promise<Artist> {
     const artistId = new ArtistId(params.id);
+    return this.removeArtistUseCase.execute(artistId);
+  }
+
+  /**
+   * Delete own artist profile
+   * @param {FindIdParams} params - Parameters to find the artist profile
+   * @returns {Promise<Artist>} The deleted artist data
+   */
+  @ApiOperation({ summary: 'Delete own artist profile' })
+  @ApiParam({ name: 'id', required: true, description: 'The ID of the artist' })
+  @ApiResponse({
+    status: 200,
+    description: 'The artist profile has been deleted successfully.',
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden' })
+  @ApiResponse({ status: 404, description: 'Artist not found' })
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('delete:me')
+  @Delete('me/:id')
+  async removeMyArtistProfile(
+    @Param() params: FindIdParams,
+    @GetUser() user: any,
+  ): Promise<Artist> {
+    const artistId = new ArtistId(params.id);
+    const artist = await this.getArtistByIdUseCase.execute(artistId);
+
+    if (artist.auth0Id !== user.auth0Id) {
+      throw new UnauthorizedException('You can only access your own data');
+    }
+
     return this.removeArtistUseCase.execute(artistId);
   }
 }
