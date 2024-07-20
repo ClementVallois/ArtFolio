@@ -10,6 +10,7 @@ export const useGlobalStore = defineStore('globalStore', () => {
     // On évite utiliser activeRole et on utilise profile.role à la place 
     // const activeRole = ref("none");
     const profile = ref(null)
+    const profileId = ref(null);
 
     let globalLogLevelError = 6;
     let globalLogLevel = 4;
@@ -29,11 +30,17 @@ export const useGlobalStore = defineStore('globalStore', () => {
     async function storeProfileFromAuth0Id(auth0id) {
         try {
             const user = await profileService().getProfileWithAuth0Id(auth0id)
+            console.log('user', user)
             profile.value = toRaw(user)
+            console.log('profile', profile)
         } catch (error) {
             console.log('error in the globalStore', error)
             throw error
         }
+    }
+
+    function addProfileId(profileId) {
+        profileId.value = profileId;
     }
 
     function resetProfile() {
@@ -57,9 +64,11 @@ export const useGlobalStore = defineStore('globalStore', () => {
 
     return {
         profile,
+        profileId,
         logError,
         log,
         storeProfileFromAuth0Id,
+        addProfileId,
         resetProfile
     }
 });

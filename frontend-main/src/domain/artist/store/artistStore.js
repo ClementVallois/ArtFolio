@@ -10,7 +10,8 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
     const allArtistData = ref([]);
     const artist = ref([]);
-    const artistId = ref("bf66a7f5-e7d8-4469-82f8-651beabb6f87");
+    // const artistId = ref("bf66a7f5-e7d8-4469-82f8-651beabb6f87");
+    const artistId = ref("");
     //  const artistId = "be4a5e15-a7e6-4a78-90fa-5867b0f952fb";
     const artistPosts = ref([]);
     const lastRegisteredArtist = ref([]);
@@ -34,14 +35,9 @@ export const useStoreArtist = defineStore('artistStore', () => {
     };
 
     async function createArtist(data) {
-        // return await serviceArtist.createArtist(data);
         const response = await serviceArtist.createArtist(data);
         if (response.status === 201) {
-            //TODO: Verifier l'ajout de l'artistId après la connexion
-            console.log(response.data)
-            console.log(response.data.artistId);
             artistId.value = response.data.artistId;
-            // console.log(artistId.value);
         }
         return response;
     };
@@ -83,9 +79,9 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
     //Search function 
     async function searchArtists(searchString) {
-        if(searchString == ''){
-            resultSearchArtist.value=[]
-        }else{
+        if (searchString == '') {
+            resultSearchArtist.value = []
+        } else {
             resultSearchArtist.value = await serviceArtist.searchArtists(searchString)
         }
     }

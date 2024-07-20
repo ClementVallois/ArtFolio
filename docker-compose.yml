@@ -11,7 +11,6 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-main
         volumes:
             - ./frontend-main:/app/frontend-main
-            # - ./frontend-main/node_modules:/app/frontend-main/node_modules
         ports:
             - "${FRONTEND_MAIN_SERVER_PORT}:5174"
         env_file:
@@ -25,7 +24,6 @@ services:
             dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-backoffice
         volumes:
             - ./frontend-backoffice:/app/frontend-backoffice
-            # - ./frontend-backoffice/node_modules:/app/frontend-backoffice/node_modules
         ports:
             - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
         env_file:
@@ -44,13 +42,13 @@ services:
             - "${BACKEND_API_SERVER_PORT}:3000"
         env_file:
             - ./.env
-        # command: tail -f /dev/null
         depends_on:
             - postgres-api
+        # command: tail -f /dev/null
 
     # Main Database 
     postgres-api:
-        image: postgres:16.2
+        image: postgres:16.2-alpine
         ports:
             - "${DB_API_PORT}:5432"
         volumes:
@@ -81,7 +79,7 @@ services:
 
     # Database used for the chat feature
     postgres-chat:
-        image: postgres:16.2
+        image: postgres:16.2-alpine
         ports:
             - "${DB_CHAT_PORT}:5432"
         volumes:

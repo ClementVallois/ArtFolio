@@ -1,7 +1,7 @@
 <template>
 
-    <NavArtistComponent v-if="authenticationStore.profile?.role === 'artist'" />
-    <NavUserComponent v-else-if="authenticationStore.profile?.role === 'user'" />
+    <NavArtistComponent v-if="globalStore.profile?.role === 'artist'" />
+    <NavUserComponent v-else-if="globalStore.profile?.role === 'amateur'" />
     <NavComponent v-else />
 
     <div class="w-screen flex flex-col ">

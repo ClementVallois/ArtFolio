@@ -104,7 +104,7 @@ import { useGlobalStore } from '@/store/GlobalStore';
 const { logout } = useAuth0();
 const artistStore = useStoreArtist();
 const globalStore = useGlobalStore()
-const artistId = artistStore.artistId;
+const artistId = globalStore.profile.id;
 const elementClickOutsideMobile = ref(null)
 const elementClickOutsideDesktop = ref(null)
 

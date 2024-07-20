@@ -104,7 +104,7 @@ async function handleDelete(deleteStatus) {
             showModal.value = false;
             document.body.style.overflow = '';
             console.log('yes');
-             let response =  await artistStore.deleteArtist(artistStore.artistId);
+             let response =  await artistStore.deleteArtist(storeGlobal.artistId);
             if (response.status == 200) {
                 alertError.value = false;
                 showAlert.value = true;
