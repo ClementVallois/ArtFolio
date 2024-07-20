@@ -13,6 +13,7 @@ export const useAuthenticationPersistStore = defineStore('authenticationPersistS
         try {
             const user = await profileService().getProfileWithAuth0Id(auth0id)
             profile.value = toRaw(user)
+            console.log('profile', profile)
         } catch (error) {
             globalStore.logError(error, 6)
         }

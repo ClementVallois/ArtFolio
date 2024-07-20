@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { userService } from '@/domain/user/service/UserService.js';
 import { ref, toRaw } from 'vue'
+import { authenticationService } from '@/domain/authentification/services/AuthenticationService';
 
 /////////
 ///// User Store
@@ -26,11 +27,21 @@ export const useStoreUser = defineStore('userStore', () => {
         return user.value;
     };
 
-    async function deleteUser(id) {
-        const response = await serviceUser.deleteUser(id);
+    async function modifyUser(id, data) {
+        const response = await serviceUser.modifyUser(id, data);
         if (response.status) {
             console.log(response.status);
         }
+        return response;
+    }
+
+    async function deleteUser(id, auth0Id) {
+        const response = await serviceUser.deleteUser(id);
+        await authenticationService().deleteUser(auth0Id)
+        if (response.status) {
+            console.log(response.status);
+        }
+
         return response;
     }
 
@@ -39,6 +50,7 @@ export const useStoreUser = defineStore('userStore', () => {
         user,
         createUser,
         getUserById,
+        modifyUser,
         deleteUser,
     }
 });

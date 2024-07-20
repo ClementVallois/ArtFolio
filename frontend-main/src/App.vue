@@ -1,7 +1,7 @@
 <template>
 
-    <NavArtistComponent v-if="globalStore.profile?.role === 'artist'" />
-    <NavUserComponent v-else-if="globalStore.profile?.role === 'amateur'" />
+    <NavArtistComponent v-if="authenticationStore.profile?.role === 'artist'" />
+    <NavUserComponent v-else-if="authenticationStore.profile?.role === 'amateur'" />
     <NavComponent v-else />
 
     <div class="w-screen flex flex-col ">
@@ -17,9 +17,10 @@ import NavComponent from '@/components/layout/NavComponent.vue';
 import FooterComponent from '@/components/layout/FooterComponent.vue';
 import NavArtistComponent from '@/domain/artist/components/layout/NavArtistComponent.vue';
 import NavUserComponent from '@/domain/user/components/layout/NavUserComponent.vue';
-import { useAuthenticationPersistStore } from '@/domain/authentication/store/AuthenticationPersistStore.js'
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore.js'
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { watch } from 'vue'
+
 
 // Récupérez l'artist demandé
 const globalStore = useGlobalStore();

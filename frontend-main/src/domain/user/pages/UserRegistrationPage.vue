@@ -130,7 +130,7 @@ const isFormValid = computed(() => {
     try {
         if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value) {
             if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
-                const amateur = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "user", user.value.sub);
+                const amateur = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "amateur", user.value.sub);
                 amateur.validateUsername(username.value);  
                 amateur.validateName(firstName.value, 'prénom');
                 amateur.validateName(lastName.value, 'nom'); 

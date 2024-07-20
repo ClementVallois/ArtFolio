@@ -25,6 +25,12 @@ function userApi() {
         return CRUDapi('DELETE', `users/${id}`)
     }
 
+    async function modifyUser(id, data) {
+        return CRUDapi('PATCH', `users/${id}`, data)
+    }
+
+
+
     ////
     // Auth0
     ////
@@ -44,6 +50,7 @@ function userApi() {
         getUserWithAuth0Id,
         getUserById,
         deleteUser,
+        modifyUser,
     };
 }
 

@@ -47,7 +47,7 @@ const routes = [
         path: '/user-info',
         name: 'UserInfoPage',
         component: UserInfoPage,
-        meta: { requiresAuth: true, roles: ['user'] }
+        meta: { requiresAuth: true, roles: ['amateur'] }
 
     },
     {

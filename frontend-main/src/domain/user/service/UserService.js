@@ -29,6 +29,15 @@ function userService() {
         }
     };
 
+    async function modifyUser(id, data) {
+        try {
+            return apiUser.modifyUser(id, data);
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la modification des informations d'un amateur: " + error.message, 6);
+            throw new Error(error.message);
+        }
+    }
+
     async function deleteUser(id) {
         try {
             return apiUser.deleteUser(id);
@@ -58,6 +67,7 @@ function userService() {
     return {
         createUser,
         getUserById,
+        modifyUser,
         getUserWithAuth0Id,
         deleteUser,
     };

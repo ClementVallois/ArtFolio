@@ -12,27 +12,27 @@
 
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom d'utilisateur</label>
-        <input type="text"  v-model="userStore.user.username" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="authenticationStore.profile.username" class="input input-bordered w-full max-w-xs" />
     </div>
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre prénom</label>
-        <input type="text"  v-model="userStore.user.firstName" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="authenticationStore.profile.firstName" class="input input-bordered w-full max-w-xs" />
     </div>
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom</label>
-        <input type="text"  v-model="userStore.user.lastName" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="authenticationStore.profile.lastName" class="input input-bordered w-full max-w-xs" />
      </div>
 
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre date de naissance</label>
-        <input type="date"  v-model="userStore.user.birthDate" class="input input-bordered w-full max-w-xs lg:w-[40%]" />
+        <input type="date"  v-model="authenticationStore.profile.birthDate" class="input input-bordered w-full max-w-xs lg:w-[40%]" />
      </div>
      <div class="pt-[2rem] flex justify-center w-full ">
         <ButtonComponent textButton="Modifier" class="lg:self-end"></ButtonComponent>
     </div>
  
    </form>
-   <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" v-model:textAlert="defaultTextAlert"></AlertComponent>
+   <AlertComponent v-if="showAlert" :alertError="alertError" @closeAlert="handleCloseAlert" :textAlert="textAlert"></AlertComponent>
    
 
 
@@ -43,14 +43,16 @@
         </div>
    </div>
 
+   <ModalComponent v-if="showModal" @closeModals="closeModal" @deleteData="handleDelete" textModal="Voulez-vous vraiment supprimer votre profil ?"></ModalComponent>
 </template>
 
 <script setup>
-
+import { useAuth0 } from "@auth0/auth0-vue";
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue'; 
 import { useStoreUser } from '@/domain/user/store/UserStore';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore'
 import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue';
 import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
@@ -58,12 +60,14 @@ import { onMounted, toRaw, ref} from 'vue';
 
 const userStore = useStoreUser();
 const storeGlobal = useGlobalStore();
+const authenticationStore = useAuthenticationPersistStore()
 let originalData; 
 const showAlert = ref(false);
 const alertError = ref(true);
-const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+const textAlert = ref('Vous devez remplir tous les champs présents.');
 const showModal = ref(false);
 const isProfilDeleted = ref(false);
+const { user } = useAuth0()
 
 
 
@@ -74,8 +78,9 @@ const handleCloseAlert = () => {
 };
 
 onMounted(async () => {
-    const userData = await userStore.getUserById(userStore.userId);
-    originalData = {... userData} ; 
+    const userData = authenticationStore.profile
+    //create a deep copy if not reference are the same and objects will move at the same time
+    originalData = { ...toRaw(userData) }; 
 });
 
 // Fonctionnement modal delete
@@ -97,12 +102,11 @@ async function handleDelete(deleteStatus) {
             showModal.value = false;
             document.body.style.overflow = '';
             console.log('yes');
-             let response =  await userStore.deleteUser(userStore.userId);
+            let response =  await userStore.deleteUser(authenticationStore.profile.id, user.value.sub);
             if (response.status == 200) {
                 alertError.value = false;
                 showAlert.value = true;
             }
-           
         } catch (error) {
             storeGlobal.logError(error, 6);
         }
@@ -113,21 +117,26 @@ async function handleDelete(deleteStatus) {
 const submitForm = async () => {
     const modifiedData = {};
     let isModified = false; 
-    for (const key in userStore.user) {
-    //     console.log(key);
-    //    console.log(artistStore.artist[key], originalData[key]);
-        if (userStore.user[key] !== originalData[key]) {
-            modifiedData[key] = userStore.user[key];
+    for (const key in authenticationStore.profile) {
+        // console.log(key);
+        // console.log(authenticationStore.profile[key], originalData[key]);
+        if (authenticationStore.profile[key] !== originalData[key]) {
+            modifiedData[key] = authenticationStore.profile[key];
             isModified = true; 
         }
     }
     if (isModified) {
-        console.log(toRaw(userStore.userId));
         console.log('Champs modifiés :', modifiedData);
-        let response = await artistStore.modifyArtist(userStore.userId, JSON.stringify(modifiedData));
-        // TODO: fonctionnel mais reste à déconnecter de Auth0 et suppression d'auth0 
-    
+        let response = await userStore.modifyUser(authenticationStore.profile.id, JSON.stringify(modifiedData));
+        console.log(response)
+        if(response.status == 200){
+            alertError.value = false;
+            textAlert.value = "Vos nouvelles données ont bien été enregistrées"
+            showAlert.value = true;
+        }
+
     } else {
+        textAlert.value="Vous devez remplir tous les champs présents."
         alertError.value = true;
         showAlert.value = true;
     }

@@ -50,11 +50,24 @@ function authenticationService() {
         }
     }
 
+    async function deleteUser(auth0Id) {
+        try {
+            const accessToken = await getAccessTokenManagementAPI();
+            auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+            const response = await auth0ManagementApi.delete(`/users/${auth0Id}`)
+            console.log(response)
+        } catch (error) {
+            storeGlobal.logError(error, 6)
+        }
+
+    }
+
 
 
     return {
         assignUserRole,
-        getRoleUser
+        getRoleUser,
+        deleteUser
     }
 
 }

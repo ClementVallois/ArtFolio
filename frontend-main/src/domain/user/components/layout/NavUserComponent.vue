@@ -85,9 +85,11 @@ import SearchComponent from '@/components/toolBox/SearchComponent.vue';
 import useClickOutside from '@/composable/useClickOutside';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useGlobalStore } from '@/store/GlobalStore';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore';
 
 const { logout } = useAuth0();
 const globalStore = useGlobalStore()
+const authenticationStore = useAuthenticationPersistStore()
 const elementClickOutsideMobile = ref(null)
 const elementClickOutsideDesktop = ref(null)
 
@@ -102,7 +104,7 @@ const toggleProfileMenu = () => {
 }
 
 const logoutApp = () => {
-    globalStore.resetProfile()
+    authenticationStore.resetProfile()
     logout()
 }
 
