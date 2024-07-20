@@ -159,7 +159,6 @@ const handleCloseAlert = () => {
 // Category
 ////
 onMounted(async () => {
-
     assignUserRoleIfNeeded()
     await categoryStore.getAllCategories();
 });
@@ -174,7 +173,6 @@ const assignUserRoleIfNeeded = () => {
 watch(isAuthenticated, (newValue) => {
     if (newValue) {
         setTimeout(()=> {
-            console.log('I am not authenticated from the begining')
             authenticationService().assignUserRole(user.value.sub, 'Artist')
         }, 500)
     }
