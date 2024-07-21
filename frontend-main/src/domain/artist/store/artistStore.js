@@ -44,15 +44,12 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
 
     async function modifyArtist(id, data) {
-        const response = await serviceArtist.modifyArtist(id, data);
-        if (response.status) {
-            console.log(response.status);
-        }
-        return response;
+        return serviceArtist.modifyArtist(id, data);
     }
 
-    async function deleteArtist(id) {
+    async function deleteArtist(id, auth0Id) {
         const response = await serviceArtist.deleteArtist(id);
+        await authenticationService().deleteUser(auth0Id)
         if (response.status) {
             console.log(response.status);
         }

@@ -12,25 +12,25 @@
 
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom d'utilisateur</label>
-        <input type="text"  v-model="artistStore.artist.username" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="authenticationStore.profile.username" class="input input-bordered w-full max-w-xs" />
     </div>
     <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre prénom</label>
-        <input type="text"  v-model="artistStore.artist.firstName" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="authenticationStore.profile.firstName" class="input input-bordered w-full max-w-xs" />
     </div>
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre nom</label>
-        <input type="text"  v-model="artistStore.artist.lastName" class="input input-bordered w-full max-w-xs" />
+        <input type="text"  v-model="authenticationStore.profile.lastName" class="input input-bordered w-full max-w-xs" />
      </div>
 
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for=""> Votre date de naissance</label>
-        <input type="date"  v-model="artistStore.artist.birthDate" class="input input-bordered w-full max-w-xs lg:w-[40%]" />
+        <input type="date"  v-model="authenticationStore.profile.birthDate" class="input input-bordered w-full max-w-xs lg:w-[40%]" />
      </div>
 
      <div class="flex flex-col w-[90vw] pb-[1rem]">
         <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
-        <textarea  v-model="artistStore.artist.description" class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " placeholder="Bio"></textarea>   
+        <textarea  v-model="authenticationStore.profile.description" class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " placeholder="Bio"></textarea>   
      </div>
 
      <div class="pt-[2rem] flex justify-center w-full ">
@@ -38,7 +38,7 @@
     </div>
  
    </form>
-   <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" v-model:textAlert="defaultTextAlert"></AlertComponent>
+   <AlertComponent v-if="showAlert" :alertError="alertError" @closeAlert="handleCloseAlert" :textAlert="textAlert"></AlertComponent>
    
 
 
@@ -53,11 +53,12 @@
 </template>
 
 <script setup>
-
+import { useAuth0 } from "@auth0/auth0-vue";
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue'; 
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore'
 import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue';
 import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
@@ -65,13 +66,14 @@ import { onMounted, toRaw, ref} from 'vue';
 
 const artistStore = useStoreArtist();
 const storeGlobal = useGlobalStore();
+const authenticationStore = useAuthenticationPersistStore()
 let originalData; 
 const showAlert = ref(false);
 const alertError = ref(true);
-const defaultTextAlert = ref('Vous devez remplir tous les champs présents.');
+const textAlert = ref('Vous devez remplir tous les champs présents.');
 const showModal = ref(false);
 const isProfilDeleted = ref(false);
-
+const { user } = useAuth0()
 
 
 /// TODO: faire en sorte de comparer l'artist original et les new data
@@ -81,8 +83,11 @@ const handleCloseAlert = () => {
 };
 
 onMounted(async () => {
-    const artistData = await artistStore.getArtistById(artistStore.artistId);
-    originalData = {... artistData} ; 
+    // const artistData = await artistStore.getArtistById(authenticationStore.profileId);
+    // originalData = {... artistData} ;
+    const artistData = authenticationStore.profile
+    //create a deep copy if not reference are the same and objects will move at the same time
+    originalData = { ...toRaw(artistData) }; 
 });
 
 // Fonctionnement modal delete
@@ -103,13 +108,11 @@ async function handleDelete(deleteStatus) {
         try {
             showModal.value = false;
             document.body.style.overflow = '';
-            console.log('yes');
-             let response =  await artistStore.deleteArtist(storeGlobal.artistId);
+            let response =  await artistStore.deleteArtist(authenticationStore.profile.id, user.value.sub);
             if (response.status == 200) {
                 alertError.value = false;
                 showAlert.value = true;
             }
-           
         } catch (error) {
             storeGlobal.logError(error, 6);
         }
@@ -120,22 +123,30 @@ async function handleDelete(deleteStatus) {
 const submitForm = async () => {
     const modifiedData = {};
     let isModified = false; 
-    console.log(artistStore.artist);
-    for (const key in artistStore.artist) {
+    // console.log(authenticationStore.profile);
+    for (const key in authenticationStore.profile) {
     //     console.log(key);
-    //    console.log(artistStore.artist[key], originalData[key]);
-        if (artistStore.artist[key] !== originalData[key]) {
-            modifiedData[key] = artistStore.artist[key];
+    //    console.log(authenticationStore.profile[key], originalData[key]);
+        if (authenticationStore.profile[key] !== originalData[key]) {
+            modifiedData[key] = authenticationStore.profile[key];
             isModified = true; 
         }
     }
     if (isModified) {
-        console.log(toRaw(artistStore.artistId));
-        console.log('Champs modifiés :', modifiedData);
-        let response = await artistStore.modifyArtist(artistStore.artistId, JSON.stringify(modifiedData));
-        // TODO: fonctionnel mais reste à déconnecter de Auth0 et suppression d'auth0 
-    
+        // console.log(toRaw(authenticationStore.profileId));
+        // console.log('Champs modifiés :', modifiedData);
+        let response = await artistStore.modifyArtist(authenticationStore.profile.id, JSON.stringify(modifiedData));
+        if(response.status == 200){
+            alertError.value = false;
+            textAlert.value = "Vos nouvelles données ont bien été enregistrées"
+            showAlert.value = true;
+        } else {
+            textAlert.value="Aïe on dirait qu'une erreur est survenue."
+            alertError.value = true;
+            showAlert.value = true;
+        }
     } else {
+        textAlert.value="Vous devez remplir tous les champs présents."
         alertError.value = true;
         showAlert.value = true;
     }

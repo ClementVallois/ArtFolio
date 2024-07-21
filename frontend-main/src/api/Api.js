@@ -14,7 +14,7 @@ const api = axios.create({
 api.interceptors.request.use(
     async (config) => {
         // Modify request config before sending
-        
+        config.headers['Content-Type'] = 'application/json';
         // Add Auth0 token
         if(auth0.isAuthenticated.value) {
             const token = await auth0.getAccessTokenSilently()

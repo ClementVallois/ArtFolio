@@ -101,7 +101,6 @@ async function handleDelete(deleteStatus) {
         try {
             showModal.value = false;
             document.body.style.overflow = '';
-            console.log('yes');
             let response =  await userStore.deleteUser(authenticationStore.profile.id, user.value.sub);
             if (response.status == 200) {
                 alertError.value = false;
@@ -126,9 +125,8 @@ const submitForm = async () => {
         }
     }
     if (isModified) {
-        console.log('Champs modifiés :', modifiedData);
+        // console.log('Champs modifiés :', modifiedData);
         let response = await userStore.modifyUser(authenticationStore.profile.id, JSON.stringify(modifiedData));
-        console.log(response)
         if(response.status == 200){
             alertError.value = false;
             textAlert.value = "Vos nouvelles données ont bien été enregistrées"
