@@ -11,12 +11,12 @@ function categoryApi() {
     // basique CRUD for categories
     ////
 
-    async function getAllCategories() {
-        return await CRUDapi('GET', 'categories');
+    function getAllCategories() { // Comme c'est async, le type de retour est Promise<TYPE DE LA VARIABLE QUE TU RENVOIES> 
+        return CRUDapi('GET', 'categories');
     }
 
-    async function getCategoryById(id) {
-        return await CRUDapi('GET', `categories/${id}`);
+    function getCategoryById(id) {
+        return CRUDapi('GET', `categories/${id}`);
     }
 
     return {

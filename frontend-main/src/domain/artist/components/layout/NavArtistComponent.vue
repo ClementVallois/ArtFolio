@@ -100,11 +100,13 @@ import useClickOutside from '@/composable/useClickOutside';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
 import { useGlobalStore } from '@/store/GlobalStore';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore'
 
 const { logout } = useAuth0();
 const artistStore = useStoreArtist();
 const globalStore = useGlobalStore()
-const artistId = artistStore.artistId;
+const authenticationStore = useAuthenticationPersistStore()
+const artistId = authenticationStore.profile.id;
 const elementClickOutsideMobile = ref(null)
 const elementClickOutsideDesktop = ref(null)
 
@@ -120,6 +122,7 @@ const toggleProfileMenu = () => {
 
 
 const logoutApp = () => {
+    authenticationStore.resetProfile()
     logout(); 
 }
 

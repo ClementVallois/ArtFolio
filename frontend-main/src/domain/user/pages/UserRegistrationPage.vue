@@ -1,6 +1,5 @@
 <template>
     <div class="flex flex-col items-center">
-    <!-- <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent> -->
 
     <ul class="steps mt-10 mb-2">
         <li class="step step-secondary">Créer un compte</li>
@@ -12,7 +11,7 @@
     <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
 
-    <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
+    <form id="userForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]">
         <div class="flex flex-col w-[90vw] pb-[1rem]">
             <label for=""> Votre photo de profil</label>
             <input @change="handleFileChange" name="profil_picture"  type="file" required class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
@@ -45,7 +44,6 @@
 </template>
 
 <script setup>
-import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 import { User } from '@/model/UserModel';
@@ -55,8 +53,6 @@ import { authenticationService } from '@/domain/authentification/services/Authen
 import { ref,  computed, onMounted, watch, toRaw } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useRouter } from 'vue-router';
-import { createPinia } from 'pinia';
-
 
 const { error, isAuthenticated, isLoading, user} = useAuth0();
 
@@ -134,7 +130,7 @@ const isFormValid = computed(() => {
     try {
         if (fileUserPicture.value && username.value && firstName.value && lastName.value && birthDate.value) {
             if (fileUserPicture.value && (typeUserPicture.value === "image/png" || typeUserPicture.value === "image/jpg" || typeUserPicture.value === "image/jpeg")) {
-                const amateur = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "user", user.value.sub);
+                const amateur = new User(null, firstName.value, lastName.value, birthDate.value, username.value, null,"active", "amateur", user.value.sub);
                 amateur.validateUsername(username.value);  
                 amateur.validateName(firstName.value, 'prénom');
                 amateur.validateName(lastName.value, 'nom'); 
@@ -185,7 +181,7 @@ const submitForm = async () => {
             let response = await userStore.createUser(data);
             if (response.status == 201 ) {
                 await storeGlobal.storeProfileFromAuth0Id(user.value.sub)
-                router.push({ name: 'home' });
+                router.push({ name: 'UserInfoPage' });
             }else{
                 defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
                 alertError.value = true;
@@ -193,10 +189,11 @@ const submitForm = async () => {
             }
         } catch (error) {
             if (error.code == 409) {
-            // if (error.includes("username") && error.message.includes("already exists")) {
+             if (error.includes("username") && error.message.includes("already exists")) {
                 defaultTextAlert.value = "Le nom d'utilisateur que vous avez choisi existe déjà !";
                 alertError.value = true;
                 showAlert.value = true;
+            }
             }
             storeGlobal.logError(error, 6);
         }

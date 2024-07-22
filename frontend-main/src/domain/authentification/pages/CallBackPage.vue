@@ -16,11 +16,13 @@ import { useRouter } from 'vue-router'
 import LoaderPage from "@/components/states/loading/LoaderPage.vue";
 import { authenticationService } from "../services/AuthenticationService";
 import { useGlobalStore } from "@/store/GlobalStore";
+import { useAuthenticationPersistStore } from "../store/AuthenticationPersistStore";
 
 const router = useRouter()
 const { error, isAuthenticated, isLoading, user} = useAuth0();
 const loading = ref(true)
 const globalStore = useGlobalStore()
+const authenticationStore = useAuthenticationPersistStore()
 
 onMounted(() => {
     //Wait a bit auth0 instance get generated
@@ -28,12 +30,12 @@ onMounted(() => {
         if(!isLoading.value && isAuthenticated.value){
             try{
                 //Get user from database and store it in User Domain. 
-                await globalStore.storeProfileFromAuth0Id(user.value.sub)
+                await authenticationStore.storeProfileFromAuth0Id(user.value.sub)
                 loading.value=false
                 router.push('/')
             } catch (error) {
                 // User is not found on our database
-                console.log(error)
+                globalStore.logError(error, 6)
                 if(error.status == 404){
                     //get role from auth0
                     const role = await authenticationService().getRoleUser(user.value.sub)

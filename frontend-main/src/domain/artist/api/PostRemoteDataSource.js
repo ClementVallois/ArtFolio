@@ -8,15 +8,15 @@ import { CRUDapi } from "@/api/CrudApi";
 ////////////
 function postApi() {
     async function getAssetForPost(id) {
-        return await CRUDapi('GET', `posts/${id}/assets`);
+        return CRUDapi('GET', `posts/${id}/assets`);
     }
 
     async function createPost(data) {
-        return await CRUDapi('POST', `posts`, data);
+        return CRUDapi('POST', `posts`, data);
     }
 
     async function deletePost(id) {
-        return await CRUDapi('DELETE', `posts/${id}`);
+        return CRUDapi('DELETE', `posts/${id}`);
     }
 
 

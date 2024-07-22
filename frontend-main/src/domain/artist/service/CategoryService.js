@@ -12,11 +12,11 @@ function categoryService() {
     ////
     async function getAllCategories() {
         try {
-            const response = await apiCategory.getAllCategories();
-            if (Array.isArray(response)) {
-                return response.map(jsonCategory => Category.fromJson(jsonCategory));
+            const { data } = await apiCategory.getAllCategories();
+            if (Array.isArray(data)) {
+                return data.map(jsonCategory => Category.fromJson(jsonCategory));
             } else {
-                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + response, 6);
+                storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
             }
         } catch (error) {
@@ -26,8 +26,8 @@ function categoryService() {
 
     async function getCategoryById(id) {
         try {
-            const response = await apiCategory.getCategoryById(id);
-            return Category.fromJson(response);
+            const { data } = await apiCategory.getCategoryById(id);
+            return Category.fromJson(data);
         } catch (error) {
             storeGlobal.logError("Erreur lors de la récupération d'une catégorie: " + error, 6);
         }

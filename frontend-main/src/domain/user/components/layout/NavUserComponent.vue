@@ -38,7 +38,7 @@
 
                     <!--  Profil section -  mobile mode -->
                     <hr class="md:hidden border-t border-gray-200 my-4 w-full">
-                    <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
+                    <CustomLinkComponent :to="{ name: 'UserInfoPage' }" text="Modifier mon profil"
                         class="md:hidden md:mx-4  pb-4" />
                     <CustomLinkComponent :to="{ name: 'about' }" text="Accéder à mon profil"
                         class="md:hidden md:mx-4 pb-4" />
@@ -59,7 +59,7 @@
                         <div v-if="isProfileMenuOpen"
                             class="origin-top-right absolute top-[60px] right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
                             <div class="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
-                                <CustomLinkComponent :to="{ name: 'registration' }" text="Modifier mon profil"
+                                <CustomLinkComponent :to="{ name: 'UserInfoPage' }" text="Modifier mon profil"
                                     class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900" />
                                 <!-- TODO: faire la méthode pour se déconnecter -->
                                 <p  type="button"
@@ -85,9 +85,11 @@ import SearchComponent from '@/components/toolBox/SearchComponent.vue';
 import useClickOutside from '@/composable/useClickOutside';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useGlobalStore } from '@/store/GlobalStore';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore';
 
 const { logout } = useAuth0();
 const globalStore = useGlobalStore()
+const authenticationStore = useAuthenticationPersistStore()
 const elementClickOutsideMobile = ref(null)
 const elementClickOutsideDesktop = ref(null)
 
@@ -102,7 +104,7 @@ const toggleProfileMenu = () => {
 }
 
 const logoutApp = () => {
-    globalStore.resetProfile()
+    authenticationStore.resetProfile()
     logout()
 }
 

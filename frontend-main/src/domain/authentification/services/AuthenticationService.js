@@ -2,8 +2,7 @@ import { CRUDapi } from '@/api/CrudApi';
 import { getAccessTokenManagementAPI } from '../api/Auth0ManagementAPI'
 import auth0ManagementApi from '../api/Auth0ManagementAPI'
 import { useGlobalStore } from '@/store/GlobalStore';
-
-
+import { useAuthenticationPersistStore } from '../store/AuthenticationPersistStore';
 
 function authenticationService() {
 
@@ -50,11 +49,26 @@ function authenticationService() {
         }
     }
 
+    async function deleteUser(auth0Id) {
+        const authenticationPersistStore = useAuthenticationPersistStore()
+        try {
+            const accessToken = await getAccessTokenManagementAPI();
+            auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
+            const response = await auth0ManagementApi.delete(`/users/${auth0Id}`)
+            authenticationPersistStore.resetProfile()
+            console.log(response)
+        } catch (error) {
+            storeGlobal.logError(error, 6)
+        }
+
+    }
+
 
 
     return {
         assignUserRole,
-        getRoleUser
+        getRoleUser,
+        deleteUser
     }
 
 }

@@ -5,6 +5,7 @@ import HomePage from '@/pages/HomePage.vue';
 import ArtistPage from '@/domain/artist/pages/ArtistPage.vue';
 import PostFormPage from '@/domain/artist/pages/PostFormPage.vue'
 import ArtistInfoPage from '@/domain/artist/pages/ArtistInfoPage.vue';
+import UserInfoPage from '@/domain/user/pages/UserInfoPage.vue';
 import ArtistSearchPage from '@/domain/artist/pages/ArtistSearchPage.vue';
 import ChatPage from '@/domain/chat/pages/ChatPage.vue';
 import AboutPage from '@/pages/AboutPage.vue';
@@ -20,6 +21,7 @@ import RedirectToAuthenticationPage from '@/domain/authentification/pages/Redire
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService';
 import UnauthorizedPage from '@/pages/UnauthorizedPage.vue';
 import NotFound404 from '@/pages/NotFound404.vue';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore';
 
 const routes = [
     {
@@ -39,6 +41,13 @@ const routes = [
         name: 'ArtistInfoPage',
         component: ArtistInfoPage,
         meta: { requiresAuth: true, roles: ['artist'] }
+
+    },
+    {
+        path: '/user-info',
+        name: 'UserInfoPage',
+        component: UserInfoPage,
+        meta: { requiresAuth: true, roles: ['amateur'] }
 
     },
     {
@@ -136,15 +145,16 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
     const { isAuthenticated, isLoading, user } = useAuth0();
     const globalStore = useGlobalStore()
+    const authenticationStore = useAuthenticationPersistStore()
     const { roles } = to.meta;
 
     // Wait for Auth0 to finish loading
     // if (isLoading.value) {
     //     await new Promise(resolve => setTimeout(resolve, 100));
     // }
-    
+
     // Redirect to login page if not authenticated and route requires authentication
-    if (roles && !roles.includes(globalStore.profile?.role)) {
+    if (roles && !roles.includes(authenticationStore.profile?.role)) {
         next('/unauthorized')
     }
     else if (to.meta.requiresAuth && !isAuthenticated.value) {
@@ -155,8 +165,8 @@ router.beforeEach(async (to, from, next) => {
 });
 
 // router.beforeEach(async (to, from, next) => {
-    
-    
+
+
 //     if (to.meta.requiresAuth) {
 //       // If the route requires authentication and the user is not authorized,
 //       // redirect the user to the custom login page
