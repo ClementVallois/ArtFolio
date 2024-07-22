@@ -1,5 +1,10 @@
 import { File } from '@nest-lab/fastify-multer';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  StreamableFile,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'fs';
 import { CreateAssetUseCase } from 'src/application/shared/modules/asset/use-cases/createAsset.useCase';
@@ -11,6 +16,13 @@ import { Asset } from 'src/domain/entities/asset.entity';
 import { User } from 'src/domain/entities/user.entity';
 import { UserId } from 'src/domain/value-objects/userId';
 import { FileData } from 'src/infrastructure/common/types/file.interface';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
+import { FastifyReply } from 'fastify';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
+import { join } from 'path';
+import { AmateurId } from 'src/domain/value-objects/amateurId';
+import { ArtistId } from 'src/domain/value-objects/artistId';
 
 @Injectable()
 export class ProfilePictureService {
@@ -21,6 +33,7 @@ export class ProfilePictureService {
     private readonly createAssetUseCase: CreateAssetUseCase,
     private readonly removeAssetUseCase: RemoveAssetUseCase,
     private readonly getUserProfilePictureAssetUseCase: GetUserProfilePictureAssetUseCase,
+    private readonly logger: Logger,
   ) {}
 
   async saveProfilePicture(
@@ -70,6 +83,41 @@ export class ProfilePictureService {
         type: 'profile_picture',
         userId: user,
       });
+    }
+  }
+
+  @LogMethod(LogLevel.DEBUG)
+  async streamUserAssets(
+    userId: AmateurId | ArtistId,
+    response: FastifyReply,
+  ): Promise<StreamableFile> {
+    this.logger.info(`Streaming user assets for userId: ${userId}`);
+    try {
+      const profilePictureAsset =
+        await this.getUserProfilePictureAssetUseCase.execute(userId);
+
+      if (!profilePictureAsset) {
+        this.logger.warn(`No assets found for userId: ${userId}`);
+        return;
+      }
+
+      const stream = fs.createReadStream(
+        join(process.cwd(), profilePictureAsset.url),
+      );
+
+      response.headers({
+        'Content-Disposition': `inline; filename="${profilePictureAsset.id}"`,
+        'Content-Type': `${profilePictureAsset.mimetype}`,
+      });
+
+      this.logger.debug(`Streaming asset with id: ${profilePictureAsset.id}`);
+      return new StreamableFile(stream);
+    } catch (error) {
+      this.logger.error(
+        `Error streaming user assets for userId: ${userId}`,
+        error,
+      );
+      throw error;
     }
   }
 

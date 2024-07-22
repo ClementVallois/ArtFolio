@@ -9,12 +9,14 @@ import { UpdateAmateurUseCase } from './use-cases/updateAmateur.useCase';
 import { RemoveAmateurUseCase } from './use-cases/removeAmateur.useCase';
 import { CommonModule } from 'src/application/common/common.module';
 import { SharedAmateurModule } from 'src/application/shared/modules/amateur/shared-amateur.module';
+import { SharedFileModule } from 'src/application/handlers/shared-file.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     forwardRef(() => CommonModule),
     forwardRef(() => SharedAmateurModule),
+    SharedFileModule,
   ],
   controllers: [AmateurController],
   providers: [

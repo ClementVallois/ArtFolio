@@ -11,6 +11,8 @@ import {
   UploadedFiles,
   BadRequestException,
   UnauthorizedException,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
 import { CreateArtistDto } from '../dto/artist/create-artist.dto';
 import { UpdateArtistDto } from '../dto/artist/update-artist.dto';
@@ -52,6 +54,9 @@ import { Category } from 'src/domain/entities/category.entity';
 import { FileUploadDto } from '../dto/artist/fileUpload.dto';
 import { GetAllArtistsWithPinnedPostUseCase } from 'src/application/modules/artist/use-cases/getAllArtistsWithPinnedPost.useCase';
 import { GetUser } from '../decorators/permissions/getUser.decorator';
+import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
+import { FastifyReply } from 'fastify';
+import { GetUserProfilePictureAssetUseCase } from 'src/application/shared/modules/asset/use-cases/getUserProfilePictureAsset.useCase';
 
 @ApiTags('Artists')
 @Controller(['artists'])
@@ -68,6 +73,8 @@ export class ArtistController {
     private readonly removeArtistUseCase: RemoveArtistUseCase,
     private readonly getRandomArtistsPostUseCase: GetRandomArtistsPostUseCase,
     private readonly getAllArtistsWithPinnedPostUseCase: GetAllArtistsWithPinnedPostUseCase,
+    private readonly profilePictureService: ProfilePictureService,
+    private readonly getUserProfilePictureAssetUseCase: GetUserProfilePictureAssetUseCase,
   ) {}
 
   /**
@@ -253,6 +260,44 @@ export class ArtistController {
     }[]
   > {
     return this.getRandomArtistsPostUseCase.execute(params.nb);
+  }
+
+  /**
+   * Get artist profile picture
+   * @param {FindIdParams} params - Parameters to find the artist
+   * @param {FastifyReply} response - Fastify response object
+   * @returns {Promise<StreamableFile>} - Streamable file of the artist's profile picture
+   */
+  @ApiOperation({ summary: 'Get artist profile picture' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'The ID of the artist',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Artist profile picture retrieved successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Artist profile picture not found',
+  })
+  @Get(':id/assets')
+  async getArtistProfilePicture(
+    @Param() params: FindIdParams,
+    @Res({ passthrough: true }) response: FastifyReply,
+  ): Promise<StreamableFile> {
+    const artistId = new ArtistId(params.id);
+    return this.profilePictureService.streamUserAssets(artistId, response);
+  }
+
+  @Get(':id/assets-url')
+  async getArtistProfilePictureUrl(
+    @Param() params: FindIdParams,
+  ): Promise<string> {
+    const artistId = new ArtistId(params.id);
+    const asset = this.getUserProfilePictureAssetUseCase.execute(artistId);
+    return (await asset).url;
   }
 
   /**

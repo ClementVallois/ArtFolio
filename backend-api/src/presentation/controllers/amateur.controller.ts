@@ -10,6 +10,8 @@ import {
   BadRequestException,
   UploadedFiles,
   UseGuards,
+  Res,
+  StreamableFile,
 } from '@nestjs/common';
 import { FindIdParams } from '../utils/params.dto';
 import { File } from '@nest-lab/fastify-multer';
@@ -35,6 +37,8 @@ import { AuthGuard } from '@nestjs/passport';
 import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
 import { Permissions } from '../decorators/permissions/permissions.decorator';
 import { GetAmateurByIdUseCase } from 'src/application/shared/modules/amateur/use-cases/getAmateurById.useCase';
+import { FastifyReply } from 'fastify';
+import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
 
 @ApiTags('Amateurs')
 @ApiBearerAuth()
@@ -47,6 +51,7 @@ export class AmateurController {
     private readonly getAmateurByIdUseCase: GetAmateurByIdUseCase,
     private readonly updateAmateurUseCase: UpdateAmateurUseCase,
     private readonly removeAmateurUseCase: RemoveAmateurUseCase,
+    private readonly profilePictureService: ProfilePictureService,
   ) {}
 
   /**
@@ -83,6 +88,35 @@ export class AmateurController {
   async getAmateurById(@Param() params: FindIdParams): Promise<Amateur> {
     const amateurId = new AmateurId(params.id);
     return this.getAmateurByIdUseCase.execute(amateurId);
+  }
+
+  /**
+   * Get amateur profile picture
+   * @param {FindIdParams} params - Parameters to find the amateur
+   * @param {FastifyReply} response - Fastify response object
+   * @returns {Promise<StreamableFile>} - Streamable file of the amateur's profile picture
+   */
+  @ApiOperation({ summary: 'Get amateur profile picture' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'The ID of the amateur',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Amateur profile picture retrieved successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Amateur profile picture not found',
+  })
+  @Get(':id/assets')
+  async getAmateurProfilePicture(
+    @Param() params: FindIdParams,
+    @Res({ passthrough: true }) response: FastifyReply,
+  ): Promise<StreamableFile> {
+    const amateurId = new AmateurId(params.id);
+    return this.profilePictureService.streamUserAssets(amateurId, response);
   }
 
   /**
@@ -147,7 +181,7 @@ export class AmateurController {
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Amateur not found' })
-  @Permissions('update:amateur')
+  // @Permissions('update:amateur')
   @Patch(':id')
   async updateAmateur(
     @Param() params: FindIdParams,
