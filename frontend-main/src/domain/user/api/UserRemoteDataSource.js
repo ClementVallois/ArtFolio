@@ -29,6 +29,10 @@ function userApi() {
         return CRUDapi('PATCH', `users/${id}`, data)
     }
 
+    async function getUserProfilePicture(id) {
+        return CRUDapi('GET', `users/${id}/assets`)
+    }
+
 
 
     ////
@@ -51,6 +55,7 @@ function userApi() {
         getUserById,
         deleteUser,
         modifyUser,
+        getUserProfilePicture,
     };
 }
 

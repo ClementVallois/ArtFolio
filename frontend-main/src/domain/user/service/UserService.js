@@ -47,6 +47,17 @@ function userService() {
         }
     }
 
+    async function getUserProfilePicture(id) {
+        try {
+            const response = await apiUser.getUserProfilePicture(id)
+            const blob = new Blob([response.data], { type: 'image/webp' });
+            const url = URL.createObjectURL(blob)
+            return url
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la récupération de la photo de profil : " + error.message, 6);
+        }
+    }
+
 
     ////
     // Auth0
@@ -70,6 +81,7 @@ function userService() {
         modifyUser,
         getUserWithAuth0Id,
         deleteUser,
+        getUserProfilePicture
     };
 }
 

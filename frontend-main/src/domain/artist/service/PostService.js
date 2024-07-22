@@ -46,10 +46,23 @@ function postService() {
         }
     }
 
+    async function getPostAssetWithId(id) {
+        try{
+            const response = await apiPost.getAssetForPost(id)
+            const blob = new Blob([response.data], { type: 'image/webp' });
+            const url = URL.createObjectURL(blob)
+            return url
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la recuperation d'un post' : " + error.message, 6);
+            throw new Error(error.message);
+        }
+    }
+
     return {
         getAssetForPost,
         createPost,
-        deletePost
+        deletePost,
+        getPostAssetWithId
     }
 }
 

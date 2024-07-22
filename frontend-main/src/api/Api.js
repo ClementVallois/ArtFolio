@@ -14,13 +14,20 @@ const api = axios.create({
 api.interceptors.request.use(
     async (config) => {
         // Modify request config before sending
-        config.headers['Content-Type'] = 'application/json';
+        // Check if the request method is GET and the URL contains '/assets'
+        if (config.method.toUpperCase() === 'GET' && config.url.includes('/assets')) {
+            config.headers['Content-Type'] = 'multipart/form-data';
+            config.responseType='arraybuffer'
+        } else {
+            // Default content type for other request methods or GET requests not containing '/assets'
+            config.headers['Content-Type'] = 'application/json';
+        }
+
         // Add Auth0 token
         if(auth0.isAuthenticated.value) {
             const token = await auth0.getAccessTokenSilently()
             config.headers.Authorization = `Bearer ${token}`;
         }
-
         return config;
     },
     (error) => {

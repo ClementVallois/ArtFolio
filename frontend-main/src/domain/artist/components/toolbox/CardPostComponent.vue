@@ -1,7 +1,9 @@
 <template>
     <div class="flex flex-col m-auto max-w-[95%] mb-[1rem] rounded overflow-hidden shadow-lg lg:w-[35vw] "  :class="{ 'bg-black text-white': props.postIsPinned }">
         <div class="relative flex justify-center">
-            <img class="max-h-[15rem]  self-center lg:max-h-[20rem]" src="@/assets/img/peinture.png">
+            <img class="max-h-[15rem]  self-center lg:max-h-[20rem]" 
+                :src="postUrl"
+                loading="lazy">
             <div class="absolute top-0 right-0 mt-2 mr-2"  v-if="props.myProfile && !props.postIsPinned" @click="toggleDropdown">
                 <div class="bg-white rounded p-1 cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-three-dots-vertical text-black" viewBox="0 0 16 16">
@@ -31,10 +33,11 @@
 </template>
 
 <script setup>
-import { defineProps, ref, defineEmits} from 'vue';
+import { defineProps, ref, defineEmits, onMounted} from 'vue';
 import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useStorePost } from '@/domain/artist/store/PostStore';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { postService } from '@/domain/artist/service/PostService'
 import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 
 const postStore = useStorePost();
@@ -56,10 +59,15 @@ const showModal = ref(false);
 const isPostDeleted = ref(false);
 const showAlert = ref(false); 
 const alertError = ref(true);
+const postUrl = ref(null)
 
 function toggleDropdown() {
     dropdownOpen.value = !dropdownOpen.value;
 }
+
+onMounted(async ()=> {
+    postUrl.value = await postService().getPostAssetWithId(props.postId)
+})
 
 
 

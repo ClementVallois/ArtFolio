@@ -31,9 +31,11 @@ export const useStoreArtist = defineStore('artistStore', () => {
 
     async function getArtistById(id) {
         artist.value = await serviceArtist.getArtistById(id);
+        console.log(artist.value)
         return artist.value;
     };
 
+    
     async function createArtist(data) {
         const response = await serviceArtist.createArtist(data);
         if (response.status === 201) {
