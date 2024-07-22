@@ -21,7 +21,8 @@ export class CreateAmateurUseCase {
     amateurData: CreateAmateurDto,
     files: { profilePicture: File },
   ): Promise<User> {
-    this.validationService.validateProfilePicture(files);
+    await this.validationService.validateProfilePicture(files);
+
     const profilePicture = files.profilePicture[0];
 
     let amateur: User;
