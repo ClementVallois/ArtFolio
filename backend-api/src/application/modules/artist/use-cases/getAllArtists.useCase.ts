@@ -10,7 +10,7 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 @Injectable()
 export class GetAllArtistsUseCase {
   private readonly CACHE_KEY = 'all_artists';
-  private readonly CACHE_TTL = 3000;
+  private readonly CACHE_TTL = 10000;
   constructor(
     @Inject('IArtistRepository')
     private readonly artistRepository: IArtistRepository,

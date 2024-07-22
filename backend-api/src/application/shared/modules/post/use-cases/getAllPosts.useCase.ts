@@ -10,7 +10,7 @@ import { Cache } from 'cache-manager';
 @Injectable()
 export class GetAllPostsUseCase {
   private readonly CACHE_KEY = 'all_posts';
-  private readonly CACHE_TTL = 3000;
+  private readonly CACHE_TTL = 10000;
 
   constructor(
     @Inject('IPostRepository')
@@ -20,6 +20,11 @@ export class GetAllPostsUseCase {
     private readonly logger: Logger,
   ) {}
 
+  /**
+   * Retrieves all posts from repository, either from cache or from database.
+   * @return {Promise<Post[]>} Promise with all posts.
+   * @throws {Error} If retrieving posts from repository fails.
+   */
   @LogMethod(LogLevel.DEBUG)
   async execute(): Promise<Post[]> {
     try {
