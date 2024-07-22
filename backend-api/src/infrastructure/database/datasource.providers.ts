@@ -8,6 +8,10 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
   constructor(private readonly configService: ConfigService) {}
 
   createTypeOrmOptions(): TypeOrmModuleOptions {
+    const synchronizeEnabled =
+      this.configService.get<string>('DB_API_SYNCHRONIZE');
+    const loggingEnable = this.configService.get<string>('DB_API_LOGGING');
+
     return {
       type: 'postgres',
       host: this.configService.get<string>('DB_API_HOST'),
@@ -16,8 +20,8 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_API_PASSWORD'),
       database: this.configService.get<string>('DB_API_NAME'),
       entities: [__dirname + '../../../**/domain/**/*.entity{.ts,.js}'],
-      synchronize: true,
-      logging: false,
+      synchronize: synchronizeEnabled === 'true' ? true : false,
+      logging: loggingEnable === 'true' ? true : false,
       migrationsRun: true,
       migrations: [__dirname + '/../**/migrations/*{.ts,.js}'],
       namingStrategy: new SnakeNamingStrategy(),

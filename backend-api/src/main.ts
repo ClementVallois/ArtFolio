@@ -19,6 +19,8 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter(),
   );
+
+  // Logging Config
   const logConfigService = app.get(LogConfigService);
   const logFileService = app.get(LogFileService);
   const logFormatterService = app.get(LogFormatterService);
@@ -29,8 +31,14 @@ async function bootstrap() {
     logFormatterService,
     configService,
   );
+
+  // Logging
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
+
+  // CORS
   app.enableCors();
+
+  // Validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -40,6 +48,15 @@ async function bootstrap() {
     }),
   );
 
+  // Redirect root to /api
+  app
+    .getHttpAdapter()
+    .getInstance()
+    .get('/', (req, reply) => {
+      reply.redirect('/api');
+    });
+
+  // Swagger
   const swaggerConfig = app.get<ISwaggerConfig>('SWAGGER_CONFIG');
   swaggerConfig.setup(app);
 

@@ -85,10 +85,10 @@ export class CreateAmateurDto {
     description: 'The role of the user',
     example: 'amateur',
     required: true,
-    enum: ['artist', 'amateur'],
+    enum: ['amateur'],
   })
-  @IsEnum(['artist', 'amateur'], {
-    message: '$property must be artist or user',
+  @IsEnum(['amateur'], {
+    message: '$property must be an amateur',
   })
   @IsNotEmpty({ message: '$property is required' })
   role: string;
