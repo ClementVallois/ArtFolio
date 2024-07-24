@@ -3,7 +3,7 @@
     <form action="" class="flex flex-col items-center w-[100vw]">
 
     <div class="flex flex-col w-[90vw] pb-[1rem]">
-        <img src="@/assets/img/profil.png" alt=""
+        <img :src="authenticationStore.profilePicture" alt=""
         class="relative max-w-[15%] rounded-lg overflow-hidden max-w-[100%] lg:max-w-[5%] pb-[1rem]">
         <input type="file" class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
     </div>
@@ -48,12 +48,13 @@
             <ButtonComponent @click="openModal" textButton="Supprimer" class=" lg:self-end"></ButtonComponent>
         </div>
    </div>
-   <ModalComponent v-if="showModal" @closeModals="closeModal" @deleteData="handleDelete" textModal="Voulez-vous vraiment supprimer cette publication ?"></ModalComponent>
+   <ModalComponent v-if="showModal" @closeModals="closeModal" @deleteData="handleDelete" textModal="Est vous sûr de vouloir supprimer votre profil ? Attention cette action est irréversible"></ModalComponent>
 
 </template>
 
 <script setup>
 import { useAuth0 } from "@auth0/auth0-vue";
+import { useRouter } from 'vue-router'
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue'; 
@@ -64,6 +65,7 @@ import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { onMounted, toRaw, ref} from 'vue';
 
+const router = useRouter()
 const artistStore = useStoreArtist();
 const storeGlobal = useGlobalStore();
 const authenticationStore = useAuthenticationPersistStore()
@@ -108,11 +110,14 @@ async function handleDelete(deleteStatus) {
         try {
             showModal.value = false;
             document.body.style.overflow = '';
-            let response =  await artistStore.deleteArtist(authenticationStore.profile.id, user.value.sub);
+            // let response =  await artistStore.deleteArtist(authenticationStore.profile.id, user.value.sub);
+            let response = await authenticationStore.deleteProfile('artist', authenticationStore.profile.id, user.value.sub)
+            console.log(response)
             if (response.status == 200) {
                 alertError.value = false;
                 showAlert.value = true;
             }
+            router.push('/')
         } catch (error) {
             storeGlobal.logError(error, 6);
         }

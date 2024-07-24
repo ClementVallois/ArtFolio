@@ -10,15 +10,24 @@ function profileApi() {
             const response = await CRUDapi('GET', `users/auth0Id/${auth0Id}`)
             return response
         } catch (error) {
-            console.log('erreur niveau Remote DataSource')
             globalStore.logError(error, 6);
             throw error
         }
     }
 
+    async function deleteProfileArtist(id) {
+        return CRUDapi('DELETE', `artists/me/${id}`)
+    }
+
+    async function deleteProfileAmateur(id) {
+        return CRUDapi('DELETE', `amateurs/me/${id}`)
+    }
+
 
     return {
         getProfileWithAuth0Id,
+        deleteProfileArtist,
+        deleteProfileAmateur,
     };
 }
 

@@ -10,14 +10,31 @@ const api = axios.create({
     }
 });
 
+// Define the routes and methods where Content-Type should be multipart/form-data
+const routesWithMultipart = [
+    { method: 'POST', route: '/artists' },
+    { method: 'PATCH', route: '/artists' },
+    { method: 'POST', route: '/amateurs' },
+    { method: 'PATCH', route: '/amateurs' },
+    { method: 'POST', route: '/post' }
+];
+
 // Optionally, you can add request interceptors
 api.interceptors.request.use(
     async (config) => {
         // Modify request config before sending
-        // Check if the request method is GET and the URL contains '/assets'
-        if (config.method.toUpperCase() === 'GET' && config.url.includes('/assets')) {
+        const url = config.url;
+        const method = config.method.toUpperCase();
+
+        console.log('url and method', url, method)
+          // Check if the current request matches any of the defined routes and methods
+        const shouldApplyMultipart = routesWithMultipart.some(
+            entry => entry.method === method && url.includes(entry.route)
+        );
+        console.log('shouldApply MultiPart', shouldApplyMultipart)
+
+        if (shouldApplyMultipart) {
             config.headers['Content-Type'] = 'multipart/form-data';
-            config.responseType='arraybuffer'
         } else {
             // Default content type for other request methods or GET requests not containing '/assets'
             config.headers['Content-Type'] = 'application/json';
@@ -47,5 +64,7 @@ api.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+
 
 export default api;

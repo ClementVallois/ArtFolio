@@ -35,8 +35,7 @@ onMounted(() => {
                 router.push('/')
             } catch (error) {
                 // User is not found on our database
-                globalStore.logError(error, 6)
-                if(error.status == 404){
+                if(error.response.status == 404){
                     //get role from auth0
                     const role = await authenticationService().getRoleUser(user.value.sub)
                     //According to role Artist or User redirect to correct page

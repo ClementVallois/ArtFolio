@@ -59,6 +59,7 @@ function authenticationService() {
             console.log(response)
         } catch (error) {
             storeGlobal.logError(error, 6)
+            throw error
         }
 
     }

@@ -98,6 +98,7 @@ import { Post } from '@/domain/artist/model/PostModel.js';
 import { ref,computed, toRaw, onMounted, watch } from 'vue';
 import { useCategoryStore } from '@/domain/artist/store/CategorieStore.js';
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useAuthenticationPersistStore } from "@/domain/authentification/store/AuthenticationPersistStore.js";
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { Asset } from '@/model/AssetModel.js';
 import { useAuth0 } from '@auth0/auth0-vue';
@@ -110,6 +111,7 @@ const { error, isAuthenticated, isLoading, user} = useAuth0();// Store initialis
 //get id auth0
 const artistStore = useStoreArtist();
 const categoryStore = useCategoryStore();
+const authenticationStore = useAuthenticationPersistStore()
 const storeGlobal = useGlobalStore();
 const router = useRouter();
 ///
@@ -325,7 +327,7 @@ const submitForm = async () => {
 
             let response =  await artistStore.createArtist(data);
             if (response.status == 201 ) {
-                await storeGlobal.storeProfileFromAuth0Id(user.value.sub)
+                await authenticationStore.storeProfileFromAuth0Id(user.value.sub)
                 router.push({ name: 'ArtistInfoPage' });
             }else{
                 defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";

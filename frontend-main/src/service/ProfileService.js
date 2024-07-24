@@ -1,5 +1,6 @@
 import { profileApi } from '@/api/ProfileRemoteDataSource';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { authenticationService } from '@/domain/authentification/services/AuthenticationService'
 import { User } from '@/model/UserModel';
 
 function profileService() {
@@ -15,8 +16,26 @@ function profileService() {
         }
     }
 
+    async function deleteProfile(typeUser, id, auth0id) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if(typeUser == 'artist'){
+                    await profileApi().deleteProfileArtist(id)
+                }else {
+
+                }
+                await authenticationService().deleteUser(auth0id)
+                resolve('success')
+            } catch (error) {
+                reject(error)
+            }
+        })
+        
+    }
+
     return {
         getProfileWithAuth0Id,
+        deleteProfile
     };
 }
 

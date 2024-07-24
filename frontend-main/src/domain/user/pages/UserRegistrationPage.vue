@@ -49,6 +49,7 @@ import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useStoreUser } from '@/domain/user/store/UserStore';
+import { useAuthenticationPersistStore } from "@/domain/authentification/store/AuthenticationPersistStore.js";
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { ref,  computed, onMounted, watch, toRaw } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
@@ -56,9 +57,11 @@ import { useRouter } from 'vue-router';
 
 const { error, isAuthenticated, isLoading, user} = useAuth0();
 
+
 // Store initialisation
 const storeGlobal = useGlobalStore();
 const userStore = useStoreUser();
+const authenticationStore = useAuthenticationPersistStore()
 const router = useRouter();
 
 
@@ -180,10 +183,10 @@ const submitForm = async () => {
 
             let response = await userStore.createUser(data);
             if (response.status == 201 ) {
-                await storeGlobal.storeProfileFromAuth0Id(user.value.sub)
+                await authenticationStore.storeProfileFromAuth0Id(user.value.sub)
                 router.push({ name: 'UserInfoPage' });
             }else{
-                defaultTextAlert.value = "Une erreur c'est produite au moment de la création.";
+                defaultTextAlert.value = "Une erreur s'est produite au moment de la création.";
                 alertError.value = true;
                 showAlert.value = true; 
             }
