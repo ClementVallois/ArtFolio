@@ -15,6 +15,7 @@ import { CommonModule } from 'src/application/common/common.module';
 import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
 import { SharedAssetModule } from 'src/application/shared/modules/asset/shared-asset.module';
 import { GetAllArtistsWithPinnedPostUseCase } from './use-cases/getAllArtistsWithPinnedPost.useCase';
+import { SharedFileModule } from 'src/application/handlers/shared-file.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { GetAllArtistsWithPinnedPostUseCase } from './use-cases/getAllArtistsWit
     SharedAssetModule,
     SharedCategoryModule,
     SharedPostModule,
+    SharedFileModule,
   ],
   controllers: [ArtistController],
   providers: [

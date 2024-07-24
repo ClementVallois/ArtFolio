@@ -18,6 +18,7 @@ import { SwaggerConfigModule } from './presentation/swagger/swagger.module';
 import { LoggerModule } from './infrastructure/logger/logger.module';
 import { CommonModule } from './application/common/common.module';
 import { Logger } from './infrastructure/logger/services/logger.service';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { Logger } from './infrastructure/logger/services/logger.service';
     CommonModule,
     AssetModule,
     AuthModule,
+    CacheModule.register({ isGlobal: true }),
     CategoryModule,
     UserModule,
     ArtistModule,
