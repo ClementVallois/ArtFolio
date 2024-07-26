@@ -15,7 +15,7 @@ export class DataRequestSeederService {
   ) {}
   async clear(): Promise<void> {
     await this.dataRequestRepository.query(
-      'TRUNCATE TABLE data_requests CASCADE',
+      'TRUNCATE TABLE personal_data_requests CASCADE',
     );
   }
 

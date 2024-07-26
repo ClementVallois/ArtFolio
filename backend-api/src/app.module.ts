@@ -10,7 +10,6 @@ import { configValidationSchema } from './infrastructure/config/env-config.valid
 import { EnvConfigModule } from './infrastructure/config/env-config.module';
 import { SeederModule } from './infrastructure/services/faker/seeder/seeder.module';
 import { ArtistModule } from './application/modules/artist/artist.module';
-import { FastifyMulterModule } from '@nest-lab/fastify-multer';
 import { SeederService } from './infrastructure/services/faker/seeder/seeder.service';
 import { PersonalDataRequestModule } from './application/modules/personal-data-request/personal-data-request.module';
 import { AmateurModule } from './application/modules/amateur/amateur.module';
@@ -19,6 +18,7 @@ import { LoggerModule } from './infrastructure/logger/logger.module';
 import { CommonModule } from './application/common/common.module';
 import { Logger } from './infrastructure/logger/services/logger.service';
 import { CacheModule } from '@nestjs/cache-manager';
+import { SeedCommand } from 'scripts/seed.command';
 
 @Module({
   imports: [
@@ -44,11 +44,10 @@ import { CacheModule } from '@nestjs/cache-manager';
     PersonalDataRequestModule,
     EnvConfigModule,
     SeederModule,
-    FastifyMulterModule,
     SwaggerConfigModule.forRoot(),
   ],
   controllers: [],
-  providers: [SeederService, Logger],
+  providers: [SeederService, SeedCommand, Logger],
 })
 export class AppModule implements OnModuleInit {
   constructor(
@@ -74,10 +73,5 @@ export class AppModule implements OnModuleInit {
     ) {
       this.logger.info('Env file is configured for production environment');
     }
-    // Uncomment to seed fake data
-    // await this.seederService.seedAll();
-
-    //Uncomment to clear fake data
-    // await this.seederService.clearAll();
   }
 }
