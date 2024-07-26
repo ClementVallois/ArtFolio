@@ -9,6 +9,8 @@ import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { FileUploadDto } from 'src/presentation/dto/artist/fileUpload.dto';
 import { CreatePostUseCase } from 'src/application/shared/modules/post/use-cases/createPost.useCase';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class CreateArtistUseCase {
@@ -22,6 +24,7 @@ export class CreateArtistUseCase {
     private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     artistData: CreateArtistDto,
     files: FileUploadDto,

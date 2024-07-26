@@ -13,6 +13,8 @@ import { LogConfigService } from './infrastructure/logger/services/log-config.se
 import { LogFormatterService } from './infrastructure/logger/services/log-formatter.service';
 import { LogLevel } from './infrastructure/logger/log-level.enum';
 import { ConfigService } from '@nestjs/config';
+import helmet from '@fastify/helmet';
+import fastifyCsrf from '@fastify/csrf-protection';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -31,6 +33,12 @@ async function bootstrap() {
     logFormatterService,
     configService,
   );
+
+  // Helmet
+  await app.register(helmet, { global: true });
+
+  // CSRF
+  await app.register(fastifyCsrf);
 
   // Logging
   app.useGlobalInterceptors(new LoggingInterceptor(logger));
