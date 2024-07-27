@@ -14,7 +14,6 @@ export const useAuthenticationPersistStore = defineStore('authenticationPersistS
     async function storeProfileFromAuth0Id(auth0id) {
         const user = await profileService().getProfileWithAuth0Id(auth0id)
         profile.value = toRaw(user)
-        console.log('user.id', user.id)
         await storeProfilePicture(user.id)
     }
 
@@ -28,8 +27,9 @@ export const useAuthenticationPersistStore = defineStore('authenticationPersistS
     }
     
     async function deleteProfile(type, id, auth0Id) {
-        await profileService().deleteProfile(type, id, auth0Id)
+        const response = await profileService().deleteProfile(type, id, auth0Id)
         resetProfile()
+        return response
     }
 
     return {

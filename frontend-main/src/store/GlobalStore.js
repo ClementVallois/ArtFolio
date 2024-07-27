@@ -30,7 +30,6 @@ export const useGlobalStore = defineStore('globalStore', () => {
     async function storeProfileFromAuth0Id(auth0id) {
         try {
             const user = await profileService().getProfileWithAuth0Id(auth0id)
-            console.log('user', user)
             profile.value = toRaw(user)
             console.log('profile', profile)
         } catch (error) {

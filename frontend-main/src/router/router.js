@@ -13,6 +13,7 @@ import LoginPage from '@/domain/authentification/pages/LoginPage.vue';
 import RegistrationPage from '@/pages/RegistrationPage.vue';
 import ArtistRegistrationPage from '@/domain/artist/pages/ArtistRegistrationPage.vue';
 import ArtistPreRegistrationPage from '@/domain/artist/pages/ArtistPreRegistrationPage.vue'
+import ArtistSuccessSignUpPage from '@/domain/artist/pages/ArtistSuccessSignUpPage.vue';
 import UserRegistrationPage from '@/domain/user/pages/UserRegistrationPage.vue';
 import LegalNotionPage from '@/pages/LegalNotionPage.vue';
 import CallBackPage from '@/domain/authentification/pages/CallBackPage.vue';
@@ -66,6 +67,11 @@ const routes = [
         path: '/preregistration-artist',
         name: 'ArtistPreRegistrationPage',
         component: ArtistPreRegistrationPage
+    },
+    {
+        path: '/success-signup-artist',
+        name: 'ArtistSuccessSignUpPage',
+        component: ArtistSuccessSignUpPage
     },
     {
         path: '/registration-user',

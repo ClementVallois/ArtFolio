@@ -1,9 +1,9 @@
-<template>
+<template v-if="authenticationStore.profile != null">
     <TitleComponent title="Vos informations personnelles" class="text-[3rem] lg:text-[4rem] py-[3rem] "> </TitleComponent>
     <form action="" class="flex flex-col items-center w-[100vw]">
 
     <div class="flex flex-col w-[90vw] pb-[1rem]">
-        <img :src="authenticationStore.profilePicture" alt=""
+        <img :src="authenticationStore.profilePicture" alt="profile Picture"
         class="relative max-w-[15%] rounded-lg overflow-hidden max-w-[100%] lg:max-w-[5%] pb-[1rem]">
         <input type="file" class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
     </div>
@@ -63,6 +63,7 @@ import { useAuthenticationPersistStore } from '@/domain/authentification/store/A
 import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue';
 import ModalComponent from '@/components/toolBox/ModalComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
+import { userService } from '@/domain/user/service/UserService'
 import { onMounted, toRaw, ref} from 'vue';
 
 const router = useRouter()
@@ -75,6 +76,7 @@ const alertError = ref(true);
 const textAlert = ref('Vous devez remplir tous les champs présents.');
 const showModal = ref(false);
 const isProfilDeleted = ref(false);
+const profilePicture=ref(null)
 const { user } = useAuth0()
 
 
@@ -112,7 +114,6 @@ async function handleDelete(deleteStatus) {
             document.body.style.overflow = '';
             // let response =  await artistStore.deleteArtist(authenticationStore.profile.id, user.value.sub);
             let response = await authenticationStore.deleteProfile('artist', authenticationStore.profile.id, user.value.sub)
-            console.log(response)
             if (response.status == 200) {
                 alertError.value = false;
                 showAlert.value = true;

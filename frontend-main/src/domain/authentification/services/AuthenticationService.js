@@ -56,7 +56,7 @@ function authenticationService() {
             auth0ManagementApi.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`
             const response = await auth0ManagementApi.delete(`/users/${auth0Id}`)
             authenticationPersistStore.resetProfile()
-            console.log(response)
+            return response
         } catch (error) {
             storeGlobal.logError(error, 6)
             throw error

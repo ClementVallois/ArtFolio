@@ -50,7 +50,7 @@ function userService() {
     async function getUserProfilePicture(id) {
         try {
             const response = await apiUser.getUserProfilePicture(id)
-            const blob = new Blob([response.data], { type: 'image/webp' });
+            const blob = new Blob([response.data], { type: response.data.type });
             const url = URL.createObjectURL(blob)
             return url
         } catch (error) {

@@ -26,18 +26,20 @@ api.interceptors.request.use(
         const url = config.url;
         const method = config.method.toUpperCase();
 
-        console.log('url and method', url, method)
           // Check if the current request matches any of the defined routes and methods
         const shouldApplyMultipart = routesWithMultipart.some(
             entry => entry.method === method && url.includes(entry.route)
-        );
-        console.log('shouldApply MultiPart', shouldApplyMultipart)
-
+        );        
         if (shouldApplyMultipart) {
             config.headers['Content-Type'] = 'multipart/form-data';
         } else {
             // Default content type for other request methods or GET requests not containing '/assets'
             config.headers['Content-Type'] = 'application/json';
+        }
+        
+        // Deal with blob
+        if(url.includes('assets')){
+            config.responseType= 'blob'
         }
 
         // Add Auth0 token

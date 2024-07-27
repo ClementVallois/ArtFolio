@@ -25,7 +25,7 @@ function profileService() {
 
                 }
                 await authenticationService().deleteUser(auth0id)
-                resolve('success')
+                resolve({ status : '200', message: 'success' })
             } catch (error) {
                 reject(error)
             }

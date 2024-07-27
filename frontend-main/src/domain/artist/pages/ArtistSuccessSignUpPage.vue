@@ -36,12 +36,14 @@ const loginAuth0 = () => {
 }
 
 onMounted(async () => {
+    console.log('onMounted')
     assignUserRoleIfNeeded()
 });
 
 //Assign Artist Role
 const assignUserRoleIfNeeded = () => {
     if (isAuthenticated.value) {
+        console.log('successSignUpPage user.value.sub', user.value.sub )
         authenticationService().assignUserRole(user.value.sub, 'Artist');
     }
 };
@@ -49,7 +51,6 @@ const assignUserRoleIfNeeded = () => {
 watch(isAuthenticated, (newValue) => {
     if (newValue) {
         setTimeout(()=> {
-            console.log(user.value)
             authenticationService().assignUserRole(user.value.sub, 'Artist')
         }, 500)
     }
