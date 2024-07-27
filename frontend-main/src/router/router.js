@@ -23,6 +23,7 @@ import { authenticationService } from '@/domain/authentification/services/Authen
 import UnauthorizedPage from '@/pages/UnauthorizedPage.vue';
 import NotFound404 from '@/pages/NotFound404.vue';
 import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore';
+import UserSuccessSignUpPage from '@/domain/user/pages/UserSuccessSignUpPage.vue';
 
 const routes = [
     {
@@ -77,6 +78,11 @@ const routes = [
         path: '/registration-user',
         name: 'UserRegistrationPage',
         component: UserRegistrationPage
+    },
+    {
+        path: '/success-signup-user',
+        name: 'UserSuccessSignUpPage',
+        component: UserSuccessSignUpPage
     },
     {
         path: '/preregistration-user',

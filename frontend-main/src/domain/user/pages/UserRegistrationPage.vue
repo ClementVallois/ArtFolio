@@ -3,11 +3,11 @@
 
     <ul class="steps mt-10 mb-2">
         <li class="step step-secondary">Créer un compte</li>
-        <!-- <li class="step step-secondary">Se connecter</li> -->
+        <li class="step step-secondary">Se connecter</li>
         <li class="step step-secondary">Compléter son profil </li>
     </ul>
 
-    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 2</p>
+    <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
     <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
 
