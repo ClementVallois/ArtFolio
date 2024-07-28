@@ -10,6 +10,8 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
 import { SharedArtistModule } from '../artist/shared-artist.module';
 import { CommonModule } from 'src/application/common/common.module';
 import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPostById.useCase';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -21,6 +23,10 @@ import { GetPostByIdUseCase } from 'src/application/modules/post/use-cases/getPo
     {
       provide: 'IPostRepository',
       useClass: PostRepository,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
     CreatePostUseCase,
     GetPostByIdUseCase,

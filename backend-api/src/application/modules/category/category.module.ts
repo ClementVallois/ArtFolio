@@ -10,6 +10,8 @@ import { RemoveCategoryUseCase } from './use-cases/removeCategory.useCase';
 import { CommonModule } from 'src/application/common/common.module';
 import { SharedArtistModule } from 'src/application/shared/modules/artist/shared-artist.module';
 import { SharedCategoryModule } from 'src/application/shared/modules/category/shared-category.module';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -21,6 +23,10 @@ import { SharedCategoryModule } from 'src/application/shared/modules/category/sh
   controllers: [CategoryController],
   providers: [
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     CreateCategoryUseCase,
     GetAllCategoriesUseCase,
     UpdateCategoryUseCase,

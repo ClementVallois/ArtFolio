@@ -19,6 +19,7 @@ import { CommonModule } from './application/common/common.module';
 import { Logger } from './infrastructure/logger/services/logger.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SeedCommand } from 'scripts/seed.command';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -31,6 +32,14 @@ import { SeedCommand } from 'scripts/seed.command';
       isGlobal: true,
     }),
     CommonModule,
+    ThrottlerModule.forRootAsync({
+      useFactory: () => [
+        {
+          ttl: 1000,
+          limit: 20,
+        },
+      ],
+    }),
     AssetModule,
     AuthModule,
     CacheModule.register({ isGlobal: true }),
