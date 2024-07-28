@@ -7,6 +7,8 @@ import { GetAllPersonalDataRequestUseCase } from './use-cases/getAllPersonalData
 import { GetOnePersonalDataRequestUseCase } from './use-cases/getOnePersonalDataRequest.useCase';
 import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalDataRequest.useCase';
 import { UserModule } from '../user/user.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PersonalDataRequest]), UserModule],
@@ -16,6 +18,10 @@ import { UserModule } from '../user/user.module';
     {
       provide: 'IPersonalDataRequestRepository',
       useClass: PersonalDataRequestRepository,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
 
     GetAllPersonalDataRequestUseCase,

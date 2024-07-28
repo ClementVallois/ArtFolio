@@ -24,9 +24,16 @@
     "typeorm:run-migrations": "npm run typeorm migration:run -- -d ./src/config/ormconfig.ts",
     "typeorm:generate-migration": "npm run typeorm -- -d ./src/config/ormconfig.ts migration:generate ./src/infrastructure/database/migrations/$npm_config_name",
     "typeorm:create-migration": "npm run typeorm -- migration:create ./src/infrastructure/database/migrations/$npm_config_name",
-    "typeorm:revert-migration": "npm run typeorm -- -d ./src/config/ormconfig.ts migration:revert"
+    "typeorm:revert-migration": "npm run typeorm -- -d ./src/config/ormconfig.ts migration:revert",
+    "console": "ts-node src/console.ts",
+    "seed": "docker exec -it artfolio-backend-api-1 npm run console seed seed",
+    "clear": "docker exec -it artfolio-backend-api-1 npm run console seed clear"
   },
   "dependencies": {
+    "@fastify/cookie": "^9.3.1",
+    "@fastify/csrf-protection": "^6.4.1",
+    "@fastify/helmet": "^11.1.1",
+    "@fastify/session": "^10.9.0",
     "@fastify/static": "^7.0.4",
     "@nest-lab/fastify-multer": "^1.2.0",
     "@nestjs/cache-manager": "^2.2.2",
@@ -37,6 +44,7 @@
     "@nestjs/passport": "^10.0.3",
     "@nestjs/platform-fastify": "^10.3.6",
     "@nestjs/swagger": "^7.3.1",
+    "@nestjs/throttler": "^6.0.0",
     "@nestjs/typeorm": "^10.0.2",
     "@types/passport-local": "^1.0.38",
     "cache-manager": "^5.7.3",
@@ -47,6 +55,7 @@
     "joi": "^17.12.2",
     "jwks-rsa": "^3.1.0",
     "mysql2": "^3.9.3",
+    "nest-commander": "^3.14.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",

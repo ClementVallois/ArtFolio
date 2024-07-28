@@ -9,12 +9,18 @@ import { SaveAssetUseCase } from 'src/application/shared/modules/asset/use-cases
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { AssetRepository } from 'src/infrastructure/repositories/asset.repository';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Asset])],
   controllers: [],
   providers: [
     { provide: 'IAssetRepository', useClass: AssetRepository },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     GetPostPictureAssetsUseCase,
     GetPostAssetsUseCase,
     GetArtistPostPictureAssetsUseCase,

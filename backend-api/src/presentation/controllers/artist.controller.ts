@@ -291,6 +291,7 @@ export class ArtistController {
     return this.profilePictureService.streamUserAssets(artistId, response);
   }
 
+  //TODO: Remove if not needed
   @Get(':id/assets-url')
   async getArtistProfilePictureUrl(
     @Param() params: FindIdParams,
@@ -320,8 +321,8 @@ export class ArtistController {
     type: CreateArtistDto,
   })
   @ApiBearerAuth()
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('create:artist')
+  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  // @Permissions('create:artist')
   @Post()
   @UseInterceptors(
     LocalFilesInterceptor({
@@ -347,6 +348,8 @@ export class ArtistController {
     @UploadedFiles() files: FileUploadDto,
     @Body() artistData: CreateArtistDto,
   ): Promise<{ message: string; artistId: string }> {
+    console.log(files);
+
     const artist = await this.createArtistUseCase.execute(artistData, files);
 
     return {

@@ -6,6 +6,8 @@ import { GetCategoryByIdUseCase } from 'src/application/shared/modules/category/
 import { Category } from 'src/domain/entities/category.entity';
 import { CategoryRepository } from 'src/infrastructure/repositories/category.repository';
 import { SharedArtistModule } from '../artist/shared-artist.module';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -14,6 +16,10 @@ import { SharedArtistModule } from '../artist/shared-artist.module';
   ],
   providers: [
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     GetArtistCategoriesUseCase,
     GetCategoryByIdUseCase,
     AssignCategoriesToArtistUseCase,

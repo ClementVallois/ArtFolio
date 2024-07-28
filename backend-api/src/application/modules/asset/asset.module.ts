@@ -10,12 +10,18 @@ import { GetPostPictureAssetsUseCase } from '../../shared/modules/asset/use-case
 import { GetUserAssetsUseCase } from './use-cases/getUserAssets.useCase';
 import { RemoveAssetUseCase } from './use-cases/removeAsset.useCase';
 import { UpdateProfilePictureMetadataUseCase } from './use-cases/updateProfilePictureMetadata.useCase';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Asset])],
   controllers: [],
   providers: [
     { provide: 'IAssetRepository', useClass: AssetRepository },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     SaveAssetUseCase,
     AddProfilePictureMetadataUseCase,
     CreateAssetUseCase,

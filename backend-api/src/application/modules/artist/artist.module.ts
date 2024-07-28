@@ -16,6 +16,8 @@ import { SharedArtistModule } from 'src/application/shared/modules/artist/shared
 import { SharedAssetModule } from 'src/application/shared/modules/asset/shared-asset.module';
 import { GetAllArtistsWithPinnedPostUseCase } from './use-cases/getAllArtistsWithPinnedPost.useCase';
 import { SharedFileModule } from 'src/application/handlers/shared-file.module';
+import { ThrottlerGuard } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -30,6 +32,10 @@ import { SharedFileModule } from 'src/application/handlers/shared-file.module';
   controllers: [ArtistController],
   providers: [
     { provide: 'IArtistRepository', useClass: ArtistRepository },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     GetAllArtistsUseCase,
     CreateArtistUseCase,
     UpdateArtistUseCase,

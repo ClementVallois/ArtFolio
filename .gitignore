@@ -137,3 +137,6 @@ dist
 
 # Swagger metadata 
 backend-api/src/metadata.ts
+
+# SSH Key
+backend-api/artfolio-key.pem
