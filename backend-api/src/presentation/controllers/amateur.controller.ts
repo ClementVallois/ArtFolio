@@ -42,7 +42,7 @@ import { ProfilePictureService } from 'src/infrastructure/services/file/profile-
 
 @ApiTags('Amateurs')
 @ApiBearerAuth()
-@UseGuards(AuthGuard('jwt'), PermissionsGuard)
+// @UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @Controller('amateurs')
 export class AmateurController {
   constructor(
@@ -64,7 +64,7 @@ export class AmateurController {
     description: 'All amateurs retrieved successfully.',
   })
   @ApiResponse({ status: 404, description: 'No amateurs found' })
-  @Permissions('read:all')
+  // @Permissions('read:all')
   @Get()
   async getAllAmateurs(): Promise<Amateur[]> {
     return this.getAllAmateursUseCase.execute();

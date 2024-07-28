@@ -1,5 +1,6 @@
 import { PersonalDataRequest } from '../entities/personal-data-request.entity';
 import { PersonalDataRequestId } from '../value-objects/personalDataRequestId';
+import { UserId } from '../value-objects/userId';
 
 export interface IPersonalDataRequestRepository {
   createPersonalDataRequest(
@@ -11,4 +12,6 @@ export interface IPersonalDataRequestRepository {
   findOnePersonalDataRequest(
     dataRequestId: PersonalDataRequestId,
   ): Promise<PersonalDataRequest>;
+
+  getPersonalDataByUserId(userId: UserId): Promise<any>;
 }

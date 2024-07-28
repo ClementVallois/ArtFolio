@@ -15,6 +15,8 @@ import {
 } from '@nestjs/swagger';
 import { Permissions } from '../decorators/permissions/permissions.decorator';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
+import { UserId } from 'src/domain/value-objects/userId';
+import { GetAllUserDataUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllUserData.useCase';
 
 @ApiTags('Personal Data Request')
 @ApiBearerAuth()
@@ -24,6 +26,7 @@ export class PersonalDataRequestController {
     private readonly getAllPersonalDataRequestUseCase: GetAllPersonalDataRequestUseCase,
     private readonly getOnePersonalDataRequestUseCase: GetOnePersonalDataRequestUseCase,
     private readonly createPersonalDataRequestUseCase: CreatePersonalDataRequestUseCase,
+    private readonly getAllUserDataUseCase: GetAllUserDataUseCase,
   ) {}
 
   /**
@@ -85,5 +88,12 @@ export class PersonalDataRequestController {
     @Body() dataRequestData: CreateDataRequestDto,
   ): Promise<PersonalDataRequest> {
     return this.createPersonalDataRequestUseCase.execute(dataRequestData);
+  }
+
+  //TODO : Add permissions and docsfor this endpoint
+  @Get('me/:id')
+  async getDataRequest(@Param() params: FindIdParams) {
+    const personalDataRequestId = new UserId(params.id);
+    return this.getAllUserDataUseCase.execute(personalDataRequestId);
   }
 }

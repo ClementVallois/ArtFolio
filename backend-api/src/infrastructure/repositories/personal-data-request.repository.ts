@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
 import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
+import { UserId } from 'src/domain/value-objects/userId';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -21,6 +22,14 @@ export class PersonalDataRequestRepository
       personalDataRequestData,
     );
     return this.personalDataRequestRepository.save(personalDataRequest);
+  }
+
+  async getPersonalDataByUserId(userId: UserId): Promise<any> {
+    const result = await this.personalDataRequestRepository.query(
+      `SELECT fetch_user_data($1)`,
+      [userId.toString()],
+    );
+    return result[0];
   }
 
   async findAllPersonalDataRequestWithUser(): Promise<PersonalDataRequest[]> {
