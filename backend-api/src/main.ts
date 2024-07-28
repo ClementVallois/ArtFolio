@@ -15,6 +15,8 @@ import { LogLevel } from './infrastructure/logger/log-level.enum';
 import { ConfigService } from '@nestjs/config';
 import helmet from '@fastify/helmet';
 import fastifyCsrf from '@fastify/csrf-protection';
+import fastifySession from '@fastify/session';
+import fastifyCookie from '@fastify/cookie';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -38,6 +40,17 @@ async function bootstrap() {
   await app.register(helmet, { global: true });
 
   // CSRF
+  const sessionSecret = configService.get<string>('SESSION_SECRET');
+
+  await app.register(fastifyCookie);
+  await app.register(fastifySession, {
+    secret: sessionSecret,
+    cookie: {
+      secure: false, // TODO: Change to true in production
+      httpOnly: true,
+      sameSite: 'lax',
+    },
+  });
   await app.register(fastifyCsrf);
 
   // Logging

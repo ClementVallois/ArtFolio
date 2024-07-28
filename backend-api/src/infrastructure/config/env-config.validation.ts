@@ -2,6 +2,7 @@ import * as Joi from 'joi';
 
 // Validate env config
 export const configValidationSchema = Joi.object({
+  SESSION_SECRET: Joi.required(),
   DB_API_HOST: Joi.required(),
   DB_API_PORT: Joi.required(),
   DB_API_NAME: Joi.required(),
