@@ -87,10 +87,12 @@ export class PersonalDataRequestController {
   async createDataRequest(
     @Body() dataRequestData: CreateDataRequestDto,
   ): Promise<PersonalDataRequest> {
+    console.log('PersonalData : ' + dataRequestData.userId);
+
     return this.createPersonalDataRequestUseCase.execute(dataRequestData);
   }
 
-  //TODO : Add permissions and docsfor this endpoint
+  //TODO : Add permissions and docs for this endpoint
   @Get('me/:id')
   async getDataRequest(@Param() params: FindIdParams) {
     const personalDataRequestId = new UserId(params.id);
