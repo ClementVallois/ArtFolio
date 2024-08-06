@@ -75,6 +75,7 @@ import ModalDeleteComponent from '@/components/toolBox/ModalDeleteComponent.vue'
 import ModalDataComponent from '@/components/toolBox/ModalDataComponent.vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { onMounted, toRaw, ref } from 'vue';
+import { PersonalDataRequest } from "@/model/PersonalDataRequestModel";
 
 const userStore = useStoreUser();
 const storeGlobal = useGlobalStore();
@@ -143,17 +144,34 @@ async function handleDelete(deleteStatus) {
 
 async function handleDataRequest() {
     try {
-        //TODO : Implement the logic to handle data request here
+        // Close the modal and reset body overflow
         showDataModal.value = false;
         document.body.style.overflow = '';
-        let response = await userStore.createPersonalDataRequest(authenticationStore.profile);
-        console.log("UserInfoPage | response : " + response);
-        if (response.status == 200) {
+
+        // Send the data request
+        const response = await userStore.createPersonalDataRequest(JSON.stringify({ userId: authenticationStore.profile.id }));
+
+        // Debugging statement to check the response
+        console.log('Response:', response);
+
+        if (response.error === 'Request already exists') {
+            alertError.value = true;
+            textAlert.value = "Vous avez déjà une demande en cours.";
+        } else if (response instanceof PersonalDataRequest) {
             alertError.value = false;
-            showAlert.value = true;
+            textAlert.value = "Votre demande a bien été envoyée";
+        } else {
+            alertError.value = true;
+            textAlert.value = "Une erreur est survenue. Veuillez réessayer.";
         }
+
+        showAlert.value = true;
     } catch (error) {
+        console.error('Error:', error);
         storeGlobal.logError(error, 6);
+        alertError.value = true;
+        textAlert.value = "Une erreur est survenue. Veuillez réessayer.";
+        showAlert.value = true;
     }
 }
 

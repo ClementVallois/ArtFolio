@@ -46,10 +46,7 @@ export const useStoreUser = defineStore('userStore', () => {
 
   async function createPersonalDataRequest(id) {
     const response = await serviceUser.createPersonalDataRequest(id)
-    if (response.status) {
-      console.log(response.status)
-    }
-    return response.value
+    return response
   }
 
   return {

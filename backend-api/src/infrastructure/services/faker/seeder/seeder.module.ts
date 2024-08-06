@@ -9,7 +9,7 @@ import { PostSeederService } from './seeders/post.seeder.service';
 import { UserSeederService } from './seeders/user.seeder.service';
 import { AssetSeederService } from './seeders/asset.seeder.service';
 import { CategorySeederService } from './seeders/category.seeder.service';
-import { DataRequestSeederService } from './seeders/data-request.seeder.service';
+import { DataRequestSeederService } from './seeders/personal-data-request.seeder.service';
 
 @Module({
   imports: [

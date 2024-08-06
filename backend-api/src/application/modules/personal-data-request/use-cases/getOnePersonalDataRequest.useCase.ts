@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
 import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
@@ -9,6 +9,13 @@ export class GetOnePersonalDataRequestUseCase {
     private readonly personalDataRequestRepository: IPersonalDataRequestRepository,
   ) {}
   async execute(id: PersonalDataRequestId): Promise<PersonalDataRequest> {
-    return this.personalDataRequestRepository.findOnePersonalDataRequest(id);
+    const personalDataRequest =
+      await this.personalDataRequestRepository.findOnePersonalDataRequest(id);
+    if (!personalDataRequest) {
+      throw new NotFoundException(
+        `Personal Data Request does not exists with ID: ${id}`,
+      );
+    }
+    return personalDataRequest;
   }
 }

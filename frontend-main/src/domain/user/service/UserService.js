@@ -1,6 +1,7 @@
 import { userApi } from '@/domain/user/api/UserRemoteDataSource'
 import { useGlobalStore } from '@/store/GlobalStore.js'
 import { User } from '@/model/UserModel'
+import { PersonalDataRequest } from '@/model/PersonalDataRequestModel'
 
 function userService() {
   const storeGlobal = useGlobalStore()
@@ -55,8 +56,13 @@ function userService() {
 
   async function createPersonalDataRequest(id) {
     try {
-      return apiUser.createPersonalDataRequest(id)
+      const response = await apiUser.createPersonalDataRequest(id)
+      return PersonalDataRequest.fromJson(response)
     } catch (error) {
+      if (error.response && error.response.status === 400) {
+        return { error: 'Request already exists' }
+      }
+
       storeGlobal.logError(
         "Erreur lors de la création d'une demande récupération des données personnelles : " +
           error.message,

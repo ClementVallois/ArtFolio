@@ -1,8 +1,8 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
 import { UserId } from 'src/domain/value-objects/userId';
-import { CreateDataRequestDto } from 'src/presentation/dto/personal-data-request/create-data-request.dto';
+import { CreatePersonalDataRequestDto } from 'src/presentation/dto/personal-data-request/create-personal-data-request.dto';
 import { GetUserByIdUseCase } from '../../user/use-cases/getUserById.useCase';
 @Injectable()
 export class CreatePersonalDataRequestUseCase {
@@ -11,15 +11,20 @@ export class CreatePersonalDataRequestUseCase {
     private readonly personalDataRequestRepository: IPersonalDataRequestRepository,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
+
   async execute(
-    personalDataRequestData: CreateDataRequestDto,
+    personalDataRequestData: CreatePersonalDataRequestDto,
   ): Promise<PersonalDataRequest> {
     const user = await this.getUserByIdUseCase.execute(
       new UserId(personalDataRequestData.userId),
     );
-    if (!user) {
-      throw new NotFoundException(
-        `User not found with ID: ${personalDataRequestData.userId}`,
+    const existingDataRequest =
+      await this.personalDataRequestRepository.getPersonalDataRequestByUserId(
+        new UserId(personalDataRequestData.userId),
+      );
+    if (existingDataRequest) {
+      throw new BadRequestException(
+        `Personal Data Request ${existingDataRequest.id} already requested for User with ID: ${personalDataRequestData.userId}`,
       );
     }
     const dataRequest = new PersonalDataRequest();

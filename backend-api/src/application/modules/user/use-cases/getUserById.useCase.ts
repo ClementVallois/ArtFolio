@@ -13,7 +13,7 @@ export class GetUserByIdUseCase {
   async execute(userId: UserId): Promise<User> {
     const amateur = await this.userRepository.findUserById(userId);
     if (!amateur) {
-      throw new NotFoundException(`Amateur not found with ID: ${userId}`);
+      throw new NotFoundException(`User not found with ID: ${userId}`);
     }
     return amateur;
   }

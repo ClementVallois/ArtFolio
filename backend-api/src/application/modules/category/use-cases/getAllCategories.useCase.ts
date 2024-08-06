@@ -12,7 +12,7 @@ export class GetAllCategoriesUseCase {
   async execute(): Promise<Category[]> {
     const categories = await this.categoryRepository.findAllCategories();
 
-    if (!categories) {
+    if (categories.length === 0) {
       throw new NotFoundException(`No categories found`);
     }
     return categories;

@@ -30,6 +30,10 @@ export class DataRequestSeederService {
       const fakeEntity = new PersonalDataRequest();
       fakeEntity.id = faker.string.uuid();
       fakeEntity.user = user;
+      fakeEntity.status = faker.helpers.arrayElement([
+        'requested',
+        'processed',
+      ]);
       fakeEntity.createdAt = faker.date.recent();
       fakeEntity.updatedAt = faker.date.recent();
 

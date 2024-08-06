@@ -10,6 +10,8 @@ import { UserModule } from '../user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { GetAllUserDataUseCase } from './use-cases/getAllUserData.useCase';
+import { UpdatePersonalDataRequestUseCase } from './use-cases/updatePersonalDataRequest.useCase';
+import { GetAllRequestedPersonalDataRequestUseCase } from './use-cases/getAllRequestedPersonalDataRequest.useCase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([PersonalDataRequest]), UserModule],
@@ -24,10 +26,11 @@ import { GetAllUserDataUseCase } from './use-cases/getAllUserData.useCase';
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
     },
-
     GetAllPersonalDataRequestUseCase,
     GetOnePersonalDataRequestUseCase,
     CreatePersonalDataRequestUseCase,
+    UpdatePersonalDataRequestUseCase,
+    GetAllRequestedPersonalDataRequestUseCase,
     GetAllUserDataUseCase,
   ],
 })

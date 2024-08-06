@@ -1,6 +1,14 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Patch,
+} from '@nestjs/common';
 import { FindIdParams } from '../utils/params.dto';
-import { CreateDataRequestDto } from '../dto/personal-data-request/create-data-request.dto';
+import { CreatePersonalDataRequestDto } from '../dto/personal-data-request/create-personal-data-request.dto';
 import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
 import { GetAllPersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllPersonalDataRequests.useCase';
 import { CreatePersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/createPersonalDataRequest.useCase';
@@ -17,6 +25,9 @@ import { Permissions } from '../decorators/permissions/permissions.decorator';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
 import { UserId } from 'src/domain/value-objects/userId';
 import { GetAllUserDataUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllUserData.useCase';
+import { UpdatePersonalDataRequestDto } from '../dto/personal-data-request/update-personal-data-request.dto';
+import { UpdatePersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/updatePersonalDataRequest.useCase';
+import { GetAllRequestedPersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllRequestedPersonalDataRequest.useCase';
 
 @ApiTags('Personal Data Request')
 @ApiBearerAuth()
@@ -26,6 +37,8 @@ export class PersonalDataRequestController {
     private readonly getAllPersonalDataRequestUseCase: GetAllPersonalDataRequestUseCase,
     private readonly getOnePersonalDataRequestUseCase: GetOnePersonalDataRequestUseCase,
     private readonly createPersonalDataRequestUseCase: CreatePersonalDataRequestUseCase,
+    private readonly updatePersonalDataRequestUseCase: UpdatePersonalDataRequestUseCase,
+    private readonly getAllRequestedPersonalDataRequestUseCase: GetAllRequestedPersonalDataRequestUseCase,
     private readonly getAllUserDataUseCase: GetAllUserDataUseCase,
   ) {}
 
@@ -41,8 +54,26 @@ export class PersonalDataRequestController {
   @ApiResponse({ status: 404, description: 'No personal data requests found' })
   @Permissions('read:personal-data-request')
   @Get()
-  async getAllDataRequests(): Promise<PersonalDataRequest[]> {
+  async getAllPersonalDataRequests(): Promise<PersonalDataRequest[]> {
     return this.getAllPersonalDataRequestUseCase.execute();
+  }
+
+  /**
+   * Get all requested personal data requests
+   * @returns {Promise<PersonalDataRequest[]>} A list of all requested personal data requests
+   */
+  @ApiOperation({ summary: 'Get all requested personal data requests' })
+  @ApiResponse({
+    status: 200,
+    description: 'All requested personal data requests retrieved successfully.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'No requested personal data requests found',
+  })
+  @Get('requested')
+  async getAlRequestedPersonalDataRequests(): Promise<PersonalDataRequest[]> {
+    return this.getAllRequestedPersonalDataRequestUseCase.execute();
   }
 
   /**
@@ -72,11 +103,11 @@ export class PersonalDataRequestController {
 
   /**
    * Create a new personal data request
-   * @param {CreateDataRequestDto} dataRequestData - Data to create the personal data request
+   * @param {CreatePersonalDataRequestDto} dataRequestData - Data to create the personal data request
    * @returns {Promise<PersonalDataRequest>} Confirmation of the created personal data request
    */
   @ApiOperation({ summary: 'Create a new personal data request' })
-  @ApiBody({ type: CreateDataRequestDto })
+  @ApiBody({ type: CreatePersonalDataRequestDto })
   @ApiResponse({
     status: 201,
     description: 'The personal data request has been created successfully.',
@@ -85,15 +116,66 @@ export class PersonalDataRequestController {
   @Permissions('create:dataRequest')
   @Post()
   async createDataRequest(
-    @Body() dataRequestData: CreateDataRequestDto,
+    @Body() dataRequestData: CreatePersonalDataRequestDto,
   ): Promise<PersonalDataRequest> {
-    console.log('PersonalData : ' + dataRequestData.userId);
-
     return this.createPersonalDataRequestUseCase.execute(dataRequestData);
   }
 
-  //TODO : Add permissions and docs for this endpoint
+  /**
+   * Update a personal data request
+   * @param {FindIdParams} params - Parameters with the personal data request ID
+   * @param {UpdatePersonalDataRequestDto} personalDataRequestData - Data to update the personal data request
+   * @returns {Promise<PersonalDataRequest>} The updated personal data request
+   */
+  @ApiOperation({ summary: 'Update a personal data request' })
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: 'The ID of the personal data request',
+  })
+  @ApiBody({ type: UpdatePersonalDataRequestDto })
+  @ApiResponse({
+    status: 200,
+    description: 'The personal data request has been updated successfully.',
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'Personal data request not found' })
+  @Permissions('update:personal-data-request')
+  @Patch(':id')
+  async updateDataRequest(
+    @Param() params: FindIdParams,
+    @Body() personalDataRequestData: UpdatePersonalDataRequestDto,
+  ): Promise<PersonalDataRequest> {
+    const personalDataRequestId = new PersonalDataRequestId(params.id);
+    return this.updatePersonalDataRequestUseCase.execute(
+      personalDataRequestId,
+      personalDataRequestData,
+    );
+  }
+
+  // TODO : Add this delete
+  // @Delete(':id')
+  // async deleteDataRequest(@Param() params: FindIdParams) {
+  //   const personalDataRequestId = new PersonalDataRequestId(params.id);
+  //   return this.deletePersonalDataRequestUseCase.execute(personalDataRequestId);
+  // }
+
+  //TODO : Add guards and permissions.
+  /**
+   * Get personal data of a user
+   * @param {FindIdParams} params - Parameters with the user ID
+   * @returns {Promise<any>} The user's personal data
+   */
   @Get('me/:id')
+  @ApiOperation({ summary: 'Get personal data of a user' })
+  @ApiParam({ name: 'id', description: 'The ID of the user' })
+  @ApiResponse({
+    status: 200,
+    description: "The user's personal data have been fetched successfully.",
+  })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  @Permissions('get:user-personal-data')
   async getDataRequest(@Param() params: FindIdParams) {
     const personalDataRequestId = new UserId(params.id);
     return this.getAllUserDataUseCase.execute(personalDataRequestId);
