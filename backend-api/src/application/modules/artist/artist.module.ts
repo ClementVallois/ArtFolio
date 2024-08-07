@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ArtistController } from '../../../presentation/controllers/artist.controller';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { GetAllArtistsUseCase } from './use-cases/getAllArtists.useCase';
 import { ArtistRepository } from 'src/infrastructure/repositories/artist.repository';
@@ -21,7 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Artist]),
     CommonModule,
     SharedArtistModule,
     SharedAssetModule,

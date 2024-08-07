@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Amateur } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
 
@@ -10,7 +10,7 @@ export class GetAmateurByIdUseCase {
     private readonly amateurRepository: IAmateurRepository,
   ) {}
 
-  async execute(amateurId: AmateurId): Promise<User> {
+  async execute(amateurId: AmateurId): Promise<Amateur> {
     const amateur = await this.amateurRepository.findAmateurById(amateurId);
     if (!amateur) {
       throw new NotFoundException(`Amateur not found with ID: ${amateurId}`);

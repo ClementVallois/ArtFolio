@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Amateur } from 'src/domain/entities/user.entity';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ValidationService } from 'src/application/validators/validation.service';
@@ -20,12 +20,12 @@ export class CreateAmateurUseCase {
   async execute(
     amateurData: CreateAmateurDto,
     files: { profilePicture: File },
-  ): Promise<User> {
+  ): Promise<Amateur> {
     await this.validationService.validateProfilePicture(files);
 
     const profilePicture = files.profilePicture[0];
 
-    let amateur: User;
+    let amateur: Amateur;
     try {
       amateur = await this.amateurRepository.createAmateur(amateurData);
     } catch (error) {

@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Amateur } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
@@ -16,13 +16,13 @@ export class UpdateAmateurUseCase {
   async execute(
     amateurId: AmateurId,
     amateurData: UpdateAmateurDto,
-  ): Promise<User> {
+  ): Promise<Amateur> {
     const amateur = await this.amateurRepository.findAmateurById(amateurId);
     if (!amateur) {
       throw new NotFoundException(`Amateur not found with ID: ${amateurId}`);
     }
 
-    let updatedAmateur: User;
+    let updatedAmateur: Amateur;
     try {
       updatedAmateur = await this.amateurRepository.updateAmateur(
         amateur,

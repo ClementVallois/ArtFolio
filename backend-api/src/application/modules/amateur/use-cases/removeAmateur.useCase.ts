@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Amateur } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { GetAmateurByIdUseCase } from '../../../shared/modules/amateur/use-cases/getAmateurById.useCase';
@@ -15,7 +15,7 @@ export class RemoveAmateurUseCase {
     private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}
 
-  async execute(amateurId: AmateurId): Promise<User> {
+  async execute(amateurId: AmateurId): Promise<Amateur> {
     const user = await this.getAmateurByIdUseCase.execute(amateurId);
 
     await this.profilePictureHandler.deleteProfilePicture(

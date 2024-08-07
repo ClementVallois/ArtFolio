@@ -16,7 +16,7 @@ export class GetArtistCategoriesUseCase {
 
     if (artistCategories.length === 0) {
       throw new NotFoundException(
-        `Categories not found for User with ID: ${id}`,
+        `Categories not found for Artist with ID: ${id}`,
       );
     }
     return artistCategories;

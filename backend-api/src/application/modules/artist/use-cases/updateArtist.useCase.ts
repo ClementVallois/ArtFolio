@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { File } from '@nest-lab/fastify-multer';
@@ -20,7 +20,7 @@ export class UpdateArtistUseCase {
     id: ArtistId,
     artistData: UpdateArtistDto,
     profilePicture: File,
-  ): Promise<User> {
+  ): Promise<Artist> {
     const artist = await this.getArtistByIdUseCase.execute(id);
 
     const updatedArtist = await this.artistRepository.updateArtist(

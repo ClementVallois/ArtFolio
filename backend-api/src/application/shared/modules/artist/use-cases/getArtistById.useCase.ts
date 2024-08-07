@@ -1,5 +1,5 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 
@@ -10,7 +10,7 @@ export class GetArtistByIdUseCase {
     private readonly artistRepository: IArtistRepository,
   ) {}
 
-  async execute(id: ArtistId): Promise<User> {
+  async execute(id: ArtistId): Promise<Artist> {
     const artist = await this.artistRepository.findArtistById(id);
     if (!artist) {
       throw new NotFoundException(`Artist not found with ID: ${id}`);

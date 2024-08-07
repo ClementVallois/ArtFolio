@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { GetArtistByIdUseCase } from '../../../shared/modules/artist/use-cases/getArtistById.useCase';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
@@ -17,7 +17,7 @@ export class RemoveArtistUseCase {
     private readonly postPictureHandler: PostPictureHandler,
   ) {}
 
-  async execute(artistId: ArtistId): Promise<User> {
+  async execute(artistId: ArtistId): Promise<Artist> {
     const artist = await this.getArtistByIdUseCase.execute(artistId);
     const userId = new UserId(artistId.toString());
     await this.profilePictureHandler.deleteProfilePicture(userId);
