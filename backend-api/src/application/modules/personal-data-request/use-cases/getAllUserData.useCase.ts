@@ -11,7 +11,6 @@ export class GetAllUserDataUseCase {
   async execute(id: UserId): Promise<any> {
     const userData =
       await this.personalDataRequestRepository.getAllPersonalDataByUserId(id);
-    console.log(userData);
 
     if (
       !userData ||

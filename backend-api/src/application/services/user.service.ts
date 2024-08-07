@@ -164,9 +164,8 @@ export class UserService {
     try {
       return await this.userRepository.remove(user);
     } catch (error) {
-      console.error(`Failed to remove user from database: ${error}`);
       throw new HttpException(
-        'Failed to remove user',
+        'Failed to remove user from database',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
