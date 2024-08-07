@@ -17,6 +17,7 @@ import helmet from '@fastify/helmet';
 import fastifyCsrf from '@fastify/csrf-protection';
 import fastifySession from '@fastify/session';
 import fastifyCookie from '@fastify/cookie';
+import multipart from '@fastify/multipart';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -35,6 +36,8 @@ async function bootstrap() {
     logFormatterService,
     configService,
   );
+
+  await app.register(multipart);
 
   // Helmet
   await app.register(helmet, { global: true });
@@ -62,6 +65,7 @@ async function bootstrap() {
   // Validation
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
       whitelist: true,
       errorHttpStatusCode: 422,
       forbidNonWhitelisted: true,
