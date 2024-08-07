@@ -7,6 +7,7 @@ import {
   MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 
 export class CreateAmateurDto {
   @ApiProperty({
@@ -20,6 +21,7 @@ export class CreateAmateurDto {
   @MaxLength(50, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value.trim())
   firstName: string;
 
   @ApiProperty({
@@ -33,6 +35,7 @@ export class CreateAmateurDto {
   @MaxLength(50, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value.trim())
   lastName: string;
 
   @ApiProperty({
@@ -55,6 +58,7 @@ export class CreateAmateurDto {
   @MaxLength(50, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value.trim())
   username: string;
 
   @ApiPropertyOptional({
@@ -67,7 +71,8 @@ export class CreateAmateurDto {
   @MaxLength(500, {
     message: '$property must be less than $constraint1 characters',
   })
-  description: string;
+  @Transform(({ value }) => value?.trim())
+  description?: string;
 
   @ApiProperty({
     description: 'The status of the amateur',
@@ -82,7 +87,7 @@ export class CreateAmateurDto {
   status: string;
 
   @ApiProperty({
-    description: 'The role of the user',
+    description: 'The role of the amateur',
     example: 'amateur',
     required: true,
     enum: ['amateur'],
