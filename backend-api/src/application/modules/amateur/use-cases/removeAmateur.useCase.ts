@@ -5,6 +5,7 @@ import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { GetAmateurByIdUseCase } from '../../../shared/modules/amateur/use-cases/getAmateurById.useCase';
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
 
 @Injectable()
 export class RemoveAmateurUseCase {
@@ -13,6 +14,7 @@ export class RemoveAmateurUseCase {
     private readonly amateurRepository: IAmateurRepository,
     private readonly getAmateurByIdUseCase: GetAmateurByIdUseCase,
     private readonly profilePictureHandler: ProfilePictureHandler,
+    private readonly logger: Logger,
   ) {}
 
   async execute(amateurId: AmateurId): Promise<Amateur> {
@@ -25,7 +27,10 @@ export class RemoveAmateurUseCase {
     try {
       return await this.amateurRepository.removeAmateur(user);
     } catch (error) {
-      console.error(`Failed to remove amateur from database: ${error}`);
+      this.logger.error(
+        `Failed to remove amateur from database: ${error}`,
+        error,
+      );
       throw new HttpException(
         'Failed to remove user',
         HttpStatus.INTERNAL_SERVER_ERROR,

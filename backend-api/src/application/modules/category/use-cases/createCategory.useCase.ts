@@ -17,7 +17,6 @@ export class CreateCategoryUseCase {
     try {
       category = await this.categoryRepository.createCategory(categoryData);
     } catch (error) {
-      console.log(error.detail);
       this.databaseErrorHandler.handleDatabaseError(error, categoryData);
     }
     return category;

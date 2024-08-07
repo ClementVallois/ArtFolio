@@ -29,7 +29,6 @@ export class UpdateCategoryUseCase {
         categoryData,
       );
     } catch (error) {
-      console.log(error.detail);
       this.databaseErrorHandler.handleDatabaseError(error, categoryData);
     }
   }

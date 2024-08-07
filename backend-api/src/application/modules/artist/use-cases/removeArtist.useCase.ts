@@ -6,6 +6,7 @@ import { IArtistRepository } from 'src/domain/interfaces/artist.repository.inter
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { PostPictureHandler } from 'src/application/handlers/post-picture.handler';
+import { Logger } from 'src/infrastructure/logger/services/logger.service';
 
 @Injectable()
 export class RemoveArtistUseCase {
@@ -15,6 +16,7 @@ export class RemoveArtistUseCase {
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
     private readonly profilePictureHandler: ProfilePictureHandler,
     private readonly postPictureHandler: PostPictureHandler,
+    private readonly logger: Logger,
   ) {}
 
   async execute(artistId: ArtistId): Promise<Artist> {
@@ -26,7 +28,10 @@ export class RemoveArtistUseCase {
     try {
       return await this.artistRepository.removeArtist(artist);
     } catch (error) {
-      console.error(`Failed to remove artist from database: ${error}`);
+      this.logger.error(
+        `Failed to remove artist from database: ${error}`,
+        error,
+      );
       throw new HttpException(
         'Failed to remove artist',
         HttpStatus.INTERNAL_SERVER_ERROR,
