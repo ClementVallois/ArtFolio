@@ -140,3 +140,10 @@ backend-api/src/metadata.ts
 
 # SSH Key
 *.pem
+
+# SonarQube files
+*/sonar-project.properties
+*/.scannerwork/.sonar_lock
+*/.scannerwork/report-task.txt
+.sonarlint/connectedMode.json
+.vscode/settings.json
