@@ -35,7 +35,7 @@ export class GetAllArtistsUseCase {
       if (artists.length === 0) {
         throw new HttpException('No artists found', HttpStatus.NOT_FOUND);
       }
-      this.logger.debug(`Found ${artists.length} posts from database`);
+      this.logger.debug(`Found ${artists.length} artists from database`);
       await this.cacheManager.set(this.CACHE_KEY, artists, this.CACHE_TTL);
 
       return artists;
