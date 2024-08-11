@@ -17,7 +17,7 @@ services:
             - ./.env
         # command: tail -f /dev/null
 
-    # Front for the Back Office
+        # Front for the Back Office
     frontend-backoffice:
         build:
             context: ./
@@ -30,7 +30,7 @@ services:
             - ./.env
         # command: tail -f /dev/null
 
-    # Main backend
+        # Main backend
     backend-api:
         build:
             context: ./
@@ -48,7 +48,7 @@ services:
             - postgres-api
         # command: tail -f /dev/null
 
-    # Main Database 
+        # Main Database 
     postgres-api:
         image: postgres:16.2-alpine
         ports:
@@ -94,7 +94,30 @@ services:
             - POSTGRES_USER=${DB_CHAT_USER}
             - POSTGRES_PASSWORD=${DB_CHAT_PASSWORD}
             - POSTGRES_DB=${DB_CHAT_NAME}
+    # SonarQube service
+    sonarqube:
+        image: sonarqube:lts
+        ports:
+            - "9000:9000"
+        environment:
+            - SONAR_JDBC_URL=jdbc:postgresql://sonarqube-db:5432/sonarqube
+            - SONAR_JDBC_USERNAME=${SONARQUBE_DB_USER}
+            - SONAR_JDBC_PASSWORD=${SONARQUBE_DB_PASSWORD}
+        depends_on:
+            - sonarqube-db
+
+    # PostgreSQL for SonarQube
+    sonarqube-db:
+        image: postgres:16.2-alpine
+        environment:
+            - POSTGRES_USER=${SONARQUBE_DB_USER}
+            - POSTGRES_PASSWORD=${SONARQUBE_DB_PASSWORD}
+            - POSTGRES_DB=sonarqube
+        volumes:
+            - postgresql-data-sonarqube:/var/lib/postgresql/data
+        restart: on-failure
 
 volumes:
     postgresql-data-api:
     postgresql-data-chat:
+    postgresql-data-sonarqube:
