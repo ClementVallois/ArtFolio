@@ -51,7 +51,7 @@ export class ArtistRepository implements IArtistRepository {
     return this.artistRepository.save(artist);
   }
 
-  findLastRegisteredArtists(numberToRetrieve: number): Promise<Artist[]> {
+  async findLastRegisteredArtists(numberToRetrieve: number): Promise<Artist[]> {
     return this.artistRepository.find({
       where: { role: 'artist' },
       order: { createdAt: 'DESC' },
