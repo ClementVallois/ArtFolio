@@ -6,6 +6,8 @@ import { ValidationService } from 'src/application/validators/validation.service
 import { File } from '@nest-lab/fastify-multer';
 import { CreateAmateurDto } from 'src/presentation/dto/amateur/create-amateur.dto';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class CreateAmateurUseCase {
@@ -17,6 +19,7 @@ export class CreateAmateurUseCase {
     private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     amateurData: CreateAmateurDto,
     files: { profilePicture: File },

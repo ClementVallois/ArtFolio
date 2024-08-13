@@ -6,6 +6,8 @@ import { File } from '@nest-lab/fastify-multer';
 import { GetArtistByIdUseCase } from '../../../shared/modules/artist/use-cases/getArtistById.useCase';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class UpdateArtistUseCase {
@@ -16,6 +18,7 @@ export class UpdateArtistUseCase {
     private readonly profilePictureHandler: ProfilePictureHandler,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     id: ArtistId,
     artistData: UpdateArtistDto,

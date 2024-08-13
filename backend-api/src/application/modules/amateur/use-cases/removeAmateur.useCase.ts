@@ -6,6 +6,8 @@ import { GetAmateurByIdUseCase } from '../../../shared/modules/amateur/use-cases
 import { UserId } from 'src/domain/value-objects/userId';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { Logger } from 'src/infrastructure/logger/services/logger.service';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class RemoveAmateurUseCase {
@@ -17,6 +19,7 @@ export class RemoveAmateurUseCase {
     private readonly logger: Logger,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(amateurId: AmateurId): Promise<Amateur> {
     const user = await this.getAmateurByIdUseCase.execute(amateurId);
 

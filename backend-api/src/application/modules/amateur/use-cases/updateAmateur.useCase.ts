@@ -4,6 +4,8 @@ import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.int
 import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class UpdateAmateurUseCase {
@@ -13,6 +15,7 @@ export class UpdateAmateurUseCase {
     private readonly databaseErrorHandler: DatabaseErrorHandler,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     amateurId: AmateurId,
     amateurData: UpdateAmateurDto,

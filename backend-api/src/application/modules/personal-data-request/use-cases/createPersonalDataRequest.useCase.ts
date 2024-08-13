@@ -4,6 +4,9 @@ import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-d
 import { UserId } from 'src/domain/value-objects/userId';
 import { CreatePersonalDataRequestDto } from 'src/presentation/dto/personal-data-request/create-personal-data-request.dto';
 import { GetUserByIdUseCase } from '../../user/use-cases/getUserById.useCase';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
+
 @Injectable()
 export class CreatePersonalDataRequestUseCase {
   constructor(
@@ -12,6 +15,7 @@ export class CreatePersonalDataRequestUseCase {
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     personalDataRequestData: CreatePersonalDataRequestDto,
   ): Promise<PersonalDataRequest> {

@@ -4,6 +4,8 @@ import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-d
 import { UpdatePersonalDataRequestDto } from 'src/presentation/dto/personal-data-request/update-personal-data-request.dto';
 import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
 import { GetOnePersonalDataRequestUseCase } from './getOnePersonalDataRequest.useCase';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 @Injectable()
 export class UpdatePersonalDataRequestUseCase {
   constructor(
@@ -11,6 +13,8 @@ export class UpdatePersonalDataRequestUseCase {
     private readonly personalDataRequestRepository: IPersonalDataRequestRepository,
     private readonly getOnePersonalDataRequestUseCase: GetOnePersonalDataRequestUseCase,
   ) {}
+
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     personalDataRequestId: PersonalDataRequestId,
     personalDataRequestData: UpdatePersonalDataRequestDto,
