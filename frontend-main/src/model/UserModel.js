@@ -34,7 +34,7 @@ class User {
 
     // Méthode pour valider le prénom et le nom avec des Regex
     validateName(name, fieldName) {
-        const nameRegex = /^[a-zA-Z-éèïù]+$/;
+        const nameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿĀ-ſŒœÆæÇçÊêÎîÔôÛûÂâÄäËëÏïÖöÜüŸÿ]+$/;
         if (!nameRegex.test(name)) {
             throw new Error(`Model Le champ ${fieldName} ne doit contenir que des lettres et des tirets.`);
         }
@@ -42,7 +42,7 @@ class User {
 
     // Méthode pour valider le nom d'utilisateur avec un Regex
     validateUsername(username) {
-        const usernameRegex = /^[a-zA-Z0-9._\-]+$/;
+        const usernameRegex = /^[a-zA-ZÀ-ÖØ-öø-ÿĀ-ſŒœÆæÇçÊêÎîÔôÛûÂâÄäËëÏïÖöÜüŸÿ]+$/;
         if (!usernameRegex.test(username)) {
             throw new Error('Model Le nom d\'utilisateur ne doit contenir que des lettres, des chiffres, des points, des tirets et des tirets bas.');
         }
@@ -58,9 +58,9 @@ class User {
 
     // Méthode pour valider la description avec un Regex
     validateDescription(description) {
-        const descriptionRegex = /^[a-zA-Z0-9._\-() "&,;:/!?éàèïù@]+$/;
+        const descriptionRegex = /^[\p{L}\p{N}\p{P}\p{S}\p{Zs}\u00C0-\u00FF\u0100-\u017F\u0180-\u024F\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u1F700-\u1F77F\u1F900-\u1F9FF\u1FA70-\u1FAFF]+$/u;
         if (!descriptionRegex.test(description)) {
-            throw new Error("Model Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!?éàèïù@ ");
+            throw new Error("Model Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!?éàèïùçêîôûâäëïöüÿœæ@ and some emojis");
         }
     }
 

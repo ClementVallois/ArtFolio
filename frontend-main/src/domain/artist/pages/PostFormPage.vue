@@ -97,7 +97,7 @@ const submitForm = async () => {
             /// Post
             data.append('isPinned', isPinned);
             data.append('description', postDescription);
-            data.append('userId', userId);
+            data.append('artistId', userId);
 
              /// Asset
             data.append('postPicture',filePostPicture.value);

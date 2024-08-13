@@ -11,7 +11,7 @@
 
         <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 1</p>
         <p>Commençons par créer un compte</p>
-        <p>Il suffira d'une addresse mail et d'un mot de passe</p>
+        <p>Il suffira d'une adresse mail et d'un mot de passe</p>
 
 
         <div class="flex flex-col w-[90vw] pb-[1rem] my-[3rem]">

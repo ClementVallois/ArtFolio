@@ -17,7 +17,7 @@ function artistApi() {
     }
 
     async function getAllArtistsWithPinnedPost() {
-        return await CRUDapi('GET', 'artists/withPinnedPost');
+        return CRUDapi('GET', 'artists/withPinnedPost');
     }
 
     async function getArtistById(id) {

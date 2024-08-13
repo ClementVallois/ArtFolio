@@ -5,7 +5,7 @@ FROM node:lts-alpine
 WORKDIR /app/backend-chat
 
 # Copy the package.json and tsconfig.json files from the host to the container
-COPY ../backend-chat/package*.json .
+COPY ../backend-chat/package.json .
 COPY ../backend-chat/tsconfig*.json .
 
 # Install the dependencies specified in the package.json file

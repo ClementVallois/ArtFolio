@@ -44,14 +44,14 @@ onMounted(async () => {
 //Assign Artist Role
 const assignUserRoleIfNeeded = () => {
     if (isAuthenticated.value) {
-        authenticationService().assignUserRole(user.value.sub, 'User');
+        authenticationService().assignUserRole(user.value.sub, 'Amateur');
     }
 };
 // Add a watch whenever there is a bit of lag in auth0
 watch(isAuthenticated, (newValue) => {
     if (newValue) {
         setTimeout(()=> {
-            authenticationService().assignUserRole(user.value.sub, 'User')
+            authenticationService().assignUserRole(user.value.sub, 'Amateur')
         }, 500)
     }
 })

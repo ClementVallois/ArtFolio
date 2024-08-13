@@ -3,7 +3,7 @@ import { auth0 } from '@/domain/authentification/index'
 
 // Create an instance of Axios with custom configuration
 const api = axios.create({
-    baseURL: 'http', // Your API base URL
+    baseURL: '', // Your API base URL
     timeout: 10000, // expression en milisecondes, 10s pour envoyer une erreur après un temps de latence 
     headers: {
         'Content-Type': 'multipart/form-data',
