@@ -11,9 +11,14 @@ import { GetUserProfilePictureAssetUseCase } from '../../../shared/modules/asset
 import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
 import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 import { Logger } from 'src/infrastructure/logger/services/logger.service';
+import { Cache } from 'cache-manager';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
 
 @Injectable()
 export class GetLastRegisteredArtistsPostsUseCase {
+  private readonly CACHE_KEY = 'last_registered_artists_posts';
+  private readonly CACHE_TTL = 60000;
+
   constructor(
     @Inject('IArtistRepository')
     private readonly artistRepository: IArtistRepository,
@@ -21,6 +26,7 @@ export class GetLastRegisteredArtistsPostsUseCase {
     private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
     private readonly getUserProfilePictureAssetUseCase: GetUserProfilePictureAssetUseCase,
     private readonly logger: Logger,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
 
   @LogMethod(LogLevel.DEBUG)
@@ -33,6 +39,23 @@ export class GetLastRegisteredArtistsPostsUseCase {
     }[]
   > {
     try {
+      // Check if data is cached
+      const cachedData = await this.cacheManager.get<
+        {
+          artist: Artist;
+          pinnedPost: Post;
+          postAssets: Asset[];
+          artistAsset: Asset;
+        }[]
+      >(this.CACHE_KEY);
+
+      if (cachedData) {
+        this.logger.debug(
+          `Retrieved ${cachedData.length} artists' posts from cache`,
+        );
+        return cachedData;
+      }
+
       this.logger.debug(`Fetching ${numberOfPosts} last registered artists`);
       const lastRegisteredArtists =
         await this.artistRepository.findLastRegisteredArtists(numberOfPosts);
@@ -86,6 +109,14 @@ export class GetLastRegisteredArtistsPostsUseCase {
       this.logger.debug(
         `Successfully processed ${artistWithPostsList.length} artists with their posts and assets`,
       );
+
+      // Store the result in the cache
+      await this.cacheManager.set(
+        this.CACHE_KEY,
+        artistWithPostsList,
+        this.CACHE_TTL,
+      );
+
       return artistWithPostsList;
     } catch (error) {
       this.logger.error(
