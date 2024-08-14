@@ -2,8 +2,8 @@
     <div class="flex flex-col m-auto max-w-[95%] mb-[1rem] rounded overflow-hidden shadow-lg lg:w-[30vw] h-[400px]">
     <!-- <div class="flex flex-col m-auto max-w-[95%] mb-[1rem] rounded overflow-hidden shadow-lg lg:w-[30vw]"> -->
         <router-link :to="{ name: 'artist', params: { artistId: props.artistId } }" class="flex">
-            <div class="max-w-[10%] max-h-[9%] p-1">
-                <img :src="profilePictureUrl" alt="pp" class="w-full h-auto rounded-lg object-cover">
+            <div class="w-[10%] h-[9%] p-1">
+                <img :src="profilePictureUrl" alt="pp" class="w-full h-full rounded-lg object-cover">
             </div>
             <div class="text-start pl-[1rem]">
                 <p class="text-xs font-boldText lg:text-base">{{ props.artistFirstName + " " + props.artistLastName }}</p>
