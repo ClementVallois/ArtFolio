@@ -132,6 +132,23 @@ function artistService() {
         }
     };
 
+    ////
+    // Artist profile picture
+    ////
+
+    async function getArtistProfilePicture(id) {
+        try {
+            const response = await apiArtist.getArtistProfilePicture(id);
+            const mimeType = response.headers['content-type'] || 'image/jpeg';
+            const blob = new Blob([response.data], { type: mimeType });
+            const url = URL.createObjectURL(blob)
+            return url
+        } catch (error) {
+            storeGlobal.logError("Erreur lors de la recuperation d'une photo de profil' : " + error.message, 6);
+            throw new Error(error.message);
+        }
+    };
+
 
     ////
     // Search Artist
@@ -169,6 +186,7 @@ function artistService() {
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,
+        getArtistProfilePicture,
         searchArtists
     };
 }
