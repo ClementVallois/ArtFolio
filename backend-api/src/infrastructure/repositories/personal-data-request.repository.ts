@@ -25,11 +25,16 @@ export class PersonalDataRequestRepository
     return this.personalDataRequestRepository.save(personalDataRequest);
   }
 
-  async getAllPersonalDataByUserId(userId: UserId): Promise<any> {
+  async getAllPersonalDataByRequestId(
+    requestId: PersonalDataRequestId,
+  ): Promise<any> {
+    const request = await this.getPersonalDataRequestById(requestId);
+
     const result = await this.personalDataRequestRepository.query(
       `SELECT fetch_user_data($1)`,
-      [userId.toString()],
+      [request.user.id],
     );
+
     return result[0];
   }
 
@@ -52,20 +57,24 @@ export class PersonalDataRequestRepository
     });
   }
 
-  async findOnePersonalDataRequest(
+  async getPersonalDataRequestById(
     personalDataRequestId: PersonalDataRequestId,
   ): Promise<PersonalDataRequest> {
     const id = personalDataRequestId.toString();
-    return this.personalDataRequestRepository.findOne({
+
+    const foundData = await this.personalDataRequestRepository.findOne({
       where: { id: id },
+      relations: ['user'],
     });
+
+    return foundData;
   }
 
   async updatePersonalDataRequest(
     personalDataRequestId: PersonalDataRequestId,
     personalDataRequestData: UpdatePersonalDataRequestDto,
   ): Promise<PersonalDataRequest> {
-    const personalDataRequest = await this.findOnePersonalDataRequest(
+    const personalDataRequest = await this.getPersonalDataRequestById(
       personalDataRequestId,
     );
     personalDataRequest.status = personalDataRequestData.status;
@@ -75,7 +84,7 @@ export class PersonalDataRequestRepository
   async deletePersonalDataRequest(
     personalDataRequestId: PersonalDataRequestId,
   ): Promise<PersonalDataRequest> {
-    const personalDataRequest = await this.findOnePersonalDataRequest(
+    const personalDataRequest = await this.getPersonalDataRequestById(
       personalDataRequestId,
     );
     return this.personalDataRequestRepository.remove(personalDataRequest);

@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Patch,
+  Res,
 } from '@nestjs/common';
 import { FindIdParams } from '../utils/params.dto';
 import { CreatePersonalDataRequestDto } from '../dto/personal-data-request/create-personal-data-request.dto';
@@ -23,11 +24,12 @@ import {
 } from '@nestjs/swagger';
 import { Permissions } from '../decorators/permissions/permissions.decorator';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
-import { UserId } from 'src/domain/value-objects/userId';
 import { GetAllUserDataUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllUserData.useCase';
 import { UpdatePersonalDataRequestDto } from '../dto/personal-data-request/update-personal-data-request.dto';
 import { UpdatePersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/updatePersonalDataRequest.useCase';
 import { GetAllRequestedPersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllRequestedPersonalDataRequest.useCase';
+import { createReadStream } from 'fs';
+import { FastifyReply } from 'fastify';
 
 @ApiTags('Personal Data Request')
 @ApiBearerAuth()
@@ -166,18 +168,37 @@ export class PersonalDataRequestController {
    * @param {FindIdParams} params - Parameters with the user ID
    * @returns {Promise<any>} The user's personal data
    */
-  @Get('me/:id')
-  @ApiOperation({ summary: 'Get personal data of a user' })
-  @ApiParam({ name: 'id', description: 'The ID of the user' })
+  @Get('download/:id')
+  @ApiOperation({ summary: 'Download personal data of a user' })
+  @ApiParam({ name: 'id', description: 'The ID of the personal data request' })
   @ApiResponse({
     status: 200,
     description: "The user's personal data have been fetched successfully.",
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  @Permissions('get:user-personal-data')
-  async getDataRequest(@Param() params: FindIdParams) {
-    const personalDataRequestId = new UserId(params.id);
-    return this.getAllUserDataUseCase.execute(personalDataRequestId);
+  // @Permissions('download:user-personal-data')
+  async downloadPersonalData(
+    @Param() requestId: FindIdParams,
+    @Res() reply: FastifyReply,
+  ): Promise<void> {
+    const personalDataRequestId = new PersonalDataRequestId(requestId.id);
+
+    const { filePath, userId } = await this.getAllUserDataUseCase.execute(
+      personalDataRequestId,
+    );
+    const fileStream = createReadStream(filePath);
+
+    reply.header('Content-Type', 'application/json');
+    reply.header(
+      'Content-Disposition',
+      `attachment; filename="user-data-${userId}.json"`,
+    );
+
+    return new Promise((resolve, reject) => {
+      reply.send(fileStream);
+      fileStream.on('end', () => resolve());
+      fileStream.on('error', (err) => reject(err));
+    });
   }
 }

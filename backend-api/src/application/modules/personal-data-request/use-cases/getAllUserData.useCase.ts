@@ -1,8 +1,11 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { IPersonalDataRequestRepository } from 'src/domain/interfaces/personal-data-request.repository.interface';
-import { UserId } from 'src/domain/value-objects/userId';
 import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
 import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
+import * as fs from 'fs';
+import * as path from 'path';
+import { PersonalDataRequestId } from 'src/domain/value-objects/personalDataRequestId';
+
 @Injectable()
 export class GetAllUserDataUseCase {
   constructor(
@@ -11,20 +14,42 @@ export class GetAllUserDataUseCase {
   ) {}
 
   @LogMethod(LogLevel.DEBUG)
-  async execute(id: UserId): Promise<any> {
-    const userData =
-      await this.personalDataRequestRepository.getAllPersonalDataByUserId(id);
+  async execute(
+    requestId: PersonalDataRequestId,
+  ): Promise<{ filePath: string; userId: string }> {
+    const personalDataRequest =
+      await this.personalDataRequestRepository.getPersonalDataRequestById(
+        requestId,
+      );
 
-    if (
-      !userData ||
-      (userData.fetch_user_data.user === null &&
-        userData.fetch_user_data.posts === null &&
-        userData.fetch_user_data.assets === null &&
-        userData.fetch_user_data.categories === null &&
-        userData.fetch_user_data.personal_data_requests === null)
-    ) {
-      throw new NotFoundException(`User not found with ID: ${id}`);
+    if (!personalDataRequest) {
+      throw new NotFoundException(
+        `Personal data request not found with ID: ${requestId}`,
+      );
     }
-    return userData;
+
+    const userData =
+      await this.personalDataRequestRepository.getAllPersonalDataByRequestId(
+        requestId,
+      );
+
+    if (!userData) {
+      throw new NotFoundException(
+        `User data not found for request ID: ${requestId}`,
+      );
+    }
+
+    const fileName = `user-data-${personalDataRequest.user.id}-${Date.now()}.json`;
+    const filePath = path.join(process.cwd(), 'temp', fileName);
+
+    await fs.promises.writeFile(filePath, JSON.stringify(userData, null, 2));
+
+    // Update status to 'processed' after file generation
+    await this.personalDataRequestRepository.updatePersonalDataRequest(
+      requestId,
+      { status: 'processed' },
+    );
+
+    return { filePath, userId: personalDataRequest.user.id };
   }
 }

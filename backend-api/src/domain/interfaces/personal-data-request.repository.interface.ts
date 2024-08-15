@@ -7,12 +7,15 @@ export interface IPersonalDataRequestRepository {
   createPersonalDataRequest(
     dataRequestData: PersonalDataRequest,
   ): Promise<PersonalDataRequest>;
+
   findAllPersonalDataRequestWithUser(): Promise<PersonalDataRequest[]>;
 
   findAllRequestedPersonalDataRequestWithUser(): Promise<PersonalDataRequest[]>;
-  findOnePersonalDataRequest(
+  getPersonalDataRequestById(
     dataRequestId: PersonalDataRequestId,
   ): Promise<PersonalDataRequest>;
+
+  getAllPersonalDataByRequestId(requestId: PersonalDataRequestId): Promise<any>;
 
   updatePersonalDataRequest(
     personalDataRequestId: PersonalDataRequestId,
@@ -24,6 +27,4 @@ export interface IPersonalDataRequestRepository {
   ): Promise<PersonalDataRequest>;
 
   getPersonalDataRequestByUserId(userId: UserId): Promise<PersonalDataRequest>;
-
-  getAllPersonalDataByUserId(userId: UserId): Promise<any>;
 }

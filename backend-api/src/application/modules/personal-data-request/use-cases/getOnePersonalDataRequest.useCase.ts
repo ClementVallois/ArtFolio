@@ -15,7 +15,7 @@ export class GetOnePersonalDataRequestUseCase {
   @LogMethod(LogLevel.DEBUG)
   async execute(id: PersonalDataRequestId): Promise<PersonalDataRequest> {
     const personalDataRequest =
-      await this.personalDataRequestRepository.findOnePersonalDataRequest(id);
+      await this.personalDataRequestRepository.getPersonalDataRequestById(id);
     if (!personalDataRequest) {
       throw new NotFoundException(
         `Personal Data Request does not exists with ID: ${id}`,
