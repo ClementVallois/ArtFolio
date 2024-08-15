@@ -64,36 +64,6 @@ services:
             - POSTGRES_PASSWORD=${DB_API_PASSWORD}
             - POSTGRES_DB=${DB_API_NAME}
 
-    # Backend used for the chat feature
-    backend-chat:
-        build:
-            context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-chat
-        volumes:
-            - ./backend-chat:/app/backend-chat
-            - ./backend-chat/node_modules:/app/backend-chat/node_modules
-        ports:
-            - "${BACKEND_CHAT_SERVER_PORT}:3010"
-        env_file:
-            - ./.env
-        depends_on:
-            - postgres-chat
-
-    # Database used for the chat feature
-    postgres-chat:
-        image: postgres:16.2-alpine
-        ports:
-            - "${DB_CHAT_PORT}:5432"
-        volumes:
-            - postgresql-data-chat:/var/lib/postgresql/data
-        env_file:
-            - ./.env
-        restart: on-failure
-        environment:
-            - POSTGRES_PORT:${DB_CHAT_PORT}
-            - POSTGRES_USER=${DB_CHAT_USER}
-            - POSTGRES_PASSWORD=${DB_CHAT_PASSWORD}
-            - POSTGRES_DB=${DB_CHAT_NAME}
     # SonarQube service
     sonarqube:
         image: sonarqube:lts
