@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { Logger } from 'src/infrastructure/logger/services/logger.service';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { Cache } from 'cache-manager';
 import { GetAllArtistsUseCase } from 'src/application/modules/artist/use-cases/getAllArtists.useCase';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
@@ -51,13 +51,13 @@ describe('GetAllArtistsUseCase', () => {
   });
 
   it('should return cached artists if available', async () => {
-    const cachedArtists: User[] = [
+    const cachedArtists: Artist[] = [
       {
         id: '1',
         firstName: 'John',
         lastName: 'Doe',
         birthDate: new Date('1990-01-01'),
-        username: 'johndoe',
+        username: 'Johndoe90',
         description: 'A great artist',
         status: 'active',
         role: 'artist',
@@ -78,13 +78,13 @@ describe('GetAllArtistsUseCase', () => {
   });
 
   it('should fetch artists from repository if not cached', async () => {
-    const artists: User[] = [
+    const artists: Artist[] = [
       {
         id: '1',
         firstName: 'John',
         lastName: 'Doe',
         birthDate: new Date('1990-01-01'),
-        username: 'johndoe',
+        username: 'Johndoe90',
         description: 'A great artist',
         status: 'active',
         role: 'artist',
@@ -98,7 +98,7 @@ describe('GetAllArtistsUseCase', () => {
         firstName: 'Jane',
         lastName: 'Smith',
         birthDate: new Date('1985-05-15'),
-        username: 'janesmith',
+        username: 'Janesmith85',
         description: 'An amazing artist',
         status: 'active',
         role: 'artist',
@@ -121,7 +121,7 @@ describe('GetAllArtistsUseCase', () => {
       artists,
       10000,
     );
-    expect(logger.debug).toHaveBeenCalledWith('Found 2 posts from database');
+    expect(logger.debug).toHaveBeenCalledWith('Found 2 artists from database');
   });
 
   it('should throw HttpException if no artists found', async () => {
