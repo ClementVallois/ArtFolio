@@ -147,3 +147,4 @@ backend-api/src/metadata.ts
 */.scannerwork/report-task.txt
 .sonarlint/connectedMode.json
 .vscode/settings.json
+backend-api/temp/*.json
