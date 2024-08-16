@@ -54,6 +54,7 @@ export class PersonalDataRequestRepository
     return this.personalDataRequestRepository.find({
       where: { status: 'requested' },
       relations: ['user'],
+      order: { createdAt: 'DESC' },
     });
   }
 
