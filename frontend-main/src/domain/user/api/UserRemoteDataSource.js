@@ -12,23 +12,23 @@ function userApi() {
   // basique CRUD for users
   ////
   async function createUser(data) {
-    return CRUDapi('POST', 'users', data)
+    return CRUDapi('POST', 'amateurs', data)
   }
 
   async function getUserById(id) {
-    return CRUDapi('GET', `users/${id}`)
+    return CRUDapi('GET', `amateurs/${id}`)
   }
 
   async function deleteUser(id) {
-    return CRUDapi('DELETE', `users/${id}`)
+    return CRUDapi('DELETE', `amateurs/${id}`)
   }
 
   async function modifyUser(id, data) {
-    return CRUDapi('PATCH', `users/${id}`, data)
+    return CRUDapi('PATCH', `amateurs/${id}`, data)
   }
 
   async function getUserProfilePicture(id) {
-    return CRUDapi('GET', `users/${id}/assets`)
+    return CRUDapi('GET', `amateurs/${id}/assets`)
   }
 
   ////

@@ -36,7 +36,6 @@ const artistStore = useStoreArtist();
 onMounted(async () => {
     await artistStore.getArtistById(props.artistId);
     const url = await userService().getUserProfilePicture(props.artistId)
-    console.log('url', url)
     profilePicture.value = url
 });
 
