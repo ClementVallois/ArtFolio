@@ -1,6 +1,6 @@
 <template>
-    <div class="flex flex-col items-center min-h-screen">
-        <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
+    <div class="flex flex-col items-center text-center min-h-screen">
+        <TitleComponent title="Je suis un artiste" class="text-[3rem] lg:text-[4rem] mt-[3rem] ml-0"> </TitleComponent>
 
         <ul class="steps mt-10 mb-20">
             <li class="step step-secondary">Créer un compte</li>
@@ -14,7 +14,7 @@
         <p>Il suffira d'une adresse mail et d'un mot de passe</p>
 
 
-        <div class="flex flex-col w-[90vw] pb-[1rem] my-[3rem]">
+        <div class="flex flex-col pb-[1rem] my-[3rem]">
             <ButtonComponent type="submit"  textButton="Suivant" class="w-[30vw] lg:w-[15vw] lg:self-center sm:self-center" @click="registerAuth0"></ButtonComponent>
         </div>
     </div>

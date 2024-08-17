@@ -28,7 +28,7 @@ services:
             - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
         env_file:
             - ./.env
-        # command: tail -f /dev/null
+        command: tail -f /dev/null
 
     # Main backend
     backend-api:

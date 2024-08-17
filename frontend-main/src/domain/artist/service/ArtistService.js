@@ -82,13 +82,12 @@ function artistService() {
     ////
     // Recover artist's pinned post for home page
     ////
-    //TODO: modifier le return await
     async function getLastRegisteredArtist(number) {
         try {
             const { data } = await apiArtist.getLastRegisteredArtist(number);
             if (Array.isArray(data)) {
                 return data;
-                //  return response.map(jsonUser => User.fromJson(jsonUser));
+                // return response.map(jsonUser => User.fromJson(jsonUser));
             } else {
                 storeGlobal.logError("La réponse n'est pas un tableau d'objets JSON : " + data, 6);
                 return [];
@@ -98,7 +97,6 @@ function artistService() {
         }
     };
 
-    //TODO: modifier le return await
     async function getRandomArtist(number) {
         try {
             const { data } = await apiArtist.getRandomArtist(number);
@@ -140,7 +138,8 @@ function artistService() {
         try {
             const response = await apiArtist.getArtistProfilePicture(id);
             const mimeType = response.headers['content-type'] || 'image/jpeg';
-            const blob = new Blob([response.data], { type: mimeType });
+            // const blob = new Blob([response.data], { type: mimeType });
+            const blob = new Blob([response.data], { type:'image/webp' });
             const url = URL.createObjectURL(blob)
             return url
         } catch (error) {

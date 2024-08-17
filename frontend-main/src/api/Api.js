@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { auth0 } from '@/domain/authentification/index'
+import { getImageFromDB, storeImageInDB } from '@/service/cache/IndexDBService';
 
 // Create an instance of Axios with custom configuration
 const api = axios.create({
@@ -71,10 +72,10 @@ api.interceptors.response.use(
     // Cache image responses
     // const { config, data } = response;
     // const { url } = config;
-
     // if (url.includes('asset')) {
     //     imageCache.set(url, data);
     // }
+
 
     return response;
     },
