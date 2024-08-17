@@ -17,7 +17,7 @@ function artistApi() {
     }
 
     async function getAllArtistsWithPinnedPost() {
-        return await CRUDapi('GET', 'artists/withPinnedPost');
+        return CRUDapi('GET', 'artists/withPinnedPost');
     }
 
     async function getArtistById(id) {
@@ -58,6 +58,10 @@ function artistApi() {
         return CRUDapi('GET', `artists/${id}/posts`)
     }
 
+    async function getArtistProfilePicture(id) {
+        return CRUDapi('GET', `artists/${id}/assets`)
+    }
+
 
     return {
         getAllArtists,
@@ -69,6 +73,7 @@ function artistApi() {
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,
+        getArtistProfilePicture
     };
 }
 

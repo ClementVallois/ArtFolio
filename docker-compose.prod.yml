@@ -8,33 +8,33 @@ services:
     frontend-main:
         build:
             context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-main
+            dockerfile: docker-conf/prod/Dockerfile.frontend-main
         volumes:
             - ./frontend-main:/app/frontend-main
         ports:
             - "${FRONTEND_MAIN_SERVER_PORT}:5174"
         env_file:
             - ./.env
-        command: tail -f /dev/null
+        # command: tail -f /dev/null
 
     # Front for the Back Office
     frontend-backoffice:
         build:
             context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-backoffice
+            dockerfile: docker-conf/prod/Dockerfile.frontend-backoffice
         volumes:
             - ./frontend-backoffice:/app/frontend-backoffice
         ports:
             - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
         env_file:
             - ./.env
-        command: tail -f /dev/null
+        # command: tail -f /dev/null
 
     # Main backend
     backend-api:
         build:
             context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-api
+            dockerfile: docker-conf/prod/Dockerfile.backend-api
         volumes:
             - ./backend-api:/app/backend-api
             - ./backend-api/node_modules:/app/backend-api/node_modules
@@ -46,7 +46,7 @@ services:
             - NODE_PATH=${NODE_PATH}
         depends_on:
             - postgres-api
-        command: tail -f /dev/null
+        # command: tail -f /dev/null
 
     # Main Database 
     postgres-api:
@@ -64,36 +64,23 @@ services:
             - POSTGRES_PASSWORD=${DB_API_PASSWORD}
             - POSTGRES_DB=${DB_API_NAME}
 
-    # Backend used for the chat feature
-    backend-chat:
-        build:
-            context: ./
-            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-chat
-        volumes:
-            - ./backend-chat:/app/backend-chat
-            - ./backend-chat/node_modules:/app/backend-chat/node_modules
-        ports:
-            - "${BACKEND_CHAT_SERVER_PORT}:3010"
-        env_file:
-            - ./.env
-        depends_on:
-            - postgres-chat
-
-    # Database used for the chat feature
-    postgres-chat:
-        image: postgres:16.2-alpine
-        ports:
-            - "${DB_CHAT_PORT}:5432"
-        volumes:
-            - postgresql-data-chat:/var/lib/postgresql/data
-        env_file:
-            - ./.env
-        restart: on-failure
-        environment:
-            - POSTGRES_PORT:${DB_CHAT_PORT}
-            - POSTGRES_USER=${DB_CHAT_USER}
-            - POSTGRES_PASSWORD=${DB_CHAT_PASSWORD}
-            - POSTGRES_DB=${DB_CHAT_NAME}
+    # Reverse Proxy
+    nginx:
+    image: nginx:latest
+    container_name: production_nginx
+    volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+        - /opt/certs:/opt/certs
+        # To be changed 
+        - /home/artfolio/artfolio/frontend-backoffice/dist:/usr/share/nginx/html/admin-dashboard
+        - /home/artfolio/artfolio/frontend/dist:/usr/share/nginx/html/frontend
+    ports:
+        - 80:80
+        - 443:443
+    depends_on:
+        - backend-api
+        - frontend-main
+        - frontend-backoffice
 
 volumes:
     postgresql-data-api:

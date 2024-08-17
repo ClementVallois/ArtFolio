@@ -1,5 +1,5 @@
 <template>
-    <div v-if="firstSection"  class="flex flex-col items-center">
+    <div v-if="firstSection"  class="flex flex-col items-center text-center">
         <ul class="steps mt-10 mb-2">
             <li class="step step-secondary">Créer un compte</li>
             <li class="step step-secondary">Se connecter</li>
@@ -8,7 +8,7 @@
         </ul>
 
         <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 3</p>
-        <p>Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
+        <p class="p-[1rem]">Ton compte est créé ! 🎉 Maintenant nous aimerions en savoir plus sur toi...</p>
 
         <form id="artistForm" @submit.prevent="submitForm"  class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem]"  method="post"  enctype="multipart/form-data">
             <div class="flex flex-col w-[90vw] pb-[1rem]">
@@ -16,34 +16,34 @@
                 <input @change="handleProfilPictureFileChange"  name="assetName"  type="file" required class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
             </div>
             <!-- Voir pour l'unicité du username -->
-            <div class="flex flex-col w-[90vw] pb-[1rem]">
+            <div class="flex flex-col w-[90vw] pb-[1rem] items-center">
                 <label for=""> Votre nom d'utilisateur</label>
                 <input v-model="username" placeholder="john.doe" type="text" required class="input input-bordered w-full max-w-xs" />
             </div>
-            <div class="flex flex-col w-[90vw] pb-[1rem]">
+            <div class="flex flex-col w-[90vw] pb-[1rem] items-center">
                 <label for=""> Votre prénom</label>
                 <input v-model="firstName" placeholder="John" type="text" required  class="input input-bordered w-full max-w-xs" />
             </div>
-                <div class="flex flex-col w-[90vw] pb-[1rem]">
+                <div class="flex flex-col w-[90vw] pb-[1rem] items-center">
                 <label for=""> Votre nom</label>
                 <input v-model="lastName" placeholder="Doe" type="text"  required class="input input-bordered w-full max-w-xs" />
             </div>
         
-            <div class="flex flex-col w-[90vw] pb-[1rem]">
+            <div class="flex flex-col w-[90vw] pb-[1rem] items-center">
                 <label for=""> Votre date de naissance</label>
                 <input v-model="birthDate" type="date" required  class="input input-bordered w-full max-w-xs lg:w-[40%]" />
             </div>
         
-            <div class="flex flex-col w-[90vw] pb-[1rem]">
+            <div class="flex flex-col w-[90vw] pb-[1rem] items-center">
                 <label for="message" class="block mb-2 text-[1rem] font-medium text-gray-900 ">Description</label>
                 <textarea  v-model="profilDescription" placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."   class="textarea textarea-bordered h-[20vh] resize-none lg:w-[40%] " ></textarea>   
             </div>    
         </form>
-        <div class="flex flex-col w-[90vw] pb-[1rem]">
+        <div class="flex flex-col pb-[1rem]">
             <ButtonComponent type="submit"  textButton="Suivant" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
         </div>
     </div>
-    <div v-if="secondSection" class="flex flex-col items-center">
+    <div v-if="secondSection" class="flex flex-col items-center text-center">
         
         <ul class="steps mt-10 mb-2">
             <li class="step step-secondary">Créer un compte</li>
@@ -53,7 +53,7 @@
         </ul>
 
         <p class="font-title text-[2rem] lg:text-[2rem]">ETAPE 4</p>
-        <p>Bientôt terminé ! 💪 Publie ton premier post pour gagner en visibilité</p>
+        <p class="p-[1rem]">Bientôt terminé ! 💪 Publie ton premier post pour gagner en visibilité</p>
         
         <TitleComponent title="Mes catégories" class="text-[3rem] lg:text-[4rem] mt-[3rem]"> </TitleComponent>
         <div class="flex flex-col items-center w-[100vw] pb-[1rem] pt-[2rem] lg:items-start">
@@ -78,7 +78,7 @@
             </div>
         
         </form>
-        <div class="flex flex justify-between w-[90vw] pb-[1rem]">
+        <div class="flex flex justify-between w-auto pb-[1rem]">
             <ButtonComponent type="submit"  textButton="Précédent" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="toggleSections"></ButtonComponent>
             <ButtonComponent type="submit"  textButton="S'inscrire" class="w-[30vw] lg:self-end lg:w-[10vw]" @click="submitForm" ></ButtonComponent>
         </div>

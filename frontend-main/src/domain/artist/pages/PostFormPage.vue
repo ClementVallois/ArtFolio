@@ -28,11 +28,13 @@ import { ref, computed, toRaw } from 'vue';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useStorePost } from '@/domain/artist/store/PostStore';
 import { useStoreArtist } from '@/domain/artist/store/ArtistStore';
+import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore'
 
 // Store initialisation
 const storeGlobal = useGlobalStore();
 const postStore = useStorePost();
 const artistStore = useStoreArtist();
+const authenticationStore = useAuthenticationPersistStore()
 
 ///
 // Ref
@@ -97,7 +99,7 @@ const submitForm = async () => {
             /// Post
             data.append('isPinned', isPinned);
             data.append('description', postDescription);
-            data.append('userId', userId);
+            data.append('artistId', authenticationStore.profile.id);
 
              /// Asset
             data.append('postPicture',filePostPicture.value);

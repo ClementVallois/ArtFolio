@@ -26,7 +26,7 @@
         </div>
     </section>
 
-    <DeleteModal :isDelete=isOpenDeleteModal :user=itemModal @closeModal="toggleDeleteModal" @stateSuccess="displaySuccessDeleteAlert" @stateError="displayErrorAlert" />
+    <DeleteModal :isDelete=isOpenDeleteModal :user=itemModal @closeModal="toggleDeleteModal" @deleteItem="deleteArtist" />
     </div>
 
 </PageLayout>
@@ -42,6 +42,8 @@ import ErrorAlert from '@/components/state/error/ErrorAlert.vue'
 import SearchArtist from '@/domain/artist/components/SearchArtist.vue'
 import ListUserTableComponent from '@/components/table/ListUserTableComponent.vue'
 import { useStoreArtist } from '../store/ArtistStore'
+import { auth0Service } from '@/domain/auth0/service/Auth0Service'
+import { artistApi } from '../api/ArtistRemoteDataSource'
 
 const isOpenDeleteModal= ref(false)
 const itemModal=ref({})
@@ -99,5 +101,14 @@ const activateSearch = (isSearchActivated) => {
     }
 }
 
+const deleteArtist = async() => {
+    try {
+        await artistApi().deleteArtist(itemModal.value.id)
+        await auth0Service().deleteUser(itemModal.value.auth0Id)
+        displaySuccessDeleteAlert()
+    }catch (error){
+        displayErrorAlert()
+    }
+}
 
 </script>

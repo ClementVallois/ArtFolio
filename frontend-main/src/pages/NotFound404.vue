@@ -2,7 +2,7 @@
     <div class="min-h-screen flex flex-col items-center">
         <div class="mb-[5%] flex flex-col items-center mt-[10%]">
             <h1 class="text-2xl mb-5">404 - Non Trouvé</h1>
-            <p>Aïe, on dirait bien que la page que tu cherches n'existes pas</p>
+            <p>Aïe, on dirait bien que la page que tu cherches n'existe pas</p>
         </div>
             <div class="flex flex-col items-center">
                 <router-link :to="{ name: 'home'}" >

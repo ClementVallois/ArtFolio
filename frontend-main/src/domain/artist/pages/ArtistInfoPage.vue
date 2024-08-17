@@ -1,12 +1,86 @@
 <template v-if="authenticationStore.profile != null">
-    <TitleComponent title="Vos informations personnelles" class="text-[3rem] lg:text-[4rem] py-[3rem] "> </TitleComponent>
-    <form action="" class="flex flex-col items-center w-[100vw]">
+    <div class="container mx-auto px-4 py-6">
+        <div class="flex justify-center items-center">
+            <TitleComponent title="Vos informations personnelles" class="text-[3rem] lg:text-[4rem] py-[3rem] "> </TitleComponent>
+        </div>
+        <!-- Profile Picture Form -->
+        <form action="" class="flex flex-col items-center w-full mb-8">
+        <div class="flex flex-col items-center w-full max-w-md">
+            <img 
+            :src="authenticationStore.profilePicture" 
+            alt="Profile Picture"
+            class="w-32 h-32 lg:w-45 lg:h-45 rounded-tl-lg rounded-br-lg object-cover mb-4 border-2 border-gray-300"
+            />
+            <input 
+            type="file" 
+            class="file-input file-input-bordered text-sm w-full max-w-xs"
+            />
+        </div>
+        </form>
 
-    <div class="flex flex-col w-[90vw] pb-[1rem]">
-        <img :src="authenticationStore.profilePicture" alt="profile Picture"
-        class="relative max-w-[15%] rounded-lg overflow-hidden max-w-[100%] lg:max-w-[5%] pb-[1rem]">
-        <input type="file" class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
+        <!-- Profile Information Form -->
+        <form action="" class="flex flex-col items-center w-full" @submit.prevent="submitForm">
+        <div class="flex flex-col w-full max-w-md mb-4">
+            <label for="username" class="mb-1 text-sm font-medium text-gray-900">Votre nom d'utilisateur</label>
+            <input 
+            id="username"
+            type="text"  
+            v-model="authenticationStore.profile.username" 
+            class="input input-bordered w-full"
+            />
+        </div>
+
+        <div class="flex flex-col w-full max-w-md mb-4">
+            <label for="firstName" class="mb-1 text-sm font-medium text-gray-900">Votre prénom</label>
+            <input 
+            id="firstName"
+            type="text"  
+            v-model="authenticationStore.profile.firstName" 
+            class="input input-bordered w-full"
+            />
+        </div>
+
+        <div class="flex flex-col w-full max-w-md mb-4">
+            <label for="lastName" class="mb-1 text-sm font-medium text-gray-900">Votre nom</label>
+            <input 
+            id="lastName"
+            type="text"  
+            v-model="authenticationStore.profile.lastName" 
+            class="input input-bordered w-full"
+            />
+        </div>
+
+        <div class="flex flex-col w-full max-w-md mb-4">
+            <label for="birthDate" class="mb-1 text-sm font-medium text-gray-900">Votre date de naissance</label>
+            <input 
+            id="birthDate"
+            type="date"  
+            v-model="authenticationStore.profile.birthDate" 
+            class="input input-bordered w-full"
+            />
+        </div>
+
+        <div class="flex flex-col w-full max-w-md mb-4">
+            <label for="description" class="block mb-1 text-sm font-medium text-gray-900">Description</label>
+            <textarea  
+            id="description"
+            v-model="authenticationStore.profile.description" 
+            class="textarea textarea-bordered h-40 resize-none w-full"
+            placeholder="Bio"
+            ></textarea>   
+        </div>
+
+        <div class="pt-4 flex justify-center w-full">
+            <ButtonComponent textButton="Modifier" class="lg:self-end" />
+        </div>
+        </form>
     </div>
+    <!-- <form action="" class="flex flex-col items-center w-[100vw]">
+        <div class="flex flex-col w-[90vw] pb-[1rem]">
+        <img :src="authenticationStore.profilePicture" alt="Profile Picture"
+            class="w-[12rem] h-[12rem] rounded-tl-lg rounded-br-lg object-cover mb-[1rem] border-2 border-gray-300">
+        <input type="file" class="file-input file-input-bordered text-[0.8rem] w-full max-w-xs" />
+        </div>
    </form>
    <form action="" class="flex flex-col items-center w-[100vw] pb-[1rem]" @submit.prevent="submitForm">
 
@@ -37,7 +111,7 @@
         <ButtonComponent textButton="Modifier" class="lg:self-end"></ButtonComponent>
     </div>
  
-   </form>
+   </form> -->
    <AlertComponent v-if="showAlert" :alertError="alertError" @closeAlert="handleCloseAlert" :textAlert="textAlert"></AlertComponent>
    
 

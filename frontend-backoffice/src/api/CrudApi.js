@@ -1,5 +1,5 @@
 import api from '@/api/api.js'
-const apiURL = "http://127.0.0.1:3000";
+const apiURL = import.meta.env.VITE_API_URL || "http://127.0.0.1:3000";
 
 function CRUDapi(verb, endpoint, data) {
     return new Promise(async (resolve, reject) => {

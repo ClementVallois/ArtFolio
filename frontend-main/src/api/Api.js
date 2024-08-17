@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { auth0 } from '@/domain/authentification/index'
+import { getImageFromDB, storeImageInDB } from '@/service/cache/IndexDBService';
 
 // Create an instance of Axios with custom configuration
 const api = axios.create({
-    baseURL: 'http', // Your API base URL
+    baseURL: '', // Your API base URL
     timeout: 10000, // expression en milisecondes, 10s pour envoyer une erreur après un temps de latence 
     headers: {
         'Content-Type': 'multipart/form-data',
@@ -19,6 +20,8 @@ const routesWithMultipart = [
     { method: 'POST', route: '/post' }
 ];
 
+const imageCache = new Map();
+
 // Optionally, you can add request interceptors
 api.interceptors.request.use(
     async (config) => {
@@ -26,7 +29,15 @@ api.interceptors.request.use(
         const url = config.url;
         const method = config.method.toUpperCase();
 
-          // Check if the current request matches any of the defined routes and methods
+        // Cache
+        // if (url.includes('asset')) {
+        //     if (imageCache.has(url)) {
+        //         const cachedResponse = imageCache.get(url);
+        //         return Promise.resolve({ ...config, data: cachedResponse });
+        //     }
+        // }
+
+        // Check if the current request matches any of the defined routes and methods
         const shouldApplyMultipart = routesWithMultipart.some(
             entry => entry.method === method && url.includes(entry.route)
         );        
@@ -58,8 +69,15 @@ api.interceptors.request.use(
 // Optionally, you can add response interceptors
 api.interceptors.response.use(
     (response) => {
-        // Modify response data before passing it to the caller
-        return response;
+    // Cache image responses
+    // const { config, data } = response;
+    // const { url } = config;
+    // if (url.includes('asset')) {
+    //     imageCache.set(url, data);
+    // }
+
+
+    return response;
     },
     (error) => {
         // Handle response error
