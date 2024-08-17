@@ -35,7 +35,7 @@ function artistApi() {
     }
 
     async function deleteArtist(id) {
-        return await CRUDapi('DELETE', 'artists', id)
+        return await CRUDapi('DELETE', `artists/${id}`)
     }
 
 
