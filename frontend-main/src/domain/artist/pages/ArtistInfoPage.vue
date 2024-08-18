@@ -9,12 +9,14 @@
             <div class="flex flex-col items-center w-full max-w-md">
                 <img :src="authenticationStore.profilePicture" alt="Profile Picture"
                     class="w-32 h-32 lg:w-45 lg:h-45 rounded-tl-lg rounded-br-lg object-cover mb-4 border-2 border-gray-300" />
-                <input type="file" class="file-input file-input-bordered text-sm w-full max-w-xs" />
+                <input type="file" class="file-input file-input-bordered text-sm w-full max-w-xs"
+                    @change="handleFileChange" />
             </div>
         </form>
 
         <!-- Profile Information Form -->
-        <form action="" class="flex flex-col items-center w-full" @submit.prevent="submitForm">
+        <form action="" class="flex flex-col items-center w-full" @submit.prevent="submitForm" method="patch"
+            enctype="multipart/form-data">
             <div class="flex flex-col w-full max-w-md mb-4">
                 <label for="username" class="mb-1 text-sm font-medium text-gray-900">Votre nom d'utilisateur</label>
                 <input id="username" type="text" v-model="authenticationStore.profile.username"
@@ -134,9 +136,12 @@ import SecondTitleComponent from '@/components/toolBox/SecondTitleComponent.vue'
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import ModalDeleteComponent from '@/components/toolBox/ModalDeleteComponent.vue';
 import ModalDataComponent from '@/components/toolBox/ModalDataComponent.vue';
-import { userService } from '@/domain/user/service/UserService'
 import { onMounted, toRaw, ref } from 'vue';
+import { PersonalDataRequest } from "@/model/PersonalDataRequestModel";
+import { useStoreUser } from "@/domain/user/store/UserStore";
 
+
+const userStore = useStoreUser();
 const router = useRouter()
 const artistStore = useStoreArtist();
 const storeGlobal = useGlobalStore();
@@ -148,9 +153,13 @@ const textAlert = ref('Vous devez remplir tous les champs présents.');
 const showDeleteModal = ref(false);
 const showDataModal = ref(false);
 const isProfilDeleted = ref(false);
-const profilePicture = ref(null)
 const { user } = useAuth0()
+const profilePictureFile = ref(null);
 
+
+const handleFileChange = (event) => {
+    profilePictureFile.value = event.target.files[0];
+};
 
 /// TODO: faire en sorte de comparer l'artist original et les new data
 // Fonction pour masquer l'alerte d'erreur
@@ -209,49 +218,74 @@ async function handleDelete(deleteStatus) {
 
 async function handleDataRequest() {
     try {
-        // TODO : Implement the logic to handle data request here
+        // Close the modal and reset body overflow
         showDataModal.value = false;
         document.body.style.overflow = '';
 
-        alertError.value = false;
-        textAlert.value = "Votre demande de données personnelles a été prise en compte.";
+        // Send the data request
+        const response = await userStore.createPersonalDataRequest(JSON.stringify({ userId: authenticationStore.profile.id }));
+
+        // Debugging statement to check the response
+
+        if (response.error === 'Request already exists') {
+            alertError.value = true;
+            textAlert.value = "Vous avez déjà une demande en cours.";
+        } else if (response instanceof PersonalDataRequest) {
+            alertError.value = false;
+            textAlert.value = "Votre demande a bien été envoyée";
+        } else {
+            alertError.value = true;
+            textAlert.value = "Une erreur est survenue. Veuillez réessayer.";
+        }
+
         showAlert.value = true;
     } catch (error) {
-        textAlert.value = "Une erreur est survenue lors de la demande de vos données.";
-        alertError.value = true;
-        showAlert.value = true;
+        console.error('Error:', error);
         storeGlobal.logError(error, 6);
+        alertError.value = true;
+        textAlert.value = "Une erreur est survenue. Veuillez réessayer.";
+        showAlert.value = true;
     }
 }
 
 // Fonction pour comparer les champs modifiés et envoyer uniquement les modifications
 const submitForm = async () => {
-    const modifiedData = {};
+    const modifiedData = new FormData();
     let isModified = false;
-    // console.log(authenticationStore.profile);
+
     for (const key in authenticationStore.profile) {
-        //     console.log(key);
-        //    console.log(authenticationStore.profile[key], originalData[key]);
         if (authenticationStore.profile[key] !== originalData[key]) {
-            modifiedData[key] = authenticationStore.profile[key];
+            modifiedData.append(key, authenticationStore.profile[key]);
             isModified = true;
         }
     }
+
+    // Add the profile picture if it was changed
+    if (profilePictureFile.value) {
+        modifiedData.append('profilePicture', profilePictureFile.value);
+        isModified = true;
+    }
+
     if (isModified) {
-        // console.log(toRaw(authenticationStore.profileId));
-        // console.log('Champs modifiés :', modifiedData);
-        let response = await artistStore.modifyArtist(authenticationStore.profile.id, JSON.stringify(modifiedData));
-        if (response.status == 200) {
-            alertError.value = false;
-            textAlert.value = "Vos nouvelles données ont bien été enregistrées"
-            showAlert.value = true;
-        } else {
-            textAlert.value = "Aïe on dirait qu'une erreur est survenue."
+        try {
+            let response = await artistStore.modifyArtist(authenticationStore.profile.id, modifiedData);
+            if (response.status == 200) {
+                alertError.value = false;
+                textAlert.value = "Vos nouvelles données ont bien été enregistrées";
+                showAlert.value = true;
+            } else {
+                textAlert.value = "Aïe on dirait qu'une erreur est survenue.";
+                alertError.value = true;
+                showAlert.value = true;
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            textAlert.value = "Une erreur est survenue lors de la mise à jour du profil.";
             alertError.value = true;
             showAlert.value = true;
         }
     } else {
-        textAlert.value = "Vous devez remplir tous les champs présents."
+        textAlert.value = "Aucune modification n'a été détectée.";
         alertError.value = true;
         showAlert.value = true;
     }

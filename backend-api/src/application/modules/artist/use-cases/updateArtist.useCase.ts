@@ -8,6 +8,7 @@ import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
 import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
+import { FileUploadDto } from 'src/presentation/dto/artist/fileUpload.dto';
 
 @Injectable()
 export class UpdateArtistUseCase {
@@ -22,8 +23,11 @@ export class UpdateArtistUseCase {
   async execute(
     id: ArtistId,
     artistData: UpdateArtistDto,
-    profilePicture: File,
+    file?: FileUploadDto,
   ): Promise<Artist> {
+    const profilePicture = file?.profilePicture?.[0];
+
+    console.log('Body:', artistData);
     const artist = await this.getArtistByIdUseCase.execute(id);
 
     const updatedArtist = await this.artistRepository.updateArtist(
