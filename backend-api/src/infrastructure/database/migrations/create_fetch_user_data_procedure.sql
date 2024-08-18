@@ -9,7 +9,7 @@ BEGIN
     -- Fetch user details
     SELECT row_to_json(u) INTO user_data
     FROM (
-        SELECT * FROM users u WHERE u.id = fetch_user_data.user_id
+        SELECT first_name, last_name, username, description, birth_date FROM users u WHERE u.id = fetch_user_data.user_id
     ) u;
 
     -- Fetch posts related to the user

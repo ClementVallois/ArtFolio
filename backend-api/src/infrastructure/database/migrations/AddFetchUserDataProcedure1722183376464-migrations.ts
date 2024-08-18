@@ -2,7 +2,9 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export class Migrations1722183376464 implements MigrationInterface {
+export class AddFetchUserDataProcedureMigrations1722183376464
+  implements MigrationInterface
+{
   public async up(queryRunner: QueryRunner): Promise<void> {
     const filePath = path.join(
       __dirname,
