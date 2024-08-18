@@ -60,17 +60,12 @@ const downloadItem = async () => {
         if (props.personalDataRequest && props.personalDataRequest.id) {
             const response = await store.downloadPersonalDataRequest(props.personalDataRequest.id)
 
-            // Ensure that response is the full response object
             if (response && response.data) {
-                // Get the filename from the Content-Disposition header
                 const contentDisposition = response.headers['content-disposition'];
                 const filenameMatch = contentDisposition && contentDisposition.match(/filename="?(.+)"?/);
                 const filename = filenameMatch ? filenameMatch[1] : `user-data-${props.personalDataRequest.id}.json`;
 
-                // Create a Blob from the response data
                 const blob = new Blob([response.data], { type: 'application/json' });
-
-                // Create a link element and trigger the download
                 const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
                 link.href = url;
@@ -78,11 +73,11 @@ const downloadItem = async () => {
                 document.body.appendChild(link);
                 link.click();
 
-                // Cleanup: revoke the object URL and remove the link element
                 window.URL.revokeObjectURL(url);
                 link.remove();
 
                 emit('stateSuccess');
+                emit('processedItem', props.personalDataRequest.id); // Emit the processed item ID
             } else {
                 throw new Error('Invalid response data');
             }

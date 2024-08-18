@@ -2,7 +2,6 @@
     <PageLayout>
         <div class="h-[calc(100%-50px)] bg-gray-50 flex flex-col items-center justify-center">
             <section class="bg-gray-100 py-6 px-4 sm:px-6 lg:px-10 lg:w-full">
-                <!-- Alerts -->
                 <SuccessAlert v-if="isSuccess" :message="successMessage" @closeAlert="toggleSuccessAlert()" />
                 <ErrorAlert v-if="isError" :message="errorMessage" />
                 <div class="max-w-9xl mx-auto">
@@ -29,10 +28,9 @@
             </section>
             <ProcessModal :isProcess="isOpenProcessModal" :personalDataRequest="itemModal"
                 @closeModal="toggleProcessModal" @stateSuccess="displaySuccessDownloadAlert"
-                @stateError="displayErrorAlert" />
+                @stateError="displayErrorAlert" @processedItem="handleProcessedItem" />
         </div>
     </PageLayout>
-
 </template>
 
 <script setup>
@@ -98,6 +96,14 @@ const activateSearch = (isSearchActivated) => {
         isSearch.value = true
     } else {
         isSearch.value = false
+    }
+}
+
+const handleProcessedItem = (itemId) => {
+    storePersonalDataRequest.allRequestedPersonalDataRequests = storePersonalDataRequest.allRequestedPersonalDataRequests.filter(item => item.id !== itemId);
+
+    if (isSearch.value) {
+        storePersonalDataRequest.personalDataRequestsFiltered = storePersonalDataRequest.personalDataRequestsFiltered.filter(item => item.id !== itemId);
     }
 }
 

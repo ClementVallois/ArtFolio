@@ -146,7 +146,6 @@ function artistService() {
         return []
       }
     } catch (error) {
-      console.log(error)
       storeGlobal.logError('Erreur lors de la récupération des posts pour un artiste : ' + error, 6)
     }
   }

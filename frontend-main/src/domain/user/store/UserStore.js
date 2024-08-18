@@ -29,7 +29,7 @@ export const useStoreUser = defineStore('userStore', () => {
   async function modifyUser(id, data) {
     const response = await serviceUser.modifyUser(id, data)
     if (response.status) {
-      console.log(response.status)
+      //console.log(response.status)
     }
     return response
   }
@@ -38,7 +38,7 @@ export const useStoreUser = defineStore('userStore', () => {
     const response = await serviceUser.deleteUser(id)
     await authenticationService().deleteUser(auth0Id)
     if (response.status) {
-      console.log(response.status)
+      // console.log(response.status)
     }
 
     return response

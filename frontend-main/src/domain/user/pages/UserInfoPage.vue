@@ -152,7 +152,6 @@ async function handleDataRequest() {
         const response = await userStore.createPersonalDataRequest(JSON.stringify({ userId: authenticationStore.profile.id }));
 
         // Debugging statement to check the response
-        console.log('Response:', response);
 
         if (response.error === 'Request already exists') {
             alertError.value = true;
@@ -167,7 +166,7 @@ async function handleDataRequest() {
 
         showAlert.value = true;
     } catch (error) {
-        console.error('Error:', error);
+        //  console.error('Error:', error);
         storeGlobal.logError(error, 6);
         alertError.value = true;
         textAlert.value = "Une erreur est survenue. Veuillez réessayer.";

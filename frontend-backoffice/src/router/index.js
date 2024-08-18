@@ -12,6 +12,7 @@ import LoaderPage from '@/pages/LoaderPage.vue'
 import CallBackPage from '@/domain/auth0/pages/CallBackPage.vue'
 import Auth0ArtistPage from '@/domain/auth0/pages/Auth0ArtistPage.vue'
 import Unauthorized from '@/pages/Unauthorized.vue'
+import PersonalDataRequestPage from '@/domain/personal-data-request/pages/PersonalDataRequestPage.vue'
 
 const routes = [
   {
