@@ -14,12 +14,14 @@
 
 
         <div class="flex flex-col w-[90vw] pb-[1rem] my-[3rem]">
-            <ButtonComponent type="submit"  textButton="Suivant" class="w-[30vw] lg:w-[15vw] lg:self-center sm:self-center" @click="registerAuth0"></ButtonComponent>
+            <ButtonComponent type="submit" textButton="Suivant"
+                class="w-[30vw] lg:w-[15vw] lg:self-center sm:self-center" @click="registerAuth0"></ButtonComponent>
         </div>
     </div>
 
-    
-    <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert" textAlert="Vous devez remplir tous les champs présents."></AlertComponent>
+
+    <AlertComponent v-if="showAlert" v-model:alertError="alertError" @closeAlert="handleCloseAlert"
+        textAlert="Vous devez remplir tous les champs présents."></AlertComponent>
 
 </template>
 
@@ -27,20 +29,22 @@
 import TitleComponent from '@/components/toolBox/TitleComponent.vue';
 import ButtonComponent from '@/components/toolBox/ButtonComponent.vue';
 import AlertComponent from '@/components/toolBox/AlertComponent.vue';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { useAuth0 } from '@auth0/auth0-vue';
 
-const showAlert = ref(false); 
+const showAlert = ref(false);
 const alertError = ref(true);
 const { loginWithRedirect } = useAuth0()
 const redirectUri = `${window.location.origin}/success-signup-user`
 
 //permet de rediriger vers la page auth0 register
 const registerAuth0 = () => {
-    loginWithRedirect({authorizationParams: {
-                        screen_hint: "signup",
-                        redirect_uri: redirectUri
-                    }})
+    loginWithRedirect({
+        authorizationParams: {
+            screen_hint: "signup",
+            redirect_uri: redirectUri
+        }
+    })
 }
 
 
@@ -51,4 +55,3 @@ const handleCloseAlert = () => {
 };
 
 </script>
-

@@ -38,6 +38,13 @@ function artistApi() {
         return await CRUDapi('DELETE', `artists/${id}`)
     }
 
+    ////
+    // User Personal Data Request
+    ////
+    async function createPersonalDataRequest(id) {
+        return CRUDapi('POST', `personal-data-requests/me/${id}`)
+    }
+
 
     ////
     // Recover artist's pinned post for home page
@@ -71,6 +78,7 @@ function artistApi() {
         createArtist,
         modifyArtist,
         deleteArtist,
+        createPersonalDataRequest,
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,

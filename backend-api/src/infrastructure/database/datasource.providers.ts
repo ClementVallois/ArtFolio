@@ -22,7 +22,7 @@ export class DatasourceProvider implements TypeOrmOptionsFactory {
       entities: [__dirname + '../../../**/domain/**/*.entity{.ts,.js}'],
       synchronize: synchronizeEnabled === 'true' ? true : false,
       logging: loggingEnable === 'true' ? true : false,
-      migrationsRun: true,
+      migrationsRun: false,
       migrations: [__dirname + '/../**/migrations/*{.ts,.js}'],
       namingStrategy: new SnakeNamingStrategy(),
     };

@@ -13,6 +13,8 @@ import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { CreatePostDto } from 'src/presentation/dto/post/create-post.dto';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class CreatePostUseCase {
@@ -24,6 +26,7 @@ export class CreatePostUseCase {
     private readonly logger: Logger,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(postData: CreatePostDto, postPicture: File): Promise<Post> {
     this.logger.info(
       `Executing CreatePostUseCase for artistId: ${postData.artistId}`,

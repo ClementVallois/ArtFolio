@@ -140,7 +140,9 @@ export class ProfilePictureService {
       await fs.promises.unlink(userProfilePicture.url);
     } catch (error) {
       if (error.code === 'ENOENT') {
-        console.log('No such file or directory:', userProfilePicture.url);
+        this.logger.debug(
+          'No such file or directory: ' + userProfilePicture.url,
+        );
         return;
       }
       throw new HttpException(

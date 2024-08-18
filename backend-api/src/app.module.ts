@@ -36,7 +36,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       useFactory: () => [
         {
           ttl: 1000,
-          limit: 200,
+          limit: 10000,
         },
       ],
     }),

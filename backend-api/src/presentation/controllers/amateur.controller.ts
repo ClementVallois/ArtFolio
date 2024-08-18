@@ -14,7 +14,6 @@ import {
   StreamableFile,
 } from '@nestjs/common';
 import { FindIdParams } from '../utils/params.dto';
-import { File } from '@nest-lab/fastify-multer';
 import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
 import { CreateAmateurUseCase } from 'src/application/modules/amateur/use-cases/createAmateur.useCase';
 import { GetAllAmateursUseCase } from 'src/application/modules/amateur/use-cases/getAllAmateurs.useCase';
@@ -39,6 +38,7 @@ import { Permissions } from '../decorators/permissions/permissions.decorator';
 import { GetAmateurByIdUseCase } from 'src/application/shared/modules/amateur/use-cases/getAmateurById.useCase';
 import { FastifyReply } from 'fastify';
 import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
+import { FileUploadDto } from '../dto/artist/fileUpload.dto';
 
 @ApiTags('Amateurs')
 @ApiBearerAuth()
@@ -138,7 +138,8 @@ export class AmateurController {
       fieldNames: [{ name: 'profilePicture', maxCount: 1 }],
       limits: { fileSize: 10 * 1024 * 1024 },
       fileFilter: (req, file, callback) => {
-        if (file.mimetype.startsWith('image/')) {
+        const acceptedMimeTypes = ['image/png', 'image/jpeg', 'image/webp'];
+        if (acceptedMimeTypes.includes(file.mimetype)) {
           callback(null, true);
         } else {
           callback(
@@ -152,7 +153,7 @@ export class AmateurController {
   @Permissions('create:amateur')
   @Post()
   async createAmateur(
-    @UploadedFiles() files: { profilePicture: File },
+    @UploadedFiles() files: FileUploadDto,
     @Body() amateurData: CreateAmateurDto,
   ): Promise<{ message: string; amateurId: string }> {
     const amateur = await this.createAmateurUseCase.execute(amateurData, files);
@@ -181,7 +182,7 @@ export class AmateurController {
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Amateur not found' })
-  // @Permissions('update:amateur')
+  @Permissions('update:amateur')
   @Patch(':id')
   async updateAmateur(
     @Param() params: FindIdParams,

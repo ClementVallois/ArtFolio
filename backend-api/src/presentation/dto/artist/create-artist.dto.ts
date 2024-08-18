@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsEnum,
   IsISO8601,
@@ -24,6 +24,7 @@ export class CreateArtistDto {
   @MaxLength(50, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value.trim())
   firstName: string;
 
   @ApiProperty({
@@ -37,6 +38,7 @@ export class CreateArtistDto {
   @MaxLength(50, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value.trim())
   lastName: string;
 
   @ApiProperty({
@@ -59,6 +61,7 @@ export class CreateArtistDto {
   @MaxLength(50, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value.trim())
   username: string;
 
   @ApiPropertyOptional({
@@ -71,7 +74,8 @@ export class CreateArtistDto {
   @MaxLength(500, {
     message: '$property must be less than $constraint1 characters',
   })
-  description: string;
+  @Transform(({ value }) => value.trim())
+  description?: string;
 
   @ApiProperty({
     description: 'The status of the artist',
@@ -86,7 +90,7 @@ export class CreateArtistDto {
   status: string;
 
   @ApiProperty({
-    description: 'The role of the user',
+    description: 'The role of the artist',
     example: 'artist',
     required: true,
     enum: ['artist'],

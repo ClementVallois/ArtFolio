@@ -1,9 +1,11 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Amateur } from 'src/domain/entities/user.entity';
 import { IAmateurRepository } from 'src/domain/interfaces/amateur.repository.interface';
 import { AmateurId } from 'src/domain/value-objects/amateurId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { UpdateAmateurDto } from 'src/presentation/dto/amateur/update-amateur.dto';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class UpdateAmateurUseCase {
@@ -13,16 +15,17 @@ export class UpdateAmateurUseCase {
     private readonly databaseErrorHandler: DatabaseErrorHandler,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     amateurId: AmateurId,
     amateurData: UpdateAmateurDto,
-  ): Promise<User> {
+  ): Promise<Amateur> {
     const amateur = await this.amateurRepository.findAmateurById(amateurId);
     if (!amateur) {
       throw new NotFoundException(`Amateur not found with ID: ${amateurId}`);
     }
 
-    let updatedAmateur: User;
+    let updatedAmateur: Amateur;
     try {
       updatedAmateur = await this.amateurRepository.updateAmateur(
         amateur,

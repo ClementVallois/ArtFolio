@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
   JoinColumn,
+  Column,
 } from 'typeorm';
 import { User } from './user.entity';
 
@@ -19,6 +20,13 @@ export class PersonalDataRequest {
     onDelete: 'CASCADE',
   })
   user: User;
+
+  @Column({
+    type: 'enum',
+    enum: ['requested', 'processed'],
+    default: 'requested',
+  })
+  status: string;
 
   @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

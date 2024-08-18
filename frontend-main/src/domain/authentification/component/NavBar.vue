@@ -1,5 +1,5 @@
 <template>
-    <nav class="shadow " >
+    <nav class="shadow ">
         <div class="container px-6 py-2 mx-auto ">
             <div class="md:flex justify-between items-center">
                 <div class="flex justify-between items-center">
@@ -21,7 +21,7 @@
                 </div>
                 <div class="flex-col mt-3 md:flex-row md:mt-0 md:flex" :class="isOpen ? 'flex' : 'hidden'">
                     <p class="md:mx-4 text-sm">UserName</p>
-                    <p class="md:mx-4 text-sm cursor-pointer" @click="logout" role="button">Se déconnecter</p> 
+                    <p class="md:mx-4 text-sm cursor-pointer" @click="logout" role="button">Se déconnecter</p>
                 </div>
             </div>
         </div>
@@ -48,10 +48,10 @@ const toggleProfileMenu = () => {
 
 //Connect to Auth0 
 const logout = async () => {
-    try{
+    try {
         await logoutWithRedirect()
     } catch (error) {
-        console.error('error logging out :', error)
+        //    console.error('error logging out :', error)
     }
 }
 

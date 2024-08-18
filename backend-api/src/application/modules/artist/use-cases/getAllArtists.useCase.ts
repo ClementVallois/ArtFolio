@@ -1,12 +1,5 @@
-import {
-  HttpException,
-  HttpStatus,
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { NotFoundError } from 'rxjs';
-import { User } from 'src/domain/entities/user.entity';
+import { HttpException, HttpStatus, Inject, Injectable } from '@nestjs/common';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
 import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
@@ -26,9 +19,11 @@ export class GetAllArtistsUseCase {
   ) {}
 
   @LogMethod(LogLevel.DEBUG)
-  async execute(): Promise<User[]> {
+  async execute(): Promise<Artist[]> {
     try {
-      const cachedArtists = await this.cacheManager.get<User[]>(this.CACHE_KEY);
+      const cachedArtists = await this.cacheManager.get<Artist[]>(
+        this.CACHE_KEY,
+      );
       if (cachedArtists) {
         this.logger.debug(
           `Retrieved ${cachedArtists.length} artists from cache`,
@@ -40,7 +35,7 @@ export class GetAllArtistsUseCase {
       if (artists.length === 0) {
         throw new HttpException('No artists found', HttpStatus.NOT_FOUND);
       }
-      this.logger.debug(`Found ${artists.length} posts from database`);
+      this.logger.debug(`Found ${artists.length} artists from database`);
       await this.cacheManager.set(this.CACHE_KEY, artists, this.CACHE_TTL);
 
       return artists;

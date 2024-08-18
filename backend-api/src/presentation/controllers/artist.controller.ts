@@ -22,7 +22,6 @@ import {
   FindNumberParams,
 } from '../utils/params.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { File } from '@nest-lab/fastify-multer';
 import LocalFilesInterceptor from 'src/infrastructure/common/interceptors/files.interceptor';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { PostId } from 'src/domain/value-objects/postId';
@@ -85,8 +84,8 @@ export class ArtistController {
   @ApiResponse({ status: 200, description: 'Return all artists.' })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  // @Permissions('read:allArtist')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('read:allArtist')
   @Get()
   async getAllArtists(): Promise<Artist[]> {
     return this.getAllArtistsUseCase.execute();
@@ -102,8 +101,8 @@ export class ArtistController {
     description: 'All artists with pinned post.',
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  // @Permissions('read:allArtist')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('read:allArtist')
   @Get('withPinnedPost')
   async getAllArtistsWithPinnedPost(): Promise<
     {
@@ -128,7 +127,7 @@ export class ArtistController {
   @ApiResponse({ status: 404, description: 'Artist not found' })
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  @Permissions('read:allArtist')
+  @Permissions('read:all')
   @Get(':id')
   async getArtistById(@Param() params: FindIdParams): Promise<Artist> {
     const artistId = new ArtistId(params.id);
@@ -147,8 +146,8 @@ export class ArtistController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
   @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  // @Permissions('read:posts')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('read:posts')
   @Get(':id/posts')
   async getArtistPosts(@Param() params: FindIdParams): Promise<PostEntity[]> {
     const artistId = new ArtistId(params.id);
@@ -198,8 +197,8 @@ export class ArtistController {
   @ApiResponse({ status: 403, description: 'Forbidden.' })
   @ApiResponse({ status: 404, description: 'Artist or post not found' })
   @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  // @Permissions('read:all')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('read:all')
   @Get(':artistId/posts/:postId')
   async getOneArtistPost(
     @Param() params: FindArtistPostParams,
@@ -321,8 +320,8 @@ export class ArtistController {
     type: CreateArtistDto,
   })
   @ApiBearerAuth()
-  // @UseGuards(AuthGuard('jwt'), PermissionsGuard)
-  // @Permissions('create:artist')
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+  @Permissions('create:artist')
   @Post()
   @UseInterceptors(
     LocalFilesInterceptor({
@@ -348,8 +347,6 @@ export class ArtistController {
     @UploadedFiles() files: FileUploadDto,
     @Body() artistData: CreateArtistDto,
   ): Promise<{ message: string; artistId: string }> {
-    console.log(files);
-
     const artist = await this.createArtistUseCase.execute(artistData, files);
 
     return {
@@ -399,8 +396,8 @@ export class ArtistController {
   )
   async updateArtist(
     @Param() params: FindIdParams,
-    @UploadedFiles() file: File,
     @Body() artistData: UpdateArtistDto,
+    @UploadedFiles() file?: FileUploadDto,
   ): Promise<Artist> {
     const artistId = new ArtistId(params.id);
     return this.updateArtistUseCase.execute(artistId, artistData, file);
@@ -419,8 +416,8 @@ export class ArtistController {
   })
   @ApiResponse({ status: 403, description: 'Forbidden' })
   @ApiResponse({ status: 404, description: 'Artist not found' })
-  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('delete:artist')
   @Delete(':id')
   async removeArtist(@Param() params: FindIdParams): Promise<Artist> {
