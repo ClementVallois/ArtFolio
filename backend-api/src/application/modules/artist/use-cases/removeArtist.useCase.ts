@@ -23,16 +23,40 @@ export class RemoveArtistUseCase {
 
   @LogMethod(LogLevel.DEBUG)
   async execute(artistId: ArtistId): Promise<Artist> {
-    const artist = await this.getArtistByIdUseCase.execute(artistId);
-    const userId = new UserId(artistId.toString());
-    await this.profilePictureHandler.deleteProfilePicture(userId);
-    await this.postPictureHandler.deleteArtistPostsPictures(artistId);
+    let artist: Artist;
 
     try {
-      return await this.artistRepository.removeArtist(artist);
+      artist = await this.getArtistByIdUseCase.execute(artistId);
+    } catch (error) {
+      this.logger.error(`Failed to get artist: ${error.message}`, error);
+      throw new HttpException('Failed to get artist', HttpStatus.NOT_FOUND);
+    }
+
+    const userId = new UserId(artistId.toString());
+
+    try {
+      await this.profilePictureHandler.deleteProfilePicture(userId);
     } catch (error) {
       this.logger.error(
-        `Failed to remove artist from database: ${error}`,
+        `Failed to delete profile picture: ${error.message}`,
+        error,
+      );
+    }
+
+    try {
+      await this.postPictureHandler.deleteArtistPostsPictures(artistId);
+    } catch (error) {
+      this.logger.error(
+        `Failed to delete artist posts pictures: ${error.message}`,
+        error,
+      );
+    }
+
+    try {
+      await this.artistRepository.removeArtist(artist);
+    } catch (error) {
+      this.logger.error(
+        `Failed to remove artist from database: ${error.message}`,
         error,
       );
       throw new HttpException(
@@ -40,5 +64,7 @@ export class RemoveArtistUseCase {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+
+    return artist;
   }
 }
