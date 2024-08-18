@@ -42,7 +42,7 @@ import { FileUploadDto } from '../dto/artist/fileUpload.dto';
 
 @ApiTags('Amateurs')
 @ApiBearerAuth()
-// @UseGuards(AuthGuard('jwt'), PermissionsGuard)
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @Controller('amateurs')
 export class AmateurController {
   constructor(
@@ -64,7 +64,7 @@ export class AmateurController {
     description: 'All amateurs retrieved successfully.',
   })
   @ApiResponse({ status: 404, description: 'No amateurs found' })
-  // @Permissions('read:all')
+  @Permissions('read:all')
   @Get()
   async getAllAmateurs(): Promise<Amateur[]> {
     return this.getAllAmateursUseCase.execute();
@@ -182,7 +182,7 @@ export class AmateurController {
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'Amateur not found' })
-  // @Permissions('update:amateur')
+  @Permissions('update:amateur')
   @Patch(':id')
   async updateAmateur(
     @Param() params: FindIdParams,

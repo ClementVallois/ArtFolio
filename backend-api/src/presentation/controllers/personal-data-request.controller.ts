@@ -7,6 +7,7 @@ import {
   Delete,
   Patch,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { FindIdParams } from '../utils/params.dto';
 import { CreatePersonalDataRequestDto } from '../dto/personal-data-request/create-personal-data-request.dto';
@@ -30,9 +31,12 @@ import { UpdatePersonalDataRequestUseCase } from 'src/application/modules/person
 import { GetAllRequestedPersonalDataRequestUseCase } from 'src/application/modules/personal-data-request/use-cases/getAllRequestedPersonalDataRequest.useCase';
 import { createReadStream } from 'fs';
 import { FastifyReply } from 'fastify';
+import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
+import { AuthGuard } from '@nestjs/passport';
 
 @ApiTags('Personal Data Request')
 @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @Controller('personal-data-requests')
 export class PersonalDataRequestController {
   constructor(
@@ -73,6 +77,7 @@ export class PersonalDataRequestController {
     status: 404,
     description: 'No requested personal data requests found',
   })
+  @Permissions('read:personal-data-request')
   @Get('requested')
   async getAlRequestedPersonalDataRequests(): Promise<PersonalDataRequest[]> {
     return this.getAllRequestedPersonalDataRequestUseCase.execute();
@@ -165,7 +170,7 @@ export class PersonalDataRequestController {
   //TODO : Add guards and permissions.
   /**
    * Get personal data of a user
-   * @param {FindIdParams} params - Parameters with the user ID
+   * @param {FindIdParams} requestId - Parameters with the user ID
    * @returns {Promise<any>} The user's personal data
    */
   @Get('download/:id')
@@ -177,7 +182,7 @@ export class PersonalDataRequestController {
   })
   @ApiResponse({ status: 400, description: 'Bad request' })
   @ApiResponse({ status: 404, description: 'User not found' })
-  // @Permissions('download:user-personal-data')
+  @Permissions('download:user-personal-data')
   async downloadPersonalData(
     @Param() requestId: FindIdParams,
     @Res() reply: FastifyReply,

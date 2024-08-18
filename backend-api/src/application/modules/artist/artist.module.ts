@@ -44,14 +44,6 @@ import { APP_GUARD } from '@nestjs/core';
     GetLastRegisteredArtistsPostsUseCase,
     GetAllArtistsWithPinnedPostUseCase,
   ],
-  exports: [
-    GetAllArtistsUseCase,
-    CreateArtistUseCase,
-    UpdateArtistUseCase,
-    RemoveArtistUseCase,
-    GetRandomArtistsPostUseCase,
-    GetLastRegisteredArtistsPostsUseCase,
-    GetAllArtistsWithPinnedPostUseCase,
-  ],
+  exports: [],
 })
 export class ArtistModule {}
