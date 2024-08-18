@@ -5,6 +5,7 @@
             <td class="px-4 py-3">{{ dataRequest.user.lastName }}</td>
             <td class="px-4 py-3">{{ dataRequest.user.firstName }}</td>
             <td class="px-4 py-3">{{ dataRequest.status }}</td>
+            <td class="px-4 py-3">{{ formatDate(dataRequest.createdAt) }}</td>
             <td class="px-4 py-3 flex items-center justify-end">
                 <ProcessButton @clickProcess="emitOpenProcessModal(dataRequest)" />
             </td>
@@ -22,4 +23,13 @@ const emitOpenProcessModal = (dataRequest) => {
     console.log('emitOpenProcessModal', dataRequest); // Add this line for debugging
     emits('emitOpenProcessModal', dataRequest)
 }
+
+const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    return date.toLocaleDateString('fr-FR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+    });
+};
 </script>
