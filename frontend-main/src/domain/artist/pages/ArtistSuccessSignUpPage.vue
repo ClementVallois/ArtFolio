@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col items-center min-h-screen">
+    <div class="flex flex-col items-center text-center min-h-screen">
         
         <ul class="steps mt-10 mb-20">
             <li class="step step-secondary">Créer un compte</li>
@@ -13,8 +13,8 @@
         <p>Et maintenant connecte-toi ! </p>
 
 
-        <div class="flex flex-col w-[90vw] pb-[1rem] my-[3rem]">
-            <ButtonComponent type="submit"  textButton="Connexion" class="w-[30vw] lg:w-[15vw] lg:self-center sm:self-center" @click="loginAuth0"></ButtonComponent>
+        <div class="flex flex-col pb-[1rem] my-[3rem]">
+            <ButtonComponent type="submit"  textButton="Connexion" class="w-auto lg:w-[15vw] lg:self-center sm:self-center" @click="loginAuth0"></ButtonComponent>
         </div>
     </div>
 </template>

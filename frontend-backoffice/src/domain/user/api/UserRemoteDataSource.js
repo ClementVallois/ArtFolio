@@ -20,7 +20,7 @@ function userApi() {
     }
 
     async function deleteUser(id) {
-        return await CRUDapi('DELETE', 'users', id)
+        return CRUDapi('DELETE', `users/${id}`)
     }
 
 

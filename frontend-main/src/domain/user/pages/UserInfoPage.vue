@@ -4,7 +4,7 @@
     <form action="" class="flex flex-col items-center w-[100vw]">
 
         <div class="flex flex-col w-[90vw] pb-[1rem]">
-            <img src="@/assets/img/profil.png" alt=""
+            <img src="@/assets/img/profil.png" alt="profile picture"
                 class="relative max-w-[15%] rounded-lg overflow-hidden max-w-[100%] lg:max-w-[5%] pb-[1rem]">
             <input type="file" class="file-input file-input-bordered text-[0.8rem]  w-full max-w-xs " />
         </div>

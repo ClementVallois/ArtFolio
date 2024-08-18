@@ -5,19 +5,19 @@
 
         <div class="mt-[4rem]  ml-[2rem] mr-[1rem] lg:mr-[2rem]">
             <SecondTitleComponent title="Vous êtes un artiste "></SecondTitleComponent>
-            <div>Plasticien, graveur, ou tout autre créateur artistique, vous souhaitez partager votre art avec une
+            <div>Plasticien, Graveur, ou tout autre créateur artistique, vous souhaitez partager votre art avec une
                 communauté solide, élargir votre audience et échanger avec d'autres passionnés d'art. Rejoignez-nous sur
                 ArtFolio et créez votre profil artiste dès aujourd'hui pour présenter votre travail, votre biographie,
-                vos influences et vos projets en cours.</div>
+                vos influences et vos projets en cours</div>
             <router-link :to="{ name: 'ArtistPreRegistrationPage' }" class="text-gray-800 text-sm  md:mx-4">
                 <ButtonComponent textButton="S'inscrire" class="lg:self-end mt-[1rem]"></ButtonComponent>
             </router-link>
         </div>
         <div class="mt-[4rem]  ml-[2rem] mr-[1rem] lg:mr-[2rem]">
-            <SecondTitleComponent title="Vous êtes un utilisateur "></SecondTitleComponent>
+            <SecondTitleComponent title="Vous êtes un amateur "></SecondTitleComponent>
             <div>Amateur d'art, simple curieux, curateur ou collectionneur, vous souhaitez avoir accès à l'intégralité
-                du panel d'artistes, découvrir de nouvelles œuvres et interagir avec eux. Inscrivez-vous sur ArtFolio
-                dès maintenant pour accéder à une variété d'œuvres d'art, explorer les profils des artistes et entrer en
+                du panel d'artistes,découvrir de nouvelles œuvres et interagir avec eux. Inscrivez-vous sur ArtFolio dès
+                maintenant pour accéder à une variété d'œuvres d'art, explorer les profils des artistes et entrer en
                 contact avec la communauté artistique.</div>
             <router-link :to="{ name: 'UserPreRegistrationPage' }" class="text-gray-800 text-sm  md:mx-4">
                 <ButtonComponent textButton="S'inscrire" class="lg:self-end my-[1rem]"></ButtonComponent>

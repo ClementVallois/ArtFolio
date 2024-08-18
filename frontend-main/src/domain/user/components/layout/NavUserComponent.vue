@@ -105,7 +105,7 @@ const toggleProfileMenu = () => {
 
 const logoutApp = () => {
     authenticationStore.resetProfile()
-    logout()
+    logout({ returnTo: window.location.origin })
 }
 
 // ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors

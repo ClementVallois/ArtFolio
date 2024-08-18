@@ -19,6 +19,9 @@ import NavArtistComponent from '@/domain/artist/components/layout/NavArtistCompo
 import NavUserComponent from '@/domain/user/components/layout/NavUserComponent.vue';
 import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore.js'
 
+
+// Récupérez l'artist demandé
 const authenticationStore = useAuthenticationPersistStore()
+
 
 </script>

@@ -1,5 +1,5 @@
 import api from '@/api/Api.js'
-const apiURL = 'http://127.0.0.1:3000'
+const apiURL = import.meta.env.VITE_API_URL || 'http://127.0.0.1:3000'
 import { useGlobalStore } from '@/store/GlobalStore.js'
 
 async function CRUDapi(verb, endpoint, data) {

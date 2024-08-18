@@ -1,9 +1,9 @@
 class Post {
-    constructor(id, isPinned, description, userId, createdAt) {
+    constructor(id, isPinned, description, artistId, createdAt) {
         this.id = id;
         this.isPinned = isPinned;
         this.description = description;
-        this.userId = userId;
+        this.artistId = artistId;
         this.createdAt = createdAt;
     }
 
@@ -12,20 +12,20 @@ class Post {
             id: this.id,
             isPinned: this.isPinned,
             description: this.description,
-            userId: this.userId
+            artistId: this.artistId
         };
     }
 
     // pour transformer le json en object grâce au Model
     static fromJson(json) {
-        const { id, isPinned, description, userId, createdAt } = json;
-        return new Post(id, isPinned, description, userId, createdAt);
+        const { id, isPinned, description, artistId, createdAt } = json;
+        return new Post(id, isPinned, description, artistId, createdAt);
     }
 
 
     // Méthode pour valider la description avec un Regex
     validateDescription(description) {
-        const descriptionRegex = /^[a-zA-Z0-9._\-() "&,;:/!?éàèïù@]+$/;
+        const descriptionRegex = /^[\p{L}\p{N}\p{P}\p{S}\p{Zs}\u00C0-\u00FF\u0100-\u017F\u0180-\u024F\u1F600-\u1F64F\u1F300-\u1F5FF\u1F680-\u1F6FF\u1F700-\u1F77F\u1F900-\u1F9FF\u1FA70-\u1FAFF]+$/u;
         if (!descriptionRegex.test(description)) {
             throw new Error("Model Les carractères acceptés pour la descriptions sont de A-Z, 1-9, ainsi que ()\"&,;:/!?éàèïù@ ");
         }
