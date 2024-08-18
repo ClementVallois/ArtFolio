@@ -5,7 +5,10 @@
         <!-- Contenu de la modal -->
         <div class="fixed  z-20">
             <div class="w-[90vw] max-w-md bg-white rounded p-4 flex flex-col justify-around ">
-                <div class="text-center p-[2rem]">{{ textModal }}</div>
+                <div class="text-center p-[2rem]">{{ props.textModal }}</div>
+                <p class="text-center text-xs text-gray-600 mb-4">
+                    Vous recevrez un mail sous 72h avec vos données.
+                </p>
                 <div class="w-[100%] flex justify-around">
                     <ButtonComponent @click="closePersonalDataModal" textButton="Annuler"
                         class="w-[30vw] lg:self-end lg:w-[10vw]">
