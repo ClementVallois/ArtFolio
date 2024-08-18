@@ -30,8 +30,9 @@ export class GetRandomArtistsPostUseCase {
     }[]
   > {
     const randomArtists = await this.getAllArtistsUseCase.execute();
-
     const artistsInDB = randomArtists.length;
+
+    const selectedIndices = new Set<number>();
     const selectedArtists: {
       artist: Artist;
       pinnedPost: Post;
@@ -39,8 +40,14 @@ export class GetRandomArtistsPostUseCase {
       artistAsset: Asset;
     }[] = [];
 
-    for (let i = 0; i < numberOfArtists; i++) {
+    while (selectedArtists.length < numberOfArtists) {
       const randomIndex = Math.floor(Math.random() * artistsInDB);
+
+      if (selectedIndices.has(randomIndex)) {
+        continue;
+      }
+
+      selectedIndices.add(randomIndex);
       const randomArtist = randomArtists[randomIndex];
       const artistId = new ArtistId(randomArtist.id);
       const pinnedPost =
@@ -48,7 +55,6 @@ export class GetRandomArtistsPostUseCase {
       const postAssets = await this.getPostAssetsUseCase.execute(
         new PostId(pinnedPost.id),
       );
-
       const artistAsset =
         await this.getUserProfilePictureAssetUseCase.execute(artistId);
 
