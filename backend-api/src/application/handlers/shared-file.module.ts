@@ -10,9 +10,9 @@ import { SharedAssetModule } from '../shared/modules/asset/shared-asset.module';
 @Module({
   imports: [
     forwardRef(() => UserModule),
-    forwardRef(() => SharedPostModule),
-    forwardRef(() => SharedArtistModule),
-    forwardRef(() => SharedAssetModule),
+    SharedPostModule,
+    SharedArtistModule,
+    SharedAssetModule,
   ],
   providers: [ProfilePictureService, PostPictureService],
   exports: [ProfilePictureService, PostPictureService],

@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AssignCategoriesToArtistUseCase } from 'src/application/shared/modules/category/use-cases/assignCategoriesToArtist.useCase';
 import { GetArtistCategoriesUseCase } from 'src/application/shared/modules/category/use-cases/getArtistCategories.useCase';
@@ -10,10 +10,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Category]),
-    forwardRef(() => SharedArtistModule),
-  ],
+  imports: [TypeOrmModule.forFeature([Category]), SharedArtistModule],
   providers: [
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
     {

@@ -16,7 +16,7 @@ import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Post]),
-    forwardRef(() => SharedArtistModule),
+    SharedArtistModule,
     forwardRef(() => CommonModule),
   ],
   providers: [
