@@ -1,0 +1,13 @@
+FROM node:lts-alpine
+
+WORKDIR /app/backend-api
+
+COPY backend-api/package*.json ./
+COPY backend-api/tsconfig*.json ./
+
+RUN npm install
+
+COPY backend-api ./
+
+EXPOSE 3000
+CMD ["npm", "run", "start:dev"]

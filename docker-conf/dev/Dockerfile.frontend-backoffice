@@ -1,0 +1,16 @@
+FROM node:lts-alpine
+
+WORKDIR /app/frontend-backoffice
+
+COPY ../frontend-backoffice/package*.json .
+COPY ../frontend-backoffice/vite*.js .
+
+RUN npm install
+
+COPY frontend-backoffice .
+
+RUN npm run format
+
+EXPOSE 5180
+
+CMD npm run dev

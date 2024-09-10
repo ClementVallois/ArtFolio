@@ -1,0 +1,93 @@
+networks:
+    ArtFolioNetwork:
+        driver: bridge
+
+services:
+
+    # Main Front for ArtFolio
+    frontend-main:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-main
+        volumes:
+            - ./frontend-main:/app/frontend-main
+        ports:
+            - "${FRONTEND_MAIN_SERVER_PORT}:5174"
+        env_file:
+            - ./.env
+        # command: tail -f /dev/null
+
+        # Front for the Back Office
+    frontend-backoffice:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.frontend-backoffice
+        volumes:
+            - ./frontend-backoffice:/app/frontend-backoffice
+        ports:
+            - "${FRONTEND_BACKOFFICE_SERVER_PORT}:5180"
+        env_file:
+            - ./.env
+        # command: tail -f /dev/null
+
+        # Main backend
+    backend-api:
+        build:
+            context: ./
+            dockerfile: docker-conf/${DOCKER_ENV}/Dockerfile.backend-api
+        volumes:
+            - ./backend-api:/app/backend-api
+            - ./backend-api/node_modules:/app/backend-api/node_modules
+        ports:
+            - "${BACKEND_API_SERVER_PORT}:3000"
+        env_file:
+            - ./.env
+        environment:
+            - NODE_PATH=${NODE_PATH}
+        depends_on:
+            - postgres-api
+        # command: tail -f /dev/null
+
+        # Main Database 
+    postgres-api:
+        image: postgres:16.2-alpine
+        ports:
+            - "${DB_API_PORT}:5432"
+        volumes:
+            - postgresql-data-api:/var/lib/postgresql/data
+        env_file:
+            - ./.env
+        restart: on-failure
+        environment:
+            - POSTGRES_PORT=${DB_API_PORT}
+            - POSTGRES_USER=${DB_API_USER}
+            - POSTGRES_PASSWORD=${DB_API_PASSWORD}
+            - POSTGRES_DB=${DB_API_NAME}
+
+    # SonarQube service
+    sonarqube:
+        image: sonarqube:lts
+        ports:
+            - "9000:9000"
+        environment:
+            - SONAR_JDBC_URL=jdbc:postgresql://sonarqube-db:5432/sonarqube
+            - SONAR_JDBC_USERNAME=${SONARQUBE_DB_USER}
+            - SONAR_JDBC_PASSWORD=${SONARQUBE_DB_PASSWORD}
+        depends_on:
+            - sonarqube-db
+
+    # PostgreSQL for SonarQube
+    sonarqube-db:
+        image: postgres:16.2-alpine
+        environment:
+            - POSTGRES_USER=${SONARQUBE_DB_USER}
+            - POSTGRES_PASSWORD=${SONARQUBE_DB_PASSWORD}
+            - POSTGRES_DB=sonarqube
+        volumes:
+            - postgresql-data-sonarqube:/var/lib/postgresql/data
+        restart: on-failure
+
+volumes:
+    postgresql-data-api:
+    postgresql-data-chat:
+    postgresql-data-sonarqube:

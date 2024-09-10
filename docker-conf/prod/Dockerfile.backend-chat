@@ -1,0 +1,22 @@
+# Set the base image to node:lts-alpine
+FROM node:lts-alpine3.19
+
+# Set the working directory inside the container
+WORKDIR /app/backend-chat
+
+# Copy the package.json and tsconfig.json files from the host to the container
+COPY ../backend-chat/package*.json .
+COPY ../backend-chat/tsconfig*.json .
+
+# Install the dependencies specified in the package.json file
+RUN npm install
+
+# Copy the code from the host to the container
+COPY backend-chat .
+
+# Expose port 3010 to allow incoming connections
+EXPOSE 3010
+
+# Set the command to run when the container starts
+# It runs the "start:dev" script specified in the package.json file
+CMD ["npm", "run", "start:dev"]
