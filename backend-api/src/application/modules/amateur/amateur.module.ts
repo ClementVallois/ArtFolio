@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User as Amateur } from 'src/domain/entities/user.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
@@ -16,8 +16,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Amateur]),
-    forwardRef(() => CommonModule),
-    forwardRef(() => SharedAmateurModule),
+    CommonModule,
+    SharedAmateurModule,
     SharedFileModule,
   ],
   controllers: [AmateurController],

@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ValidationService } from '../validators/validation.service';
 import { ProfilePictureHandler } from '../handlers/profile-picture.handler';
 import { PostPictureHandler } from '../handlers/post-picture.handler';
@@ -9,11 +9,7 @@ import { SharedCategoryModule } from '../shared/modules/category/shared-category
 import { SharedAssetModule } from '../shared/modules/asset/shared-asset.module';
 
 @Module({
-  imports: [
-    forwardRef(() => SharedCategoryModule),
-    forwardRef(() => SharedFileModule),
-    forwardRef(() => SharedAssetModule),
-  ],
+  imports: [SharedCategoryModule, SharedFileModule, SharedAssetModule],
   providers: [
     ValidationService,
     ProfilePictureHandler,

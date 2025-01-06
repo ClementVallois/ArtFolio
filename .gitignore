@@ -73,6 +73,7 @@ web_modules/
 .yarn-integrity
 
 # dotenv environment variable files
+.env.*
 .env
 .env.development.local
 .env.test.local
@@ -150,3 +151,4 @@ backend-api/src/metadata.ts
 .sonarlint/connectedMode.json
 .vscode/settings.json
 backend-api/temp/*.json
+.env.production

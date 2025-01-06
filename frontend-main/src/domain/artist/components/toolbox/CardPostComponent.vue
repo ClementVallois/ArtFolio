@@ -2,7 +2,7 @@
     <div class="flex flex-col m-auto max-w-[95%] mb-[1rem] rounded overflow-hidden shadow-lg lg:w-[35vw] "
         :class="{ 'bg-black text-white': props.postIsPinned }">
         <div class="relative flex justify-center">
-            <img class="max-h-[15rem]  self-center lg:max-h-[20rem]" :src="postUrl" loading="lazy">
+            <img class="max-h-[15rem]  self-center lg:max-h-[20rem]" :src="postUrl" loading="lazy" alt="Pinned post">
             <div class="absolute top-0 right-0 mt-2 mr-2" v-if="props.myProfile && !props.postIsPinned"
                 @click="toggleDropdown">
                 <div class="bg-white rounded p-1 cursor-pointer">
