@@ -3,6 +3,8 @@ import { Logger } from 'src/infrastructure/logger/services/logger.service';
 import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 import { PostId } from 'src/domain/value-objects/postId';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class GetPostByIdUseCase {
@@ -12,6 +14,7 @@ export class GetPostByIdUseCase {
     private readonly logger: Logger,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(id: PostId): Promise<Post> {
     this.logger.info(`Executing GetPostByIdUseCase for ID: ${id}`, 4);
 

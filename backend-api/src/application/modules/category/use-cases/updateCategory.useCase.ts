@@ -4,6 +4,8 @@ import { ICategoryRepository } from 'src/domain/interfaces/category.repository.i
 import { CategoryId } from 'src/domain/value-objects/categoryId';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { UpdateCategoryDto } from 'src/presentation/dto/category/update-category.dto';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class UpdateCategoryUseCase {
@@ -13,6 +15,7 @@ export class UpdateCategoryUseCase {
     private readonly databaseErrorHandler: DatabaseErrorHandler,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(
     id: CategoryId,
     categoryData: UpdateCategoryDto,
@@ -29,7 +32,6 @@ export class UpdateCategoryUseCase {
         categoryData,
       );
     } catch (error) {
-      console.log(error.detail);
       this.databaseErrorHandler.handleDatabaseError(error, categoryData);
     }
   }

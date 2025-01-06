@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { ToBoolean } from 'src/presentation/decorators/toBoolean/toBoolean.decorator';
+import { Transform } from 'class-transformer';
 
 export class CreatePostDto {
   @ApiProperty({
@@ -28,10 +29,11 @@ export class CreatePostDto {
   @MaxLength(500, {
     message: '$property must be less than $constraint1 characters',
   })
+  @Transform(({ value }) => value?.trim())
   description?: string;
 
   @ApiProperty({
-    description: 'The ID of the user creating the post',
+    description: 'The ID of the artist creating the post',
     required: false,
     example: '12345678-abcd-efgh-ijkl-123456789012',
   })

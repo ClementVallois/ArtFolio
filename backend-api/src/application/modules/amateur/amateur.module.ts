@@ -1,6 +1,6 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Amateur } from 'src/domain/entities/user.entity';
 import { AmateurRepository } from 'src/infrastructure/repositories/amateur.repository';
 import { CreateAmateurUseCase } from './use-cases/createAmateur.useCase';
 import { GetAllAmateursUseCase } from './use-cases/getAllAmateurs.useCase';
@@ -15,9 +15,9 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
-    forwardRef(() => CommonModule),
-    forwardRef(() => SharedAmateurModule),
+    TypeOrmModule.forFeature([Amateur]),
+    CommonModule,
+    SharedAmateurModule,
     SharedFileModule,
   ],
   controllers: [AmateurController],

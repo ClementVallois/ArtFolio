@@ -4,6 +4,4 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 @ApiTags('Moderators')
 @ApiBearerAuth()
 @Controller('moderators')
-export class ModeratorController {
-  constructor() {}
-}
+export class ModeratorController {}

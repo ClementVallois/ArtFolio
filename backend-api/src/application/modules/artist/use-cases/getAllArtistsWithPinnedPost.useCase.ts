@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { GetArtistPinnedPostUseCase } from 'src/application/shared/modules/post/use-cases/getArtistPinnedPost.useCase';
 import { Asset } from 'src/domain/entities/asset.entity';
 import { Post } from 'src/domain/entities/post.entity';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { GetPostAssetsUseCase } from '../../../shared/modules/asset/use-cases/getPostAssets.useCase';
@@ -26,7 +26,7 @@ export class GetAllArtistsWithPinnedPostUseCase {
   @LogMethod(LogLevel.DEBUG)
   async execute(): Promise<
     {
-      artist: User;
+      artist: Artist;
       pinnedPost: Post;
       postAssets: Asset[];
       artistAsset: Asset;
@@ -38,7 +38,7 @@ export class GetAllArtistsWithPinnedPostUseCase {
       this.logger.debug(`Found ${allArtists.length} artists`);
 
       const artistWithPostsList: {
-        artist: User;
+        artist: Artist;
         pinnedPost: Post;
         postAssets: Asset[];
         artistAsset: Asset;

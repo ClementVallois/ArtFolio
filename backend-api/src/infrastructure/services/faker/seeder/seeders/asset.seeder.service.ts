@@ -68,7 +68,7 @@ export class AssetSeederService {
 
       const fileNames = fs.readdirSync(folderPath);
       if (fileNames.length === 0) {
-        console.warn(`No files found in ${folderPath}`);
+        this.logger.warn(`No files found in ${folderPath}`);
         continue;
       }
 
@@ -87,7 +87,7 @@ export class AssetSeederService {
       } else if (extension === '.webp') {
         mimeType = 'image/webp';
       } else {
-        console.warn(`Unsupported file extension for ${randomFileName}`);
+        this.logger.warn(`Unsupported file extension for ${randomFileName}`);
         continue;
       }
 
@@ -139,7 +139,7 @@ export class AssetSeederService {
 
         newProfilePicture.mimetype = mimeType;
         if (!newProfilePicture.mimetype) {
-          console.warn(`Unsupported file extension for ${fileName}`);
+          this.logger.warn(`Unsupported file extension for ${fileName}`);
           continue;
         }
         newProfilePicture.id = faker.string.uuid();
@@ -187,7 +187,7 @@ export class AssetSeederService {
 
         newProfilePicture.mimetype = mimeType;
         if (!newProfilePicture.mimetype) {
-          console.warn(`Unsupported file extension for ${fileName}`);
+          this.logger.warn(`Unsupported file extension for ${fileName}`);
           continue;
         }
         newProfilePicture.id = faker.string.uuid();

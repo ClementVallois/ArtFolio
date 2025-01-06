@@ -6,7 +6,7 @@ import { PostId } from 'src/domain/value-objects/postId';
 import { UpdatePostDto } from 'src/presentation/dto/post/update-post.dto';
 import { ArtistId } from 'src/domain/value-objects/artistId';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { CreatePostDto } from 'src/presentation/dto/post/create-post.dto';
 
 @Injectable()
@@ -54,7 +54,7 @@ export class PostRepository implements IPostRepository {
     return this.postRepository.save(postToUpdate);
   }
 
-  createPost(postData: CreatePostDto, artist: User): Promise<Post> {
+  createPost(postData: CreatePostDto, artist: Artist): Promise<Post> {
     const postToCreate = this.postRepository.create({
       ...postData,
       user: artist,

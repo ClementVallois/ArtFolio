@@ -1,13 +1,13 @@
 import { UpdateArtistDto } from 'src/presentation/dto/artist/update-artist.dto';
-import { User } from '../entities/user.entity';
+import { User as Artist } from '../entities/user.entity';
 import { ArtistId } from '../value-objects/artistId';
 
 export interface IArtistRepository {
-  createArtist(artist: any): Promise<User>;
-  findArtistById(id: ArtistId): Promise<User>;
-  findAllArtists(): Promise<User[]>;
-  findAllByDescCreateDate(): Promise<User[]>;
-  removeArtist(artist: User): Promise<User>;
-  updateArtist(artist: User, artistData: UpdateArtistDto): Promise<User>;
-  findLastRegisteredArtists(numberToRetrieve: number): Promise<User[]>;
+  createArtist(artist: any): Promise<Artist>;
+  findArtistById(id: ArtistId): Promise<Artist>;
+  findAllArtists(): Promise<Artist[]>;
+  findAllByDescCreateDate(): Promise<Artist[]>;
+  removeArtist(artist: Artist): Promise<Artist>;
+  updateArtist(artist: Artist, artistData: UpdateArtistDto): Promise<Artist>;
+  findLastRegisteredArtists(numberToRetrieve: number): Promise<Artist[]>;
 }

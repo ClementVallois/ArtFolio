@@ -27,7 +27,7 @@
     <!-- End block -->
 
 
-<DeleteModal :isDelete=isOpenDeleteModal :user=itemModal @closeModal="toggleDeleteModal" @stateSuccess="displaySuccessDeleteAlert" @stateError="displayErrorAlert" />
+<DeleteModal :isDelete=isOpenDeleteModal :user=itemModal @closeModal="toggleDeleteModal" @deleteItem="deleteUser" />
 
 </div>
 
@@ -44,6 +44,8 @@ import ErrorAlert from '@/components/state/error/ErrorAlert.vue'
 import SearchUser from '@/domain/user/components/SearchUser.vue'
 import ListUserTableComponent from '@/components/table/ListUserTableComponent.vue'
 import { useStoreUser } from '../store/UserStore.js'
+import { userApi } from '../api/UserRemoteDataSource'
+import { auth0Service } from '@/domain/auth0/service/Auth0Service'
 
 const isOpenDeleteModal= ref(false)
 const itemModal=ref({})
@@ -56,13 +58,14 @@ const storeUser = useStoreUser()
 
 
 onMounted(async() => {
-    console.log('onMounted')
     await storeUser.getAllUsers()
+
 })
 
 
 const openDeleteModal = (item) => {
     itemModal.value = item
+    console.log(itemModal)
     isOpenDeleteModal.value = true
 }
 
@@ -103,4 +106,14 @@ const activateSearch = (isSearchActivated) => {
     }
 }
 
-</script>../store/UserStore
+const deleteUser = async() => {
+    try {
+        await userApi().deleteUser(itemModal.value.id)
+        await auth0Service().deleteUser(itemModal.value.auth0Id)
+        displaySuccessDeleteAlert()
+    }catch (error){
+        displayErrorAlert()
+    }
+}
+
+</script>

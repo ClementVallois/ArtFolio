@@ -12,7 +12,7 @@
                 <div class="flex items-center justify-end space-x-4">
                     <i class="fas fa-user text-xl"></i>
                     <div class="flex flex-col w-[80%]">
-                        <p>Natacha Desse</p>
+                        <p>{{ user.nickname }}</p>
                         <p class="text-xs">Admin</p>
                     </div>
                 </div>
@@ -41,6 +41,8 @@ import { ref, defineEmits } from 'vue';
 
 //AUTH0 REACTIVATE
 import { useAuth0 } from '@auth0/auth0-vue';
+const { user } = useAuth0()
+
 
 const emit = defineEmits();
 const showMenuUser = ref(false)

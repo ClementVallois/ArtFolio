@@ -18,17 +18,10 @@ import FooterComponent from '@/components/layout/FooterComponent.vue';
 import NavArtistComponent from '@/domain/artist/components/layout/NavArtistComponent.vue';
 import NavUserComponent from '@/domain/user/components/layout/NavUserComponent.vue';
 import { useAuthenticationPersistStore } from '@/domain/authentification/store/AuthenticationPersistStore.js'
-import { useGlobalStore } from '@/store/GlobalStore.js';
-import { watch } from 'vue'
 
 
 // Récupérez l'artist demandé
-const globalStore = useGlobalStore();
 const authenticationStore = useAuthenticationPersistStore()
 
-
-watch(authenticationStore.profile?.value, (newValue) => {
-    console.log('globalstore.profile?.Value.role', authenticationStore.profile?.value.role)
-})
 
 </script>

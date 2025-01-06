@@ -106,7 +106,7 @@ const { logout } = useAuth0();
 const artistStore = useStoreArtist();
 const globalStore = useGlobalStore()
 const authenticationStore = useAuthenticationPersistStore()
-const artistId = authenticationStore.profile.id;
+const artistId = authenticationStore.profile?.id;
 const elementClickOutsideMobile = ref(null)
 const elementClickOutsideDesktop = ref(null)
 
@@ -123,7 +123,7 @@ const toggleProfileMenu = () => {
 
 const logoutApp = () => {
     authenticationStore.resetProfile()
-    logout(); 
+    logout({ returnTo: window.location.origin }); 
 }
 
 // ajouter le fait que le menu déroulant du profil se ferme quand on clique en dehors

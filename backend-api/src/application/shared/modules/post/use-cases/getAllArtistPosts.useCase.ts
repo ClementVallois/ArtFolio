@@ -3,6 +3,8 @@ import { GetArtistByIdUseCase } from 'src/application/shared/modules/artist/use-
 import { Post } from 'src/domain/entities/post.entity';
 import { IPostRepository } from 'src/domain/interfaces/post.repository.interface';
 import { ArtistId } from 'src/domain/value-objects/artistId';
+import { LogMethod } from 'src/infrastructure/logger/decorators/log-method.decorator';
+import { LogLevel } from 'src/infrastructure/logger/log-level.enum';
 
 @Injectable()
 export class GetAllArtistPostsUseCase {
@@ -12,6 +14,7 @@ export class GetAllArtistPostsUseCase {
     private readonly getArtistByIdUseCase: GetArtistByIdUseCase,
   ) {}
 
+  @LogMethod(LogLevel.DEBUG)
   async execute(id: ArtistId): Promise<Post[]> {
     const user = await this.getArtistByIdUseCase.execute(id);
     if (!user) {

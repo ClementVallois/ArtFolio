@@ -35,7 +35,14 @@ function artistApi() {
     }
 
     async function deleteArtist(id) {
-        return await CRUDapi('DELETE', 'artists', id)
+        return await CRUDapi('DELETE', `artists/${id}`)
+    }
+
+    ////
+    // User Personal Data Request
+    ////
+    async function createPersonalDataRequest(id) {
+        return CRUDapi('POST', `personal-data-requests/me/${id}`)
     }
 
 
@@ -71,6 +78,7 @@ function artistApi() {
         createArtist,
         modifyArtist,
         deleteArtist,
+        createPersonalDataRequest,
         getLastRegisteredArtist,
         getRandomArtist,
         getArtistPosts,

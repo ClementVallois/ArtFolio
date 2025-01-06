@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { User } from 'src/domain/entities/user.entity';
+import { User as Artist } from 'src/domain/entities/user.entity';
 import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
 import { ValidationService } from 'src/application/validators/validation.service';
@@ -28,14 +28,14 @@ export class CreateArtistUseCase {
   async execute(
     artistData: CreateArtistDto,
     files: FileUploadDto,
-  ): Promise<User> {
+  ): Promise<Artist> {
     await this.validationService.validateArtistCategories(artistData);
     await this.validationService.validateProfilePicture(files);
     await this.validationService.validatePostPicture(files);
 
     const profilePicture = files.profilePicture[0];
     const postPicture = files.postPicture[0];
-    let artist: User;
+    let artist: Artist;
     try {
       artist = await this.artistRepository.createArtist(artistData);
     } catch (error) {

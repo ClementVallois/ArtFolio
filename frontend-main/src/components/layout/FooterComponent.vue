@@ -2,7 +2,7 @@
     <div
         class="bg-black flex flex-col items-center justify-center px-[2rem] pt-[4rem] md:h-[40vh] md:px-[10rem] text-white">
         <div class="max-w-[1780px] w-full md:flex md:justify-around">
-            <img src="@/assets/img/artfolio_logo_white.png" class="max-h-48">
+            <img src="@/assets/img/artfolio_logo_white.png" class="max-h-48" alt="ArtFolio Logo">
             <hr class="md:hidden border-t border-gray-200 my-4 w-full">
             <div class="w-full text-slate-200 flex justify-around pb-[4rem] md:flex-col md:justify-center md:items-end">
                 <!-- TODO: mettre les bon liens -->

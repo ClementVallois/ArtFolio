@@ -49,6 +49,7 @@ import AlertComponent from '@/components/toolBox/AlertComponent.vue';
 import { User } from '@/model/UserModel';
 import { useGlobalStore } from '@/store/GlobalStore.js';
 import { useStoreUser } from '@/domain/user/store/UserStore';
+import { useStoreAmateur } from '@/domain/amateur/store/AmateurStore';
 import { useAuthenticationPersistStore } from "@/domain/authentification/store/AuthenticationPersistStore.js";
 import { authenticationService } from '@/domain/authentification/services/AuthenticationService.js';
 import { ref,  computed, onMounted, watch, toRaw } from 'vue';
@@ -61,6 +62,7 @@ const { error, isAuthenticated, isLoading, user} = useAuth0();
 // Store initialisation
 const storeGlobal = useGlobalStore();
 const userStore = useStoreUser();
+const amateurStore = useStoreAmateur()
 const authenticationStore = useAuthenticationPersistStore()
 const router = useRouter();
 
@@ -92,15 +94,14 @@ onMounted(async () => {
 //Assign User Role
 const assignUserRoleIfNeeded = () => {
     if (isAuthenticated.value) {
-        authenticationService().assignUserRole(user.value.sub, 'User');
-        
+        authenticationService().assignUserRole(user.value.sub, 'Amateur');
     }
 };
 // Add a watch whenever there is a bit of lag in auth0
 watch(isAuthenticated, (newValue) => {
     if (newValue) {
         setTimeout(()=> {
-            authenticationService().assignUserRole(user.value.sub, 'User')
+            authenticationService().assignUserRole(user.value.sub, 'Amateur')
         }, 500)
     }
 })
@@ -181,10 +182,11 @@ const submitForm = async () => {
             /// Asset
             data.append('profilePicture',fileUserPicture.value);
 
-            let response = await userStore.createUser(data);
+            // let response = await userStore.createUser(data);
+            let response = await amateurStore.createAmateur(data)
             if (response.status == 201 ) {
                 await authenticationStore.storeProfileFromAuth0Id(user.value.sub)
-                router.push({ name: 'UserInfoPage' });
+                router.push('/');
             }else{
                 defaultTextAlert.value = "Une erreur s'est produite au moment de la création.";
                 alertError.value = true;

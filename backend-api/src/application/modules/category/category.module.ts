@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { CategoryController } from 'src/presentation/controllers/category.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from 'src/domain/entities/category.entity';
@@ -16,9 +16,9 @@ import { APP_GUARD } from '@nestjs/core';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Category]),
-    forwardRef(() => SharedArtistModule),
-    forwardRef(() => SharedCategoryModule),
-    forwardRef(() => CommonModule),
+    SharedArtistModule,
+    SharedCategoryModule,
+    CommonModule,
   ],
   controllers: [CategoryController],
   providers: [

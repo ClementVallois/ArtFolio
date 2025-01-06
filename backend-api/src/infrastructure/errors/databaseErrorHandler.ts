@@ -1,7 +1,9 @@
 import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { Logger } from '../logger/services/logger.service';
 
 @Injectable()
 export class DatabaseErrorHandler {
+  constructor(private readonly logger: Logger) {}
   parseDatabaseError(error: any, data: any): string {
     if (error.code === '23505') {
       if (error.detail.includes('username')) {
@@ -17,6 +19,7 @@ export class DatabaseErrorHandler {
 
   handleDatabaseError(error: any, data: any): never {
     const errorMessage = this.parseDatabaseError(error, data);
+    this.logger.error(errorMessage, error);
     throw new HttpException(errorMessage, HttpStatus.BAD_REQUEST);
   }
 }
