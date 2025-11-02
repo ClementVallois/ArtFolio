@@ -21,7 +21,7 @@ L'objectif est de développer un réseau social convivial pour les artistes et l
 Le développement implique plusieurs composants techniques :
 - **Frontends** : 2 applications web : Une interface principale responsive pour la raison sociale de Artfolio et une autre interface administrateur pour modérer la communauté et le contenu de l’application. Ces deux frontends sont développés en Javascript avec l’utilisation de Vue.js
 - **Backend** : Une architecture sophistiquée en Domain Driven Development pour gérer les interactions de données. Notre backend type ses données avec TypeScript et utilise NestJs.
-RNCP31678 - TITRE CONCEPTEUR DEVELOPPEUR – SESSION 2024
+
 - **Base de Données** : Une base de données relationnelle pour organiser et stocker les données des utilisateurs. Nous avons utilisé du SQL et PostgreSQL comme système de gestion de base de données.
 - **Système de connexion Auth0** : Notre application intègre un système d'authentification robuste conçu pour remédier à plusieurs vulnérabilités majeures listées par l’OWASP en matière de sécurité.
 - **Environnement de Production** : Déploiement sur un serveur Amazon EC2 utilisant la conteneurisation pour assurer évolutivité, sécurité et facilité de déploiement.
