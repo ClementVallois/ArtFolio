@@ -13,13 +13,13 @@ export class ValidationService {
   constructor(
     private readonly getCategoryByIdUseCase: GetCategoryByIdUseCase,
   ) {}
-  public validateFilesAndData(
+  public async validateFilesAndData(
     files: { profilePicture?: File; postPicture?: File[] },
     artistData?: CreateArtistDto,
   ): Promise<void> {
-    this.validateProfilePicture(files);
-    this.validatePostPicture(files);
-    this.validateArtistCategories(artistData);
+    await this.validateProfilePicture(files);
+    await this.validatePostPicture(files);
+    await this.validateArtistCategories(artistData);
     return Promise.resolve();
   }
 
