@@ -2,158 +2,124 @@
 
 # ArtFolio Backend
 
-API REST du backend ArtFolio, construit avec **NestJS**, **Fastify** et **TypeScript**, suivant une architecture **DDD** pour gérer utilisateurs, contenus et demandes de données personnelles RGPD.
+REST API for ArtFolio, a social platform where artists showcase their work and connect with their community. Built with NestJS, Fastify, TypeScript, and PostgreSQL.
 
----
+## Why these choices
 
-## Stack
+**DDD architecture** because the domain has real business rules (artist profiles, content moderation, GDPR data requests) that benefit from explicit modeling. Entities, value objects, and use cases live in their own layers, separated from infrastructure.
 
-* **Framework:** NestJS + Fastify
-* **Langage:** TypeScript
-* **Base de données:** PostgreSQL via TypeORM avec SnakeNamingStrategy
-* **Authentification:** JWT (passport-jwt, jwks-rsa) et guards de permissions
-* **Documentation:** Swagger/OpenAPI, redirection de `/` vers `/api`
-* **Sécurité:** Helmet, CORS, sessions + CSRF, ValidationPipe stricte
-* **Upload:** Multipart avec filtrage MIME et limite 10MB
+**Fastify over Express** for better performance on file uploads (profile pictures, post images) and lower overhead on JSON serialization. NestJS abstracts the adapter, so switching back would be trivial.
 
----
+**Auth0 over hand-rolled auth** because authentication is not a differentiator for this project. Auth0 handles token issuance, JWKS rotation, and scope management. The backend validates JWTs and enforces permissions through NestJS guards.
 
-## Structure
+## Architecture
 
 ```
-backend-api/
-├─ assets/                  # posts_pictures, profile_pictures, photo_seed
-├─ scripts/                 # seed.command.ts (nest-commander)
-├─ src/
-│  ├─ application/          # use-cases par domaine, handlers fichiers, validators
-│  ├─ domain/               # entities, value-objects, interfaces de repositories
-│  ├─ infrastructure/       # DB config + migrations, logger, file services, security
-│  └─ presentation/         # controllers, DTOs, decorators, swagger
+Request → Controller → UseCase → Repository Interface → TypeORM Repository → PostgreSQL
+                         ↓
+                   Domain Entity
+                   Value Object
 ```
 
-Cette organisation sépare clairement **métier**, **infrastructure** et **présentation** selon les principes DDD pour une meilleure maintenabilité.
+```
+src/
+├── domain/           # Entities, value objects, repository interfaces (no dependencies)
+├── application/      # Use cases, validators, file handlers (depends on domain only)
+├── infrastructure/   # TypeORM repos, Auth0 config, database, logger (implements domain interfaces)
+└── presentation/     # Controllers, DTOs, Swagger config (calls application layer)
+```
 
----
+The domain layer has zero imports from NestJS or TypeORM. Infrastructure implements the repository interfaces defined in the domain. Controllers never touch repositories directly.
 
-## Installation
+## Quick start
 
 ```bash
+# With Docker Compose (from project root)
+docker compose up -d
+
+# Or manually
+cp .env.example .env          # fill in your Auth0 + DB credentials
 npm install
+npm run typeorm:run-migrations
+npm run seed                  # optional: load sample data
+npm run start:dev             # http://localhost:3000
 ```
 
-Les scripts clés (`start`, `start:dev`, `test`, `test:e2e`, `test:cov`) et les commandes TypeORM pour migrations sont disponibles dans `package.json`.
-
----
-
-## Configuration (.env)
-
-```env
-# Application
-NODE_ENV=development
-BACKEND_API_SERVER_PORT=3000
-SESSION_SECRET=your-session-secret
-LOG_DIRECTORY=./logs
-
-# Database
-DB_API_PORT=5432
-DB_API_NAME=artfolio
-DB_API_USER=your_username
-DB_API_PASSWORD=your_password
-SYNCHRONIZE_ENABLED=false
-LOGGING_ENABLED=false
-
-# Auth0 (JWT)
-AUTH0_ISSUER_URL=https://your-domain.auth0.com/
-AUTH0_AUDIENCE=your-api-audience
-
-# Assets (dev)
-DEV_POST_ASSETS_LOCATION=./backend-api/assets/posts_pictures
-DEV_PROFILE_ASSETS_LOCATION=./backend-api/assets/profile_pictures
-```
-
-Le datasource TypeORM lit ces variables, applique la stratégie **snake_case**, charge les entités sous `src/domain/*.entity` et les migrations sous `src/infrastructure/database/migrations`.
-
----
-
-## Démarrage
-
-```bash
-# Dev (watch, 0.0.0.0:3000 par défaut)
-npm run start:dev
-```
-
-Au boot, l’app configure **CORS**, **Helmet**, **multipart**, **sessions + CSRF**, **ValidationPipe**, installe **Swagger** via `SWAGGER_CONFIG`, redirige `/` vers `/api` et écoute sur `BACKEND_API_SERVER_PORT` (par défaut 3000).
-
----
-
-## CORS et sécurité
-
-* **CORS:** origines autorisées `https://artfolio.dev`, `https://www.artfolio.dev`, `https://admin.artfolio.dev`, `http://localhost:5174` et `:5180` avec credentials et en-têtes `Content-Type`, `Authorization`, `x-csrf-token`.
-* **Helmet:** `frameguard sameorigin`, `referrerPolicy same-origin`, CSP activé, CORP `cross-origin`, COOP `same-origin-allow-popups`.
-* **Sessions + CSRF:** cookies `httpOnly`, `SameSite=lax`, `secure` si `NODE_ENV=production`, token CSRF activé.
-* **Validation:** `transform`, `whitelist`, `forbidNonWhitelisted`, code 422, `stopAtFirstError=false`.
-
----
-
-## Endpoints clés
-
-* **Artistes:**
-  `GET /artists`, `GET /artists/withPinnedPost`, `GET /artists/:id`, `GET /artists/:id/posts`, `GET /artists/:id/categories`, `GET /artists/:id/assets`, `POST /artists`, `PATCH /artists/:id`, `DELETE /artists/:id`, `DELETE /artists/me/:id` (guards + scopes)
-
-* **Amateurs:**
-  `GET /amateurs`, `GET /amateurs/:id`, `GET /amateurs/:id/assets`, `POST /amateurs`, `PATCH /amateurs/:id`, `DELETE /amateurs/:id` (upload profilePicture)
-
-* **Posts:**
-  `GET /posts`, `GET /posts/:id`, `GET /posts/:id/assets`, `POST /posts`, `PATCH /posts/:id`, `DELETE /posts/:id` (upload postPicture)
-
-* **Catégories:**
-  `GET /categories`, `GET /categories/:id`, `POST /categories`, `PATCH /categories/:id`, `DELETE /categories/:id`
-
-* **Données personnelles:**
-  `GET /personal-data-requests`, `GET /personal-data-requests/requested`, `GET /personal-data-requests/:id`, `POST /personal-data-requests`, `PATCH /personal-data-requests/:id`, `GET /personal-data-requests/download/:id`
-
----
-
-## Auth et permissions
-
-Routes protégées avec `AuthGuard('jwt')` et `PermissionsGuard` utilisant des scopes tels que `read:all`, `read:allArtist`, `read:posts`, `create:artist`, `create:amateur`, `create:post`, `update:*`, `delete:*` selon le domaine.
-
----
-
-## Upload et assets
-
-* Interceptor **multipart** avec filtre MIME (`image/png`, `image/jpeg`, `image/webp`) et limite 10MB par champ.
-* Sauvegarde sur `DEV_PROFILE_ASSETS_LOCATION` ou `DEV_POST_ASSETS_LOCATION`.
-* Création/mise à jour des métadonnées d’**Asset**.
-* Streaming via **FastifyReply**.
-
----
-
-## Base de données et migrations
-
-* **Exécution:** `npm run typeorm:run-migrations`
-* **Rollback:** `npm run typeorm:revert-migration` (config: `src/infrastructure/database/ormconfig.ts`)
-* **Génération:** `npm run typeorm:generate-migration --name <Nom>`
-* **Création:** `npm run typeorm:create-migration --name <Nom>`
-
----
-
-## Seeding
-
-* **Via conteneur:** `npm run seed` et `npm run clear` exécutent seed et clear via `nest-commander`.
-* **En direct:** `npm run console seed seed` ou `npm run console seed clear` pour lancer `SeederService` depuis la machine hôte.
-
----
+The root URL (`/`) redirects to Swagger at `/api`.
 
 ## Tests
 
-* **Unitaires:** `npm run test` ou `npm run test:watch`
-* **E2E:** `npm run test:e2e`
-* **Couverture:** `npm run test:cov`
+25 unit tests covering the core use cases:
 
----
+```bash
+npm test              # run all tests
+npm run test:watch    # watch mode
+npm run test:cov      # coverage report
+npm run test:e2e      # end-to-end
+```
+
+Tested use cases: `createArtist`, `getAllArtists`, `getPostById`, `getUserById`, `getUserByAuth0Id`, `getUserDataRequests`.
+
+## Stack
+
+| Layer            | Technology                                              |
+| ---------------- | ------------------------------------------------------- |
+| Framework        | NestJS 10 + Fastify                                     |
+| Language         | TypeScript (strict)                                     |
+| Database         | PostgreSQL 16, TypeORM, snake_case naming strategy      |
+| Auth             | Auth0 (passport-jwt, jwks-rsa), permission guards       |
+| Validation       | class-validator, class-transformer, Joi                 |
+| Security         | Helmet, CSRF, CORS, rate limiting (throttler)           |
+| File upload      | @fastify/multipart, MIME filtering, 10MB limit          |
+| Documentation    | Swagger / OpenAPI (auto-generated)                      |
+| CI               | GitHub Actions (lint → test → build)                    |
+| Containerization | Docker Compose (backend + 2 frontends + DB + SonarQube) |
+
+## API overview
+
+All mutating routes require a valid JWT and appropriate scopes (`create:artist`, `update:post`, `delete:*`, etc.). Read routes for public content are open.
+
+| Resource               | Endpoints                               |
+| ---------------------- | --------------------------------------- |
+| Artists                | CRUD + pinned posts, categories, assets |
+| Amateurs               | CRUD + profile picture upload           |
+| Posts                  | CRUD + post picture upload              |
+| Categories             | CRUD                                    |
+| Personal data requests | CRUD + download (GDPR compliance)       |
+
+Full endpoint list available at `/api` (Swagger UI) when the server is running.
+
+## Security
+
+- **CORS**: whitelisted origins only, credentials enabled
+- **Helmet**: CSP, frameguard, referrer policy
+- **CSRF**: session-based tokens, httpOnly cookies, SameSite=lax, secure in production
+- **Validation**: whitelist mode, forbidNonWhitelisted, transforms enabled, returns 422
+- **Auth**: JWT validation via JWKS endpoint, permission-based guards on every protected route
+
+## Database
+
+```bash
+npm run typeorm:run-migrations          # apply migrations
+npm run typeorm:revert-migration        # rollback last migration
+npm run typeorm:generate-migration --name=<Name>  # generate from entity diff
+```
+
+Config: `src/infrastructure/database/ormconfig.ts`
+
+## Configuration
+
+See `.env.example` for all required variables. Key groups:
+
+- `BACKEND_API_SERVER_PORT`, `NODE_ENV`, `SESSION_SECRET`
+- `DB_API_*` (PostgreSQL connection)
+- `AUTH0_ISSUER_URL`, `AUTH0_AUDIENCE` (JWT validation)
+- `DEV_*_ASSETS_LOCATION` (file upload paths)
 
 ## Logging
 
-* Logger applicatif écrit des fichiers journaux quotidiens dans `LOG_DIRECTORY` selon `NODE_ENV`.
-* Interceptor global trace chaque requête avec méthode, URL et temps de réponse.
+Daily rotating log files in `LOG_DIRECTORY`. A global interceptor logs every request with method, URL, and response time.
+
+## Author
+
+Clément Vallois — [GitHub](https://github.com/ClementVallois)
