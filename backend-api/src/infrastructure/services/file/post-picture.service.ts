@@ -33,7 +33,6 @@ export class PostPictureService {
     private readonly getPostByIdUseCase: GetPostByIdUseCase,
     private readonly getPostPictureAssetsUseCase: GetPostPictureAssetsUseCase,
     private readonly getArtistPostPictureAssetsUseCase: GetArtistPostPictureAssetsUseCase,
-    private readonly getPostPictureAssetUseCase: GetPostPictureAssetsUseCase,
     private readonly removeAssetUseCase: RemoveAssetUseCase,
     private readonly getPostAssetsUseCase: GetPostAssetsUseCase,
     private readonly logger: Logger,
@@ -133,7 +132,7 @@ export class PostPictureService {
 
     try {
       const existingPostPicture =
-        await this.getPostPictureAssetUseCase.execute(postId);
+        await this.getPostPictureAssetsUseCase.execute(postId);
       if (existingPostPicture) {
         for (const asset of existingPostPicture) {
           await this.removeAssetUseCase.execute(asset);
