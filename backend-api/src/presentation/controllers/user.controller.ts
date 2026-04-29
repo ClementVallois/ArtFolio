@@ -1,7 +1,15 @@
-import { Controller, Get, Param, Res, StreamableFile } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  Res,
+  StreamableFile,
+  UseGuards,
+} from '@nestjs/common';
 import { FindAuth0IdParams, FindIdParams } from '../utils/params.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { FastifyReply } from 'fastify';
+import { AuthGuard } from '@nestjs/passport';
 import { GetUserByIdUseCase } from 'src/application/modules/user/use-cases/getUserById.useCase';
 import { GetUserByAuth0IdUseCase } from 'src/application/modules/user/use-cases/getUserByAuth0Id.useCase';
 import { GetUserDataRequestsUseCase } from 'src/application/modules/user/use-cases/getUserDataRequests.useCase';
@@ -9,9 +17,12 @@ import { ProfilePictureService } from 'src/infrastructure/services/file/profile-
 import { UserId } from 'src/domain/value-objects/userId';
 import { User } from 'src/domain/entities/user.entity';
 import { PersonalDataRequest } from 'src/domain/entities/personal-data-request.entity';
+import { PermissionsGuard } from '../decorators/permissions/permissions.guard';
+import { Permissions } from '../decorators/permissions/permissions.decorator';
 
 @ApiTags('Users')
 @ApiBearerAuth()
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @Controller('users')
 export class UserController {
   constructor(
@@ -21,12 +32,14 @@ export class UserController {
     private readonly profilePictureService: ProfilePictureService,
   ) {}
 
+  @Permissions('read:all')
   @Get(':id')
   async getUserById(@Param() { id }: FindIdParams): Promise<User> {
     const userId = new UserId(id);
     return this.getUserByIdUseCase.execute(userId);
   }
 
+  @Permissions('read:all')
   @Get(':id/assets')
   async getUserAssets(
     @Param() { id }: FindIdParams,
@@ -36,6 +49,7 @@ export class UserController {
     return this.profilePictureService.streamUserAssets(userId, response);
   }
 
+  @Permissions('read:all')
   @Get('auth0Id/:auth0Id')
   async getUserByAuth0Id(
     @Param() { auth0Id }: FindAuth0IdParams,
@@ -43,6 +57,7 @@ export class UserController {
     return this.getUserByAuth0IdUseCase.execute(auth0Id);
   }
 
+  @Permissions('read:personal-data-request')
   @Get(':id/data-requests')
   async getUserDataRequests(
     @Param() { id }: FindIdParams,
