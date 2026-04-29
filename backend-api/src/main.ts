@@ -75,9 +75,6 @@ async function bootstrap() {
     },
   });
 
-  // Logging
-  app.useGlobalInterceptors(new LoggingInterceptor(logger));
-
   // Validation
   app.useGlobalPipes(
     new ValidationPipe({

@@ -10,9 +10,6 @@ import { RemoveAmateurUseCase } from './use-cases/removeAmateur.useCase';
 import { CommonModule } from 'src/application/common/common.module';
 import { SharedAmateurModule } from 'src/application/shared/modules/amateur/shared-amateur.module';
 import { SharedFileModule } from 'src/application/handlers/shared-file.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
-
 @Module({
   imports: [
     TypeOrmModule.forFeature([Amateur]),
@@ -23,10 +20,6 @@ import { ThrottlerGuard } from '@nestjs/throttler';
   controllers: [AmateurController],
   providers: [
     { provide: 'IAmateurRepository', useClass: AmateurRepository },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
     CreateAmateurUseCase,
     GetAllAmateursUseCase,
     UpdateAmateurUseCase,

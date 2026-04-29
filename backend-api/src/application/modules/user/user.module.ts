@@ -23,8 +23,6 @@ import { GetPostPictureAssetsUseCase } from '../../shared/modules/asset/use-case
 import { GetArtistPostPictureAssetsUseCase } from '../../shared/modules/asset/use-cases/getArtistPostPictureAssets.useCase';
 import { RemoveAssetUseCase } from '../asset/use-cases/removeAsset.useCase';
 import { CommonModule } from 'src/application/common/common.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -43,10 +41,6 @@ import { ThrottlerGuard } from '@nestjs/throttler';
     { provide: 'IAssetRepository', useClass: AssetRepository },
     { provide: 'IUserRepository', useClass: UserRepository },
     { provide: 'ICategoryRepository', useClass: CategoryRepository },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
     ProfilePictureService,
     UserService,
     GetUserProfilePictureAssetUseCase,

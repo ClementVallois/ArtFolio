@@ -7,8 +7,6 @@ import { GetAllPersonalDataRequestUseCase } from './use-cases/getAllPersonalData
 import { GetOnePersonalDataRequestUseCase } from './use-cases/getOnePersonalDataRequest.useCase';
 import { CreatePersonalDataRequestUseCase } from './use-cases/createPersonalDataRequest.useCase';
 import { UserModule } from '../user/user.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ThrottlerGuard } from '@nestjs/throttler';
 import { GetAllUserDataUseCase } from './use-cases/getAllUserData.useCase';
 import { UpdatePersonalDataRequestUseCase } from './use-cases/updatePersonalDataRequest.useCase';
 import { GetAllRequestedPersonalDataRequestUseCase } from './use-cases/getAllRequestedPersonalDataRequest.useCase';
@@ -21,10 +19,6 @@ import { GetAllRequestedPersonalDataRequestUseCase } from './use-cases/getAllReq
     {
       provide: 'IPersonalDataRequestRepository',
       useClass: PersonalDataRequestRepository,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
     },
     GetAllPersonalDataRequestUseCase,
     GetOnePersonalDataRequestUseCase,
