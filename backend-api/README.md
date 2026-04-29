@@ -1,3 +1,5 @@
+[![Backend CI](https://github.com/ClementVallois/ArtFolio/actions/workflows/backend-ci.yml/badge.svg?branch=main)](https://github.com/ClementVallois/ArtFolio/actions/workflows/backend-ci.yml)
+
 # ArtFolio Backend
 
 API REST du backend ArtFolio, construit avec **NestJS**, **Fastify** et **TypeScript**, suivant une architecture **DDD** pour gérer utilisateurs, contenus et demandes de données personnelles RGPD.
