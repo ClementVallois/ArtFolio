@@ -77,8 +77,6 @@ export class UserSeederService {
       artist.status = 'active';
       artist.auth0Id = auth0Id;
       artist.role = 'artist';
-      artist.createdAt = faker.date.recent();
-      artist.updatedAt = faker.date.recent();
       await this.userRepository.save(artist);
     }
   }
@@ -101,8 +99,6 @@ export class UserSeederService {
       user.status = 'active';
       user.auth0Id = auth0Id;
       user.role = 'amateur';
-      user.createdAt = faker.date.recent();
-      user.updatedAt = faker.date.recent();
       await this.userRepository.save(user);
     }
   }
@@ -125,8 +121,6 @@ export class UserSeederService {
       user.status = 'active';
       user.auth0Id = auth0Id;
       user.role = 'moderator';
-      user.createdAt = faker.date.recent();
-      user.updatedAt = faker.date.recent();
       await this.userRepository.save(user);
     }
   }
