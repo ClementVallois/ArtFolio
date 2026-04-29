@@ -122,4 +122,4 @@ Daily rotating log files in `LOG_DIRECTORY`. A global interceptor logs every req
 
 ## Author
 
-Clément Vallois — [GitHub](https://github.com/ClementVallois)
+Clément Vallois | [GitHub](https://github.com/ClementVallois)
