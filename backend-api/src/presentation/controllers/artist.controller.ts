@@ -290,7 +290,6 @@ export class ArtistController {
     return this.profilePictureService.streamUserAssets(artistId, response);
   }
 
-  //TODO: Remove if not needed
   @Get(':id/assets-url')
   async getArtistProfilePictureUrl(
     @Param() params: FindIdParams,

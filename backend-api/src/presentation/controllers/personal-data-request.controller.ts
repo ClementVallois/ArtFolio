@@ -159,14 +159,6 @@ export class PersonalDataRequestController {
     );
   }
 
-  // TODO : Add this delete
-  // @Delete(':id')
-  // async deleteDataRequest(@Param() params: FindIdParams) {
-  //   const personalDataRequestId = new PersonalDataRequestId(params.id);
-  //   return this.deletePersonalDataRequestUseCase.execute(personalDataRequestId);
-  // }
-
-  //TODO : Add guards and permissions.
   /**
    * Get personal data of a user
    * @param {FindIdParams} requestId - Parameters with the user ID

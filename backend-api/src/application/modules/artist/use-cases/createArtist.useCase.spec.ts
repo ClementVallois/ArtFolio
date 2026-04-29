@@ -1,30 +1,33 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { getDataSourceToken } from '@nestjs/typeorm';
 import { CreateArtistUseCase } from './createArtist.useCase';
-import { IArtistRepository } from 'src/domain/interfaces/artist.repository.interface';
 import { ValidationService } from 'src/application/validators/validation.service';
 import { DatabaseErrorHandler } from 'src/infrastructure/errors/databaseErrorHandler';
-import { ProfilePictureHandler } from 'src/application/handlers/profile-picture.handler';
-import { AssignCategoriesToArtistUseCase } from 'src/application/shared/modules/category/use-cases/assignCategoriesToArtist.useCase';
-import { CreatePostUseCase } from 'src/application/shared/modules/post/use-cases/createPost.useCase';
+import { ProfilePictureService } from 'src/infrastructure/services/file/profile-picture.service';
+import { PostPictureService } from 'src/infrastructure/services/file/post-picture.service';
 import {
   BadRequestException,
   HttpException,
   NotFoundException,
 } from '@nestjs/common';
-import { User as Artist } from 'src/domain/entities/user.entity';
+import { User } from 'src/domain/entities/user.entity';
+import { Asset } from 'src/domain/entities/asset.entity';
+import { Post } from 'src/domain/entities/post.entity';
+import { Category } from 'src/domain/entities/category.entity';
 import { CreateArtistDto } from 'src/presentation/dto/artist/create-artist.dto';
 import { FileUploadDto } from 'src/presentation/dto/artist/fileUpload.dto';
 
 describe('CreateArtistUseCase', () => {
   let useCase: CreateArtistUseCase;
-  let artistRepository: jest.Mocked<IArtistRepository>;
   let validationService: jest.Mocked<ValidationService>;
   let databaseErrorHandler: jest.Mocked<DatabaseErrorHandler>;
-  let profilePictureHandler: jest.Mocked<ProfilePictureHandler>;
-  let assignCategoriesToArtistUseCase: jest.Mocked<AssignCategoriesToArtistUseCase>;
-  let createPostUseCase: jest.Mocked<CreatePostUseCase>;
+  let profilePictureService: jest.Mocked<ProfilePictureService>;
+  let postPictureService: jest.Mocked<PostPictureService>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let mockManager: any;
+  let dataSourceTransactionMock: jest.Mock;
 
-  const mockArtist: Artist = {
+  const mockArtist: User = {
     id: 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11',
     firstName: 'John',
     lastName: 'Doe',
@@ -34,6 +37,39 @@ describe('CreateArtistUseCase', () => {
     status: 'active',
     role: 'artist',
     auth0Id: 'auth0|123456789',
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  };
+
+  const mockPost: Post = {
+    id: 'post-uuid-1',
+    isPinned: true,
+    description: 'My first post',
+    user: mockArtist,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  };
+
+  const mockCategory: Category = {
+    id: 'cat-uuid-1',
+    name: 'Painting',
+    description: 'Painting category',
+    user: [],
+    post: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    deletedAt: null,
+  };
+
+  const mockAsset: Asset = {
+    id: 'asset-uuid-1',
+    url: '/uploads/profile/profile.png',
+    type: 'profile_picture',
+    mimetype: 'image/png',
+    userId: mockArtist,
+    postId: null,
     createdAt: new Date(),
     updatedAt: new Date(),
     deletedAt: null,
@@ -58,12 +94,22 @@ describe('CreateArtistUseCase', () => {
   };
 
   beforeEach(async () => {
+    mockManager = {
+      create: jest.fn(),
+      save: jest.fn(),
+      findOne: jest.fn(),
+    } as any;
+
+    dataSourceTransactionMock = jest
+      .fn()
+      .mockImplementation(async (cb) => cb(mockManager));
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         CreateArtistUseCase,
         {
-          provide: 'IArtistRepository',
-          useValue: { createArtist: jest.fn() },
+          provide: getDataSourceToken(),
+          useValue: { transaction: dataSourceTransactionMock },
         },
         {
           provide: ValidationService,
@@ -78,37 +124,57 @@ describe('CreateArtistUseCase', () => {
           useValue: { handleDatabaseError: jest.fn() },
         },
         {
-          provide: ProfilePictureHandler,
-          useValue: { createOrUpdateProfilePicture: jest.fn() },
+          provide: ProfilePictureService,
+          useValue: {
+            saveProfilePicture: jest.fn(),
+          },
         },
         {
-          provide: AssignCategoriesToArtistUseCase,
-          useValue: { execute: jest.fn() },
-        },
-        {
-          provide: CreatePostUseCase,
-          useValue: { execute: jest.fn() },
+          provide: PostPictureService,
+          useValue: {
+            savePostPicture: jest.fn(),
+          },
         },
       ],
     }).compile();
 
     useCase = module.get(CreateArtistUseCase);
-    artistRepository = module.get('IArtistRepository');
     validationService = module.get(ValidationService);
     databaseErrorHandler = module.get(DatabaseErrorHandler);
-    profilePictureHandler = module.get(ProfilePictureHandler);
-    assignCategoriesToArtistUseCase = module.get(
-      AssignCategoriesToArtistUseCase,
-    );
-    createPostUseCase = module.get(CreatePostUseCase);
+    profilePictureService = module.get(ProfilePictureService);
+    postPictureService = module.get(PostPictureService);
   });
 
   it('should be defined', () => {
     expect(useCase).toBeDefined();
   });
 
-  it('should create an artist and return it', async () => {
-    artistRepository.createArtist.mockResolvedValue(mockArtist);
+  it('should create an artist and return it within a transaction', async () => {
+    validationService.validateArtistCategories.mockResolvedValue();
+    validationService.validateProfilePicture.mockResolvedValue();
+    validationService.validatePostPicture.mockResolvedValue();
+
+    profilePictureService.saveProfilePicture.mockResolvedValue({
+      filePath: '/uploads/profile/profile.png',
+      fileType: 'image/png',
+    });
+    postPictureService.savePostPicture.mockResolvedValue({
+      filePath: '/uploads/posts/post.jpg',
+      fileType: 'image/jpeg',
+    });
+
+    mockManager.create
+      .mockReturnValueOnce(mockArtist)
+      .mockReturnValueOnce(mockAsset)
+      .mockReturnValueOnce(mockPost)
+      .mockReturnValueOnce({ ...mockAsset, type: 'post_picture' });
+    mockManager.save
+      .mockResolvedValueOnce(mockArtist)
+      .mockResolvedValueOnce(mockAsset)
+      .mockResolvedValueOnce(mockPost)
+      .mockResolvedValueOnce({ ...mockAsset, type: 'post_picture' })
+      .mockResolvedValueOnce(mockCategory);
+    mockManager.findOne.mockResolvedValue(mockCategory);
 
     const result = await useCase.execute(
       mockArtistData as CreateArtistDto,
@@ -116,31 +182,21 @@ describe('CreateArtistUseCase', () => {
     );
 
     expect(result).toEqual(mockArtist);
-    expect(validationService.validateArtistCategories).toHaveBeenCalledWith(
-      mockArtistData,
+    expect(dataSourceTransactionMock).toHaveBeenCalledTimes(1);
+    expect(profilePictureService.saveProfilePicture).toHaveBeenCalledWith(
+      mockArtistData.auth0Id,
+      mockFiles.profilePicture[0],
     );
-    expect(validationService.validateProfilePicture).toHaveBeenCalledWith(
-      mockFiles,
-    );
-    expect(validationService.validatePostPicture).toHaveBeenCalledWith(
-      mockFiles,
-    );
-    expect(artistRepository.createArtist).toHaveBeenCalledWith(mockArtistData);
-    expect(
-      profilePictureHandler.createOrUpdateProfilePicture,
-    ).toHaveBeenCalledWith(mockArtist, mockFiles.profilePicture[0]);
-    expect(createPostUseCase.execute).toHaveBeenCalledWith(
-      {
-        isPinned: mockArtistData.post.isPinned,
-        description: mockArtistData.post.description,
-        artistId: mockArtist.id,
-      },
+    expect(postPictureService.savePostPicture).toHaveBeenCalledWith(
+      mockPost.id,
       mockFiles.postPicture[0],
     );
-    expect(assignCategoriesToArtistUseCase.execute).toHaveBeenCalled();
+    expect(mockManager.findOne).toHaveBeenCalledWith(Category, {
+      where: { id: 'cat-uuid-1' },
+    });
   });
 
-  it('should throw BadRequestException when profile picture is missing', async () => {
+  it('should throw BadRequestException when profile picture validation fails', async () => {
     validationService.validateArtistCategories.mockResolvedValue();
     validationService.validateProfilePicture.mockRejectedValue(
       new BadRequestException('Profile picture file is required.'),
@@ -150,10 +206,10 @@ describe('CreateArtistUseCase', () => {
       useCase.execute(mockArtistData as CreateArtistDto, mockFiles),
     ).rejects.toThrow(BadRequestException);
 
-    expect(artistRepository.createArtist).not.toHaveBeenCalled();
+    expect(dataSourceTransactionMock).not.toHaveBeenCalled();
   });
 
-  it('should throw BadRequestException when post picture is missing', async () => {
+  it('should throw BadRequestException when post picture validation fails', async () => {
     validationService.validateArtistCategories.mockResolvedValue();
     validationService.validateProfilePicture.mockResolvedValue();
     validationService.validatePostPicture.mockRejectedValue(
@@ -164,27 +220,61 @@ describe('CreateArtistUseCase', () => {
       useCase.execute(mockArtistData as CreateArtistDto, mockFiles),
     ).rejects.toThrow(BadRequestException);
 
-    expect(artistRepository.createArtist).not.toHaveBeenCalled();
+    expect(dataSourceTransactionMock).not.toHaveBeenCalled();
   });
 
   it('should throw NotFoundException when a category does not exist', async () => {
-    validationService.validateArtistCategories.mockRejectedValue(
-      new NotFoundException('One or more categories do not exist.'),
-    );
+    validationService.validateArtistCategories.mockResolvedValue();
+    validationService.validateProfilePicture.mockResolvedValue();
+    validationService.validatePostPicture.mockResolvedValue();
+
+    profilePictureService.saveProfilePicture.mockResolvedValue({
+      filePath: '/uploads/profile/profile.png',
+      fileType: 'image/png',
+    });
+    postPictureService.savePostPicture.mockResolvedValue({
+      filePath: '/uploads/posts/post.jpg',
+      fileType: 'image/jpeg',
+    });
+
+    mockManager.create
+      .mockReturnValueOnce(mockArtist)
+      .mockReturnValueOnce(mockAsset)
+      .mockReturnValueOnce(mockPost)
+      .mockReturnValueOnce({ ...mockAsset, type: 'post_picture' });
+    mockManager.save
+      .mockResolvedValueOnce(mockArtist)
+      .mockResolvedValueOnce(mockAsset)
+      .mockResolvedValueOnce(mockPost)
+      .mockResolvedValueOnce({ ...mockAsset, type: 'post_picture' });
+    mockManager.findOne.mockResolvedValue(null);
+
+    dataSourceTransactionMock.mockImplementation(async (cb) => cb(mockManager));
 
     await expect(
       useCase.execute(mockArtistData as CreateArtistDto, mockFiles),
     ).rejects.toThrow(NotFoundException);
-
-    expect(artistRepository.createArtist).not.toHaveBeenCalled();
   });
 
-  it('should delegate to DatabaseErrorHandler on database error', async () => {
-    const dbError = new Error('Duplicate key');
-    artistRepository.createArtist.mockRejectedValue(dbError);
+  it('should clean up saved files and delegate to DatabaseErrorHandler on DB error', async () => {
+    validationService.validateArtistCategories.mockResolvedValue();
+    validationService.validateProfilePicture.mockResolvedValue();
+    validationService.validatePostPicture.mockResolvedValue();
+
+    profilePictureService.saveProfilePicture.mockResolvedValue({
+      filePath: '/uploads/profile/profile.png',
+      fileType: 'image/png',
+    });
+
+    const dbError = {
+      code: '23505',
+      detail: 'Key (username)=(johndoe) already exists.',
+    };
     databaseErrorHandler.handleDatabaseError.mockImplementation(() => {
       throw new HttpException('User with username johndoe already exists', 400);
     });
+
+    dataSourceTransactionMock.mockRejectedValue(dbError);
 
     await expect(
       useCase.execute(mockArtistData as CreateArtistDto, mockFiles),
@@ -194,8 +284,5 @@ describe('CreateArtistUseCase', () => {
       dbError,
       mockArtistData,
     );
-    expect(
-      profilePictureHandler.createOrUpdateProfilePicture,
-    ).not.toHaveBeenCalled();
   });
 });
