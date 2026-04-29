@@ -3,7 +3,12 @@ module.exports = {
   rootDir: '.',
   testEnvironment: 'node',
   transform: {
-    '^.+\\.(t|j)s$': 'ts-jest',
+    '^.+\\.(t|j)s$': [
+      'ts-jest',
+      {
+        tsconfig: 'tsconfig.spec.json',
+      },
+    ],
   },
   moduleNameMapper: {
     '^src/(.*)$': '<rootDir>/src/$1',
