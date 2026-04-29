@@ -27,4 +27,7 @@ export interface IPersonalDataRequestRepository {
   ): Promise<PersonalDataRequest>;
 
   getPersonalDataRequestByUserId(userId: UserId): Promise<PersonalDataRequest>;
+  findPersonalDataRequestsByUserId(
+    userId: UserId,
+  ): Promise<PersonalDataRequest[]>;
 }

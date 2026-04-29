@@ -19,7 +19,8 @@ import { CommonModule } from './application/common/common.module';
 import { Logger } from './infrastructure/logger/services/logger.service';
 import { CacheModule } from '@nestjs/cache-manager';
 import { SeedCommand } from 'scripts/seed.command';
-import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from 'node_modules/@nestjs/core';
 
 @Module({
   imports: [
@@ -56,7 +57,15 @@ import { ThrottlerModule } from '@nestjs/throttler';
     SwaggerConfigModule.forRoot(),
   ],
   controllers: [],
-  providers: [SeederService, SeedCommand, Logger],
+  providers: [
+    SeederService,
+    SeedCommand,
+    Logger,
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule implements OnModuleInit {
   constructor(

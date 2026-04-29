@@ -34,9 +34,6 @@ export class DataRequestSeederService {
         'requested',
         'processed',
       ]);
-      fakeEntity.createdAt = faker.date.recent();
-      fakeEntity.updatedAt = faker.date.recent();
-
       return fakeEntity;
     });
 

@@ -8,8 +8,6 @@ import { PostRepository } from 'src/infrastructure/repositories/post.repository'
 import { CommonModule } from 'src/application/common/common.module';
 import { SharedPostModule } from 'src/application/shared/modules/post/shared-post.module';
 import { SharedFileModule } from 'src/application/handlers/shared-file.module';
-import { ThrottlerGuard } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -21,10 +19,6 @@ import { APP_GUARD } from '@nestjs/core';
   controllers: [PostController],
   providers: [
     { provide: 'IPostRepository', useClass: PostRepository },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
     RemovePostUseCase,
     UpdatePostUseCase,
   ],

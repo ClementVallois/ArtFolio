@@ -43,8 +43,6 @@ export class PostSeederService {
         fakeEntity.isPinned = true;
         fakeEntity.user = artist;
         fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
-        fakeEntity.createdAt = faker.date.recent();
-        fakeEntity.updatedAt = faker.date.recent();
         await this.postRepository.save(fakeEntity);
       }
     }
@@ -63,8 +61,6 @@ export class PostSeederService {
       fakeEntity.isPinned = false;
       fakeEntity.user = user;
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
-      fakeEntity.createdAt = faker.date.recent();
-      fakeEntity.updatedAt = faker.date.recent();
 
       return fakeEntity;
     });

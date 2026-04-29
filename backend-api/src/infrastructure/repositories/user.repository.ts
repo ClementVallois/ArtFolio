@@ -1,9 +1,11 @@
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/domain/entities/user.entity';
 import { IUserRepository } from 'src/domain/interfaces/user.repository.interface';
 import { UserId } from 'src/domain/value-objects/userId';
 import { Repository } from 'typeorm';
 
+@Injectable()
 export class UserRepository implements IUserRepository {
   constructor(
     @InjectRepository(User)
@@ -12,5 +14,9 @@ export class UserRepository implements IUserRepository {
 
   findUserById(userId: UserId): Promise<User> {
     return this.userRepository.findOneBy({ id: userId.toString() });
+  }
+
+  findUserByAuth0Id(auth0Id: string): Promise<User> {
+    return this.userRepository.findOneBy({ auth0Id });
   }
 }

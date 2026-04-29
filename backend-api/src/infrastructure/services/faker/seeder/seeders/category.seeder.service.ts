@@ -61,8 +61,6 @@ export class CategorySeederService {
       fakeEntity.id = faker.string.uuid();
       fakeEntity.name = name;
       fakeEntity.description = faker.lorem.words({ min: 10, max: 30 });
-      fakeEntity.createdAt = faker.date.recent();
-      fakeEntity.updatedAt = faker.date.recent();
       await this.categoryRepository.save(fakeEntity);
     }
   }

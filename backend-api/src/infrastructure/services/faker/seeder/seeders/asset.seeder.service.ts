@@ -98,8 +98,6 @@ export class AssetSeederService {
       asset.type = 'post_picture';
       asset.mimetype = mimeType;
       asset.userId = randomArtist;
-      asset.createdAt = faker.date.recent();
-      asset.updatedAt = faker.date.recent();
 
       await this.assetRepository.save(asset);
     }
@@ -143,8 +141,6 @@ export class AssetSeederService {
           continue;
         }
         newProfilePicture.id = faker.string.uuid();
-        newProfilePicture.createdAt = faker.date.recent();
-        newProfilePicture.updatedAt = faker.date.recent();
         await this.assetRepository.save(newProfilePicture);
       }
     }
@@ -191,8 +187,6 @@ export class AssetSeederService {
           continue;
         }
         newProfilePicture.id = faker.string.uuid();
-        newProfilePicture.createdAt = faker.date.recent();
-        newProfilePicture.updatedAt = faker.date.recent();
         await this.assetRepository.save(newProfilePicture);
       }
     }
@@ -225,8 +219,6 @@ export class AssetSeederService {
           ]);
           asset.userId = user;
           asset.url = faker.internet.url();
-          asset.createdAt = faker.date.recent();
-          asset.updatedAt = faker.date.recent();
           await this.assetRepository.save(asset);
         }
       }

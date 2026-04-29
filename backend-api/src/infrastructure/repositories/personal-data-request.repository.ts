@@ -44,6 +44,14 @@ export class PersonalDataRequestRepository
     });
   }
 
+  findPersonalDataRequestsByUserId(
+    userId: UserId,
+  ): Promise<PersonalDataRequest[]> {
+    return this.personalDataRequestRepository.find({
+      where: { user: { id: userId.toString() } },
+    });
+  }
+
   async findAllPersonalDataRequestWithUser(): Promise<PersonalDataRequest[]> {
     return this.personalDataRequestRepository.find({ relations: ['user'] });
   }

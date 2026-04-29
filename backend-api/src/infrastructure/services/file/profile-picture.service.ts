@@ -88,7 +88,7 @@ export class ProfilePictureService {
 
   @LogMethod(LogLevel.DEBUG)
   async streamUserAssets(
-    userId: AmateurId | ArtistId,
+    userId: UserId | AmateurId | ArtistId,
     response: FastifyReply,
   ): Promise<StreamableFile> {
     this.logger.info(`Streaming user assets for userId: ${userId}`);

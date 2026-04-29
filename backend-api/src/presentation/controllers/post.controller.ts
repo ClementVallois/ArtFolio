@@ -12,7 +12,6 @@ import {
   Res,
   StreamableFile,
   UploadedFiles,
-  Session,
 } from '@nestjs/common';
 import { CreatePostDto } from '../dto/post/create-post.dto';
 import { UpdatePostDto } from '../dto/post/update-post.dto';
@@ -56,21 +55,6 @@ export class PostController {
     private readonly postPictureService: PostPictureService,
   ) {}
 
-  //TODO : Rework the session logic
-  @Post('set-session')
-  async setSessionData(
-    @Session() session: Record<string, any>,
-    @Body() body: { key: string; value: any },
-  ) {
-    session[body.key] = body.value;
-    return { message: 'Session data set successfully' };
-  }
-
-  @Get('get-session')
-  async getSessionData(@Session() session: Record<string, any>) {
-    return session;
-  }
-
   /**
    * Get all posts.
    *
@@ -85,13 +69,7 @@ export class PostController {
   @UseGuards(AuthGuard('jwt'), PermissionsGuard)
   @Permissions('read:all')
   @Get()
-  async getAllPosts(
-    @Session() session: Record<string, any>,
-  ): Promise<PostEntity[]> {
-    session.viewCount = (session.viewCount || 0) + 1;
-
-    //TODO : Rework the session logic
-    console.log(`User has viewed all posts ${session.viewCount} times`);
+  async getAllPosts(): Promise<PostEntity[]> {
     return this.getAllPostsUseCase.execute();
   }
 
