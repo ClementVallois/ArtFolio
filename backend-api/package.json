@@ -57,7 +57,6 @@
     "fastify-multer": "^2.0.3",
     "joi": "^17.12.2",
     "jwks-rsa": "^3.1.0",
-    "mysql2": "^3.9.3",
     "nest-commander": "^3.14.0",
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
