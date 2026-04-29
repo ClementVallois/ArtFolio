@@ -1,3 +1,5 @@
+[![Backend CI](https://github.com/ClementVallois/ArtFolio/actions/workflows/backend-ci.yml/badge.svg?branch=main)](https://github.com/ClementVallois/ArtFolio/actions/workflows/backend-ci.yml)
+
 ## Démonstration 🎥
 
 ![Demo Artfolio](demo_artfolio-main.gif)
