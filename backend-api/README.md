@@ -1,157 +1,393 @@
-# ArtFolio Backend
+# ArtFolio Backend API
 
-API REST du backend ArtFolio, construit avec **NestJS**, **Fastify** et **TypeScript**, suivant une architecture **DDD** pour gérer utilisateurs, contenus et demandes de données personnelles RGPD.
-
----
-
-## Stack
-
-* **Framework:** NestJS + Fastify
-* **Langage:** TypeScript
-* **Base de données:** PostgreSQL via TypeORM avec SnakeNamingStrategy
-* **Authentification:** JWT (passport-jwt, jwks-rsa) et guards de permissions
-* **Documentation:** Swagger/OpenAPI, redirection de `/` vers `/api`
-* **Sécurité:** Helmet, CORS, sessions + CSRF, ValidationPipe stricte
-* **Upload:** Multipart avec filtrage MIME et limite 10MB
+Production-grade REST API built with **NestJS**, **Fastify**, and **TypeScript**, following **Domain-Driven Design (DDD)** and **Clean Architecture** principles. The system manages users, content, file uploads, and GDPR personal data requests with enterprise-level security, observability, and testing.
 
 ---
 
-## Structure
+## Architecture Overview
 
 ```
-backend-api/
-├─ assets/                  # posts_pictures, profile_pictures, photo_seed
-├─ scripts/                 # seed.command.ts (nest-commander)
-├─ src/
-│  ├─ application/          # use-cases par domaine, handlers fichiers, validators
-│  ├─ domain/               # entities, value-objects, interfaces de repositories
-│  ├─ infrastructure/       # DB config + migrations, logger, file services, security
-│  └─ presentation/         # controllers, DTOs, decorators, swagger
+src/
+├── domain/                          # Core business layer (framework-agnostic)
+│   ├── entities/                    # Business entities (User, Post, Asset, Category, PersonalDataRequest)
+│   ├── interfaces/                  # Repository contracts (8 interfaces)
+│   └── value-objects/               # Typed identifiers with built-in validation (UserId, ArtistId, PostId, etc.)
+│
+├── application/                     # Use-case layer (orchestration logic)
+│   ├── modules/                     # Feature modules (Artist, Amateur, Post, Category, PersonalDataRequest, User, Asset)
+│   │   └── */use-cases/             # Single-responsibility use cases
+│   ├── handlers/                    # Cross-domain orchestrators (ProfilePictureHandler)
+│   └── validators/                  # Business rule validation (ValidationService)
+│
+├── infrastructure/                  # Technical concerns (replaceable implementations)
+│   ├── database/                    # TypeORM config, migrations, stored procedures
+│   ├── repositories/                # Repository implementations (concrete data access)
+│   ├── security/                    # JWT strategy, Auth0 integration
+│   ├── logger/                      # File-based logging system with levels, interceptors, decorators
+│   ├── services/                    # File management, seeding (Faker)
+│   ├── errors/                      # Database error parsing & structured error responses
+│   ├── config/                      # Joi-based environment validation
+│   └── common/                      # Pipes, interceptors, filters, types
+│
+├── presentation/                    # API surface layer
+│   ├── controllers/                 # HTTP controllers (7 controllers)
+│   ├── dto/                         # Request/response DTOs with class-validator decorators
+│   ├── decorators/                  # @Permissions, @GetUser, @ToBoolean
+│   └── swagger/                     # OpenAPI auto-generated documentation
 ```
 
-Cette organisation sépare clairement **métier**, **infrastructure** et **présentation** selon les principes DDD pour une meilleure maintenabilité.
+**Design decisions:**
+- The **Domain layer** has zero external dependencies -- entities, value objects, and repository interfaces are pure TypeScript, making business logic fully testable without a framework
+- The **Application layer** depends only on domain interfaces, never on infrastructure -- use cases are injected with abstractions via NestJS DI
+- The **Infrastructure layer** implements domain contracts -- swapping PostgreSQL for another DB only requires new repository implementations
+- The **Presentation layer** handles HTTP concerns exclusively -- DTOs, validation decorators, guards, and Swagger docs live here
 
 ---
 
-## Installation
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Runtime | Node.js + TypeScript (strict mode) |
+| Framework | NestJS + Fastify (high-performance HTTP) |
+| Database | PostgreSQL via TypeORM (SnakeNamingStrategy) |
+| Auth | Auth0 + JWT (RS256, JWKS auto-rotation) |
+| Validation | class-validator + class-transformer |
+| Docs | Swagger/OpenAPI (auto-generated) |
+| Caching | NestJS CacheModule (in-memory, TTL-based) |
+| Testing | Jest + @nestjs/testing |
+| CLI | nest-commander (seed/clear operations) |
+
+---
+
+## Authentication & Authorization
+
+### Auth0 JWT Integration
+
+```
+Client -> Authorization: Bearer <token> -> API
+                                            |
+                                  ┌─────────┴──────────┐
+                                  │ JWT Strategy        │
+                                  │ - JWKS endpoint     │
+                                  │ - RS256 validation  │
+                                  │ - Audience check    │
+                                  │ - Issuer check      │
+                                  └─────────┬──────────┘
+                                            |
+                                  ┌─────────┴──────────┐
+                                  │ PermissionsGuard    │
+                                  │ - Extracts scopes   │
+                                  │ - Route matching    │
+                                  └────────────────────┘
+```
+
+- **JWKS caching and rate limiting** (5 requests/min to Auth0) to avoid upstream bottlenecks
+- **RS256 asymmetric algorithm** -- the API never holds signing secrets, only verifies with public keys
+- Token payload extraction provides `auth0Id` (sub claim) for user identity resolution
+
+### Role-Based Access Control (RBAC)
+
+Custom `@Permissions()` decorator paired with a `PermissionsGuard` that performs route-level authorization:
+
+```typescript
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
+@Permissions('create:artist', 'update:artist')
+@Post()
+async createArtist(...) {}
+```
+
+Permission scopes include: `read:all`, `read:allArtist`, `read:posts`, `create:artist`, `create:amateur`, `create:post`, `update:artist`, `update:amateur`, `delete:artist`, `delete:me`, etc.
+
+The guard reads metadata set by the decorator via NestJS `Reflector` and validates every required scope is present in the JWT token's `permissions` array.
+
+---
+
+## Rate Limiting
+
+Global throttle protection via `@nestjs/throttler`:
+
+```typescript
+ThrottlerModule.forRootAsync({
+  useFactory: () => [{ ttl: 1000, limit: 10000 }],
+}),
+{ provide: APP_GUARD, useClass: ThrottlerGuard }
+```
+
+Applied as a global guard -- every endpoint is protected without explicit decoration.
+
+---
+
+## Security Hardening
+
+| Measure | Implementation |
+|---------|---------------|
+| **CORS** | Strict origin whitelist (no wildcards), credentials enabled, specific allowed headers |
+| **Helmet** | CSP, X-Frame-Options (sameorigin), Referrer-Policy (same-origin), CORP (cross-origin), COOP |
+| **CSRF** | Token-based protection via `@fastify/csrf-protection`, secure cookies in production |
+| **Sessions** | HttpOnly, SameSite=Lax, Secure flag in production, server-side secret |
+| **Input validation** | Global ValidationPipe: whitelist, forbidNonWhitelisted, transform, 422 status |
+| **File upload** | MIME type filtering (png/jpeg/webp only), 10MB size limit, interceptor-based |
+| **Env validation** | Joi schema validates all required env vars at boot -- fails fast on misconfiguration |
+
+---
+
+## Data Validation & DTOs
+
+Global `ValidationPipe` configuration enforces strict request validation:
+
+```typescript
+new ValidationPipe({
+  transform: true,              // Auto-transform payloads to DTO instances
+  whitelist: true,              // Strip properties not in the DTO
+  forbidNonWhitelisted: true,   // Reject requests with unknown properties
+  errorHttpStatusCode: 422,     // Unprocessable Entity for validation failures
+  stopAtFirstError: false,      // Report ALL validation errors, not just the first
+})
+```
+
+DTOs leverage `class-validator` decorators with custom error messages:
+- `@IsNotEmpty`, `@IsString`, `@MaxLength`, `@IsISO8601`, `@IsEnum`, `@IsUUID`
+- `@ValidateNested` + `@Type()` for deep object validation
+- `@Transform()` for sanitization (e.g., trimming whitespace)
+
+---
+
+## Error Handling & Structured API Responses
+
+### Database Error Handler
+
+Parses PostgreSQL error codes into human-readable, client-safe messages:
+
+```typescript
+// PostgreSQL code 23505 (unique violation) -> contextual message
+"User with username johndoe already exists"  // 400 Bad Request
+```
+
+### HTTP Status Code Strategy
+
+| Status | Meaning | When Used |
+|--------|---------|-----------|
+| 200 | OK | Successful GET, PATCH |
+| 201 | Created | Successful POST |
+| 400 | Bad Request | Business rule violation, DB constraint |
+| 401 | Unauthorized | Missing/invalid JWT |
+| 403 | Forbidden | Insufficient permissions |
+| 404 | Not Found | Resource doesn't exist |
+| 422 | Unprocessable Entity | DTO validation failure |
+| 500 | Internal Server Error | Unexpected failures |
+
+All error responses follow a consistent structure for frontend consumption.
+
+---
+
+## Logging & Observability
+
+Custom file-based logging system with 7 severity levels:
+
+```
+FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL
+```
+
+### Components
+
+- **LoggerService**: Global injectable, writes daily rotating log files (`app-YYYY-MM-DD.log`)
+- **LoggingInterceptor**: Global HTTP interceptor tracing every request with method, URL, response time, and errors
+- **@LogMethod() decorator**: Method-level tracing for use-case debugging
+- **LogConfigService**: Environment-aware configuration (dev vs. prod log levels)
+- **LogFormatterService**: Consistent log message formatting with timestamps
+- **LogFileService**: File I/O abstraction for log persistence
+
+---
+
+## Database
+
+### TypeORM Configuration
+
+- **SnakeNamingStrategy**: Automatic `camelCase` to `snake_case` column mapping
+- **Entity auto-discovery**: Scans `src/domain/*.entity.ts`
+- **Soft deletes**: `@DeleteDateColumn()` on all entities -- data is never physically removed
+- **UUID primary keys**: `@PrimaryGeneratedColumn('uuid')` for distributed-friendly IDs
+- **Timestamps**: `@CreateDateColumn()` and `@UpdateDateColumn()` on every entity
+
+### Migrations
+
+Versioned, reversible schema changes:
 
 ```bash
-npm install
+npm run typeorm:run-migrations       # Apply pending migrations
+npm run typeorm:revert-migration     # Rollback last migration
+npm run typeorm:generate-migration   # Auto-generate from entity changes
+npm run typeorm:create-migration     # Create empty migration file
 ```
 
-Les scripts clés (`start`, `start:dev`, `test`, `test:e2e`, `test:cov`) et les commandes TypeORM pour migrations sont disponibles dans `package.json`.
+### Stored Procedures & Triggers
 
----
+**`fetch_user_data(user_id UUID)`** -- PL/pgSQL function for GDPR data export:
+- Aggregates user profile, posts, assets, categories, and data requests into a single JSONB object
+- Deployed via TypeORM migration reading raw SQL files
+- Called from the PersonalDataRequest use case for portable data downloads
 
-## Configuration (.env)
+**`log_user_changes()`** -- Audit trigger:
+- Fires on INSERT, UPDATE, DELETE on the `users` table
+- Records old/new state as JSONB in `users_history`
+- Tracks action type, timestamp, and database user
+- Full audit trail for compliance
 
-```env
-# Application
-NODE_ENV=development
-BACKEND_API_SERVER_PORT=3000
-SESSION_SECRET=your-session-secret
-LOG_DIRECTORY=./logs
+### Transactions
 
-# Database
-DB_API_PORT=5432
-DB_API_NAME=artfolio
-DB_API_USER=your_username
-DB_API_PASSWORD=your_password
-SYNCHRONIZE_ENABLED=false
-LOGGING_ENABLED=false
+Multi-step operations use `DataSource.transaction()` with `EntityManager` scoping:
 
-# Auth0 (JWT)
-AUTH0_ISSUER_URL=https://your-domain.auth0.com/
-AUTH0_AUDIENCE=your-api-audience
-
-# Assets (dev)
-DEV_POST_ASSETS_LOCATION=./backend-api/assets/posts_pictures
-DEV_PROFILE_ASSETS_LOCATION=./backend-api/assets/profile_pictures
+```typescript
+return await this.dataSource.transaction(async (manager: EntityManager) => {
+  const artist = await manager.save(manager.create(User, userFields));
+  const profileAsset = await manager.save(manager.create(Asset, {...}));
+  const post = await manager.save(manager.create(Post, {...}));
+  // ... category linking
+  return artist;
+});
 ```
 
-Le datasource TypeORM lit ces variables, applique la stratégie **snake_case**, charge les entités sous `src/domain/*.entity` et les migrations sous `src/infrastructure/database/migrations`.
+On failure: automatic rollback + file cleanup for any saved uploads.
 
 ---
 
-## Démarrage
+## Value Objects
 
-```bash
-# Dev (watch, 0.0.0.0:3000 par défaut)
-npm run start:dev
+Typed wrappers enforcing domain invariants at the boundary:
+
+```typescript
+export class UserId {
+  constructor(private readonly value: string) {
+    if (!isUUID(value, 4)) throw new Error('Invalid user ID');
+  }
+  toString(): string { return this.value; }
+}
 ```
 
-Au boot, l’app configure **CORS**, **Helmet**, **multipart**, **sessions + CSRF**, **ValidationPipe**, installe **Swagger** via `SWAGGER_CONFIG`, redirige `/` vers `/api` et écoute sur `BACKEND_API_SERVER_PORT` (par défaut 3000).
+Available: `UserId`, `ArtistId`, `AmateurId`, `PostId`, `CategoryId`, `PersonalDataRequestId`
+
+Prevents accidentally passing a PostId where a UserId is expected -- compile-time and runtime safety.
 
 ---
 
-## CORS et sécurité
+## Caching
 
-* **CORS:** origines autorisées `https://artfolio.dev`, `https://www.artfolio.dev`, `https://admin.artfolio.dev`, `http://localhost:5174` et `:5180` avec credentials et en-têtes `Content-Type`, `Authorization`, `x-csrf-token`.
-* **Helmet:** `frameguard sameorigin`, `referrerPolicy same-origin`, CSP activé, CORP `cross-origin`, COOP `same-origin-allow-popups`.
-* **Sessions + CSRF:** cookies `httpOnly`, `SameSite=lax`, `secure` si `NODE_ENV=production`, token CSRF activé.
-* **Validation:** `transform`, `whitelist`, `forbidNonWhitelisted`, code 422, `stopAtFirstError=false`.
+Cache-aside pattern with TTL-based expiration:
 
----
+```typescript
+const cached = await this.cacheManager.get<Artist[]>('all_artists');
+if (cached) return cached;
 
-## Endpoints clés
+const artists = await this.artistRepository.findAllByDescCreateDate();
+await this.cacheManager.set('all_artists', artists, 10000); // 10s TTL
+return artists;
+```
 
-* **Artistes:**
-  `GET /artists`, `GET /artists/withPinnedPost`, `GET /artists/:id`, `GET /artists/:id/posts`, `GET /artists/:id/categories`, `GET /artists/:id/assets`, `POST /artists`, `PATCH /artists/:id`, `DELETE /artists/:id`, `DELETE /artists/me/:id` (guards + scopes)
-
-* **Amateurs:**
-  `GET /amateurs`, `GET /amateurs/:id`, `GET /amateurs/:id/assets`, `POST /amateurs`, `PATCH /amateurs/:id`, `DELETE /amateurs/:id` (upload profilePicture)
-
-* **Posts:**
-  `GET /posts`, `GET /posts/:id`, `GET /posts/:id/assets`, `POST /posts`, `PATCH /posts/:id`, `DELETE /posts/:id` (upload postPicture)
-
-* **Catégories:**
-  `GET /categories`, `GET /categories/:id`, `POST /categories`, `PATCH /categories/:id`, `DELETE /categories/:id`
-
-* **Données personnelles:**
-  `GET /personal-data-requests`, `GET /personal-data-requests/requested`, `GET /personal-data-requests/:id`, `POST /personal-data-requests`, `PATCH /personal-data-requests/:id`, `GET /personal-data-requests/download/:id`
+Reduces database load for frequently accessed, infrequently changing data.
 
 ---
 
-## Auth et permissions
+## File Upload System
 
-Routes protégées avec `AuthGuard('jwt')` et `PermissionsGuard` utilisant des scopes tels que `read:all`, `read:allArtist`, `read:posts`, `create:artist`, `create:amateur`, `create:post`, `update:*`, `delete:*` selon le domaine.
-
----
-
-## Upload et assets
-
-* Interceptor **multipart** avec filtre MIME (`image/png`, `image/jpeg`, `image/webp`) et limite 10MB par champ.
-* Sauvegarde sur `DEV_PROFILE_ASSETS_LOCATION` ou `DEV_POST_ASSETS_LOCATION`.
-* Création/mise à jour des métadonnées d’**Asset**.
-* Streaming via **FastifyReply**.
+- **Fastify multipart** with custom interceptor (`LocalFilesInterceptor`)
+- **MIME filtering**: Only `image/png`, `image/jpeg`, `image/webp` accepted
+- **Size limit**: 10MB per file
+- **Streaming responses**: Files served via `FastifyReply.sendFile()` for memory efficiency
+- **Cleanup on failure**: If a transaction rolls back, saved files are deleted
 
 ---
 
-## Base de données et migrations
+## Testing Strategy
 
-* **Exécution:** `npm run typeorm:run-migrations`
-* **Rollback:** `npm run typeorm:revert-migration` (config: `src/infrastructure/database/ormconfig.ts`)
-* **Génération:** `npm run typeorm:generate-migration --name <Nom>`
-* **Création:** `npm run typeorm:create-migration --name <Nom>`
+### Unit Tests
+
+Each use case tested in isolation with fully mocked dependencies:
+
+```typescript
+const module: TestingModule = await Test.createTestingModule({
+  providers: [
+    CreateArtistUseCase,
+    { provide: 'IArtistRepository', useValue: { findAll: jest.fn() } },
+    { provide: CACHE_MANAGER, useValue: { get: jest.fn(), set: jest.fn() } },
+    { provide: getDataSourceToken(), useValue: { transaction: jest.fn() } },
+  ],
+}).compile();
+```
+
+**Test scenarios covered:**
+- Happy path (successful creation/retrieval)
+- Validation failures (bad input, missing files)
+- Not found scenarios (non-existent resources)
+- Database errors (unique constraint violations)
+- Cache hit/miss paths
+- Transaction rollback and file cleanup
+- Guard and permission enforcement
+
+### Integration Tests
+
+Test use cases with real NestJS module resolution and dependency wiring to verify correct DI configuration and module imports.
+
+### E2E Tests
+
+Full request lifecycle testing via `jest-e2e.json` configuration -- HTTP request to database response.
+
+### Mocking Patterns
+
+- **Repository mocking**: Interface-based (`jest.Mocked<IArtistRepository>`)
+- **Service mocking**: Partial implementation with `jest.fn()`
+- **DataSource mocking**: Transaction callback simulation
+- **Cache mocking**: Hit/miss scenario testing
 
 ---
 
 ## Seeding
 
-* **Via conteneur:** `npm run seed` et `npm run clear` exécutent seed et clear via `nest-commander`.
-* **En direct:** `npm run console seed seed` ou `npm run console seed clear` pour lancer `SeederService` depuis la machine hôte.
+CLI-driven data seeding via `nest-commander`:
+
+```bash
+npm run console seed seed    # Populate with Faker-generated data
+npm run console seed clear   # Wipe seeded data
+```
+
+Seeders: User (artist/amateur/moderator roles), Post, Asset, Category, PersonalDataRequest
+
+Features:
+- Idempotent execution (checks existence before insert)
+- Predefined Auth0 IDs for consistent local testing
+- Faker.js for realistic dataset generation
+- Ordered execution with early-exit on error
 
 ---
 
-## Tests
+## API Documentation
 
-* **Unitaires:** `npm run test` ou `npm run test:watch`
-* **E2E:** `npm run test:e2e`
-* **Couverture:** `npm run test:cov`
+Auto-generated Swagger/OpenAPI documentation at `/api`:
+- Bearer token security scheme
+- DTO-based request/response schemas
+- Per-endpoint descriptions and examples
 
 ---
 
-## Logging
+## Environment Configuration
 
-* Logger applicatif écrit des fichiers journaux quotidiens dans `LOG_DIRECTORY` selon `NODE_ENV`.
-* Interceptor global trace chaque requête avec méthode, URL et temps de réponse.
+Boot-time validation via Joi schema -- the application **refuses to start** if any required variable is missing:
+
+```bash
+SESSION_SECRET, DB_API_HOST, DB_API_PORT, DB_API_NAME, DB_API_USER,
+DB_API_PASSWORD, AUTH0_ISSUER_URL, AUTH0_AUDIENCE, NODE_ENV, LOG_DIRECTORY, ...
+```
+
+---
+
+## Running
+
+```bash
+npm install
+npm run start:dev          # Development with hot-reload (0.0.0.0:3000)
+npm run start:prod         # Production build
+npm run test               # Unit tests
+npm run test:e2e           # End-to-end tests
+npm run test:cov           # Coverage report
+npm run typeorm:run-migrations
+```
