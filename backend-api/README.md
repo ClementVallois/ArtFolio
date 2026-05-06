@@ -4,7 +4,7 @@
 
 Production-grade REST API built with **NestJS**, **Fastify**, and **TypeScript**, following **Domain-Driven Design (DDD)** and **Clean Architecture** principles. The system manages users, content, file uploads, and GDPR personal data requests with enterprise-level security, observability, and testing.
 
----
+## Why these choices
 
 ## Architecture Overview
 
@@ -45,7 +45,7 @@ src/
 - The **Infrastructure layer** implements domain contracts -- swapping PostgreSQL for another DB only requires new repository implementations
 - The **Presentation layer** handles HTTP concerns exclusively -- DTOs, validation decorators, guards, and Swagger docs live here
 
----
+**Auth0 over hand-rolled auth** because authentication is not a differentiator for this project. Auth0 handles token issuance, JWKS rotation, and scope management. The backend validates JWTs and enforces permissions through NestJS guards.
 
 ## Tech Stack
 
@@ -155,7 +155,7 @@ DTOs leverage `class-validator` decorators with custom error messages:
 - `@ValidateNested` + `@Type()` for deep object validation
 - `@Transform()` for sanitization (e.g., trimming whitespace)
 
----
+## Tests
 
 ## Error Handling & Structured API Responses
 
@@ -256,7 +256,18 @@ return await this.dataSource.transaction(async (manager: EntityManager) => {
 
 On failure: automatic rollback + file cleanup for any saved uploads.
 
----
+| Layer            | Technology                                              |
+| ---------------- | ------------------------------------------------------- |
+| Framework        | NestJS 10 + Fastify                                     |
+| Language         | TypeScript (strict)                                     |
+| Database         | PostgreSQL 16, TypeORM, snake_case naming strategy      |
+| Auth             | Auth0 (passport-jwt, jwks-rsa), permission guards       |
+| Validation       | class-validator, class-transformer, Joi                 |
+| Security         | Helmet, CSRF, CORS, rate limiting (throttler)           |
+| File upload      | @fastify/multipart, MIME filtering, 10MB limit          |
+| Documentation    | Swagger / OpenAPI (auto-generated)                      |
+| CI               | GitHub Actions (lint → test → build)                    |
+| Containerization | Docker Compose (backend + 2 frontends + DB + SonarQube) |
 
 ## Value Objects
 
@@ -277,7 +288,13 @@ Available: `UserId`, `ArtistId`, `AmateurId`, `PostId`, `CategoryId`, `PersonalD
 
 Prevents accidentally passing a PostId where a UserId is expected -- compile-time and runtime safety.
 
----
+| Resource               | Endpoints                               |
+| ---------------------- | --------------------------------------- |
+| Artists                | CRUD + pinned posts, categories, assets |
+| Amateurs               | CRUD + profile picture upload           |
+| Posts                  | CRUD + post picture upload              |
+| Categories             | CRUD                                    |
+| Personal data requests | CRUD + download (GDPR compliance)       |
 
 ## Caching
 
@@ -294,7 +311,11 @@ return artists;
 
 Reduces database load for frequently accessed, infrequently changing data.
 
----
+- **CORS**: whitelisted origins only, credentials enabled
+- **Helmet**: CSP, frameguard, referrer policy
+- **CSRF**: session-based tokens, httpOnly cookies, SameSite=lax, secure in production
+- **Validation**: whitelist mode, forbidNonWhitelisted, transforms enabled, returns 422
+- **Auth**: JWT validation via JWKS endpoint, permission-based guards on every protected route
 
 ## File Upload System
 
@@ -348,9 +369,9 @@ Full request lifecycle testing via `jest-e2e.json` configuration -- HTTP request
 - **DataSource mocking**: Transaction callback simulation
 - **Cache mocking**: Hit/miss scenario testing
 
----
+Config: `src/infrastructure/database/ormconfig.ts`
 
-## Seeding
+## Configuration
 
 CLI-driven data seeding via `nest-commander`:
 
@@ -368,7 +389,10 @@ Features:
 - Faker.js for realistic dataset generation
 - Ordered execution with early-exit on error
 
----
+- `BACKEND_API_SERVER_PORT`, `NODE_ENV`, `SESSION_SECRET`
+- `DB_API_*` (PostgreSQL connection)
+- `AUTH0_ISSUER_URL`, `AUTH0_AUDIENCE` (JWT validation)
+- `DEV_*_ASSETS_LOCATION` (file upload paths)
 
 ## API Documentation
 
@@ -378,7 +402,7 @@ Auto-generated Swagger/OpenAPI documentation at `/api`:
 - DTO-based request/response schemas
 - Per-endpoint descriptions and examples
 
----
+Daily rotating log files in `LOG_DIRECTORY`. A global interceptor logs every request with method, URL, and response time.
 
 ## Environment Configuration
 
