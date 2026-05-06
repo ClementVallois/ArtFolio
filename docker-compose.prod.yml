@@ -84,4 +84,3 @@ services:
 
 volumes:
     postgresql-data-api:
-    postgresql-data-chat:
