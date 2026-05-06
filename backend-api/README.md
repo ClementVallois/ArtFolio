@@ -1,3 +1,5 @@
+[![Backend CI](https://github.com/ClementVallois/ArtFolio/actions/workflows/backend-ci.yml/badge.svg?branch=main)](https://github.com/ClementVallois/ArtFolio/actions/workflows/backend-ci.yml)
+
 # ArtFolio Backend API
 
 Production-grade REST API built with **NestJS**, **Fastify**, and **TypeScript**, following **Domain-Driven Design (DDD)** and **Clean Architecture** principles. The system manages users, content, file uploads, and GDPR personal data requests with enterprise-level security, observability, and testing.
@@ -37,6 +39,7 @@ src/
 ```
 
 **Design decisions:**
+
 - The **Domain layer** has zero external dependencies -- entities, value objects, and repository interfaces are pure TypeScript, making business logic fully testable without a framework
 - The **Application layer** depends only on domain interfaces, never on infrastructure -- use cases are injected with abstractions via NestJS DI
 - The **Infrastructure layer** implements domain contracts -- swapping PostgreSQL for another DB only requires new repository implementations
@@ -46,17 +49,17 @@ src/
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Runtime | Node.js + TypeScript (strict mode) |
-| Framework | NestJS + Fastify (high-performance HTTP) |
-| Database | PostgreSQL via TypeORM (SnakeNamingStrategy) |
-| Auth | Auth0 + JWT (RS256, JWKS auto-rotation) |
-| Validation | class-validator + class-transformer |
-| Docs | Swagger/OpenAPI (auto-generated) |
-| Caching | NestJS CacheModule (in-memory, TTL-based) |
-| Testing | Jest + @nestjs/testing |
-| CLI | nest-commander (seed/clear operations) |
+| Layer      | Technology                                   |
+| ---------- | -------------------------------------------- |
+| Runtime    | Node.js + TypeScript (strict mode)           |
+| Framework  | NestJS + Fastify (high-performance HTTP)     |
+| Database   | PostgreSQL via TypeORM (SnakeNamingStrategy) |
+| Auth       | Auth0 + JWT (RS256, JWKS auto-rotation)      |
+| Validation | class-validator + class-transformer          |
+| Docs       | Swagger/OpenAPI (auto-generated)             |
+| Caching    | NestJS CacheModule (in-memory, TTL-based)    |
+| Testing    | Jest + @nestjs/testing                       |
+| CLI        | nest-commander (seed/clear operations)       |
 
 ---
 
@@ -111,7 +114,7 @@ Global throttle protection via `@nestjs/throttler`:
 ThrottlerModule.forRootAsync({
   useFactory: () => [{ ttl: 1000, limit: 10000 }],
 }),
-{ provide: APP_GUARD, useClass: ThrottlerGuard }
+  { provide: APP_GUARD, useClass: ThrottlerGuard };
 ```
 
 Applied as a global guard -- every endpoint is protected without explicit decoration.
@@ -120,15 +123,15 @@ Applied as a global guard -- every endpoint is protected without explicit decora
 
 ## Security Hardening
 
-| Measure | Implementation |
-|---------|---------------|
-| **CORS** | Strict origin whitelist (no wildcards), credentials enabled, specific allowed headers |
-| **Helmet** | CSP, X-Frame-Options (sameorigin), Referrer-Policy (same-origin), CORP (cross-origin), COOP |
-| **CSRF** | Token-based protection via `@fastify/csrf-protection`, secure cookies in production |
-| **Sessions** | HttpOnly, SameSite=Lax, Secure flag in production, server-side secret |
-| **Input validation** | Global ValidationPipe: whitelist, forbidNonWhitelisted, transform, 422 status |
-| **File upload** | MIME type filtering (png/jpeg/webp only), 10MB size limit, interceptor-based |
-| **Env validation** | Joi schema validates all required env vars at boot -- fails fast on misconfiguration |
+| Measure              | Implementation                                                                              |
+| -------------------- | ------------------------------------------------------------------------------------------- |
+| **CORS**             | Strict origin whitelist (no wildcards), credentials enabled, specific allowed headers       |
+| **Helmet**           | CSP, X-Frame-Options (sameorigin), Referrer-Policy (same-origin), CORP (cross-origin), COOP |
+| **CSRF**             | Token-based protection via `@fastify/csrf-protection`, secure cookies in production         |
+| **Sessions**         | HttpOnly, SameSite=Lax, Secure flag in production, server-side secret                       |
+| **Input validation** | Global ValidationPipe: whitelist, forbidNonWhitelisted, transform, 422 status               |
+| **File upload**      | MIME type filtering (png/jpeg/webp only), 10MB size limit, interceptor-based                |
+| **Env validation**   | Joi schema validates all required env vars at boot -- fails fast on misconfiguration        |
 
 ---
 
@@ -138,15 +141,16 @@ Global `ValidationPipe` configuration enforces strict request validation:
 
 ```typescript
 new ValidationPipe({
-  transform: true,              // Auto-transform payloads to DTO instances
-  whitelist: true,              // Strip properties not in the DTO
-  forbidNonWhitelisted: true,   // Reject requests with unknown properties
-  errorHttpStatusCode: 422,     // Unprocessable Entity for validation failures
-  stopAtFirstError: false,      // Report ALL validation errors, not just the first
-})
+  transform: true, // Auto-transform payloads to DTO instances
+  whitelist: true, // Strip properties not in the DTO
+  forbidNonWhitelisted: true, // Reject requests with unknown properties
+  errorHttpStatusCode: 422, // Unprocessable Entity for validation failures
+  stopAtFirstError: false, // Report ALL validation errors, not just the first
+});
 ```
 
 DTOs leverage `class-validator` decorators with custom error messages:
+
 - `@IsNotEmpty`, `@IsString`, `@MaxLength`, `@IsISO8601`, `@IsEnum`, `@IsUUID`
 - `@ValidateNested` + `@Type()` for deep object validation
 - `@Transform()` for sanitization (e.g., trimming whitespace)
@@ -161,21 +165,21 @@ Parses PostgreSQL error codes into human-readable, client-safe messages:
 
 ```typescript
 // PostgreSQL code 23505 (unique violation) -> contextual message
-"User with username johndoe already exists"  // 400 Bad Request
+'User with username johndoe already exists'; // 400 Bad Request
 ```
 
 ### HTTP Status Code Strategy
 
-| Status | Meaning | When Used |
-|--------|---------|-----------|
-| 200 | OK | Successful GET, PATCH |
-| 201 | Created | Successful POST |
-| 400 | Bad Request | Business rule violation, DB constraint |
-| 401 | Unauthorized | Missing/invalid JWT |
-| 403 | Forbidden | Insufficient permissions |
-| 404 | Not Found | Resource doesn't exist |
-| 422 | Unprocessable Entity | DTO validation failure |
-| 500 | Internal Server Error | Unexpected failures |
+| Status | Meaning               | When Used                              |
+| ------ | --------------------- | -------------------------------------- |
+| 200    | OK                    | Successful GET, PATCH                  |
+| 201    | Created               | Successful POST                        |
+| 400    | Bad Request           | Business rule violation, DB constraint |
+| 401    | Unauthorized          | Missing/invalid JWT                    |
+| 403    | Forbidden             | Insufficient permissions               |
+| 404    | Not Found             | Resource doesn't exist                 |
+| 422    | Unprocessable Entity  | DTO validation failure                 |
+| 500    | Internal Server Error | Unexpected failures                    |
 
 All error responses follow a consistent structure for frontend consumption.
 
@@ -224,11 +228,13 @@ npm run typeorm:create-migration     # Create empty migration file
 ### Stored Procedures & Triggers
 
 **`fetch_user_data(user_id UUID)`** -- PL/pgSQL function for GDPR data export:
+
 - Aggregates user profile, posts, assets, categories, and data requests into a single JSONB object
 - Deployed via TypeORM migration reading raw SQL files
 - Called from the PersonalDataRequest use case for portable data downloads
 
 **`log_user_changes()`** -- Audit trigger:
+
 - Fires on INSERT, UPDATE, DELETE on the `users` table
 - Records old/new state as JSONB in `users_history`
 - Tracks action type, timestamp, and database user
@@ -261,7 +267,9 @@ export class UserId {
   constructor(private readonly value: string) {
     if (!isUUID(value, 4)) throw new Error('Invalid user ID');
   }
-  toString(): string { return this.value; }
+  toString(): string {
+    return this.value;
+  }
 }
 ```
 
@@ -316,6 +324,7 @@ const module: TestingModule = await Test.createTestingModule({
 ```
 
 **Test scenarios covered:**
+
 - Happy path (successful creation/retrieval)
 - Validation failures (bad input, missing files)
 - Not found scenarios (non-existent resources)
@@ -353,6 +362,7 @@ npm run console seed clear   # Wipe seeded data
 Seeders: User (artist/amateur/moderator roles), Post, Asset, Category, PersonalDataRequest
 
 Features:
+
 - Idempotent execution (checks existence before insert)
 - Predefined Auth0 IDs for consistent local testing
 - Faker.js for realistic dataset generation
@@ -363,6 +373,7 @@ Features:
 ## API Documentation
 
 Auto-generated Swagger/OpenAPI documentation at `/api`:
+
 - Bearer token security scheme
 - DTO-based request/response schemas
 - Per-endpoint descriptions and examples
