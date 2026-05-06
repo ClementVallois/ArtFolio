@@ -1,30 +1,109 @@
-## Démonstration 🎥
+# ArtFolio
+
+A social platform for independent artists to showcase their work, built with a production-grade backend architecture following Domain-Driven Design and Clean Architecture principles.
 
 ![Demo Artfolio](demo_artfolio-main.gif)
 
-## Objectifs 🎯
+---
 
-Être artiste c’est bien souvent lutter pour être visible. En tant qu’artistes eux-mêmes, les membres de l’équipe derrière ArtFolio le savent très bien. C’est de ce constat qu’est née l’idée de créer une plateforme permettant aux artistes indépendants de s’exprimer pleinement, d’exposer leur art et de dialoguer avec leurs communautés.
+## What Is ArtFolio
 
-ArtFolio est un réseau social destiné aux artistes de tous les horizons pour partager leur travail, leur processus créatif et leur activité artistique avec d'autres passionnés d'art. Les utilisateurs peuvent découvrir de nouveaux artistes, suivre leurs oeuvres.
-Que vous soyez artiste ou amateur d’art, ArtFolio sera votre nouvelle source d’inspiration.
+ArtFolio is a social network for artists of all disciplines to share their creative work, process, and activity with art enthusiasts. Users can discover new artists, follow their work, and engage with the community.
 
-## Détails projet 📋
+**Core features:**
+- Customizable artist/amateur profiles with portfolio display
+- Content sharing (images with metadata, categories, pinned posts)
+- Community engagement (likes, comments, follows)
+- Discovery tools (search by artist, category filtering)
+- GDPR-compliant personal data export and deletion requests
+- Admin interface for content moderation
 
-L'objectif est de développer un réseau social convivial pour les artistes et les amateurs d'art, comprenant :
+---
 
-- **Profils Utilisateurs** : Profils personnalisables permettant aux artistes de présenter leur portfolio, leur biographie et leurs coordonnées.
-- **Partage de Contenu** : Les artistes peuvent importer des images, des vidéos et des descriptions de leurs oeuvres.
-- **Engagement Communautaire** : Des fonctionnalités comme les commentaires, les likes et les partages pour favoriser l'interaction.
-- **Outils de Découverte** : Options de recherche par artiste ou par catégorie.
+## Architecture & Technical Decisions
 
-## Specifications techniques 🛠️
+### Backend (NestJS + Fastify + TypeScript)
 
-Le développement implique plusieurs composants techniques :
+The backend is the technical core of this project -- a production-ready REST API demonstrating enterprise-level engineering:
 
-- **Frontends** : 2 applications web : Une interface principale responsive pour la raison sociale de Artfolio et une autre interface administrateur pour modérer la communauté et le contenu de l’application. Ces deux frontends sont développés en Javascript avec l’utilisation de Vue.js
-- **Backend** : Une architecture sophistiquée en Domain Driven Development pour gérer les interactions de données. Notre backend type ses données avec TypeScript et utilise NestJs.
+| Area | Implementation |
+|------|---------------|
+| **Architecture** | Domain-Driven Design with 4-layer Clean Architecture (Domain, Application, Infrastructure, Presentation) |
+| **Auth** | Auth0 with RS256 JWT, JWKS auto-rotation, RBAC via custom PermissionsGuard |
+| **Security** | Helmet (CSP, CORP, COOP), CORS whitelist, CSRF tokens, secure sessions, input sanitization |
+| **Rate Limiting** | Global ThrottlerGuard on all endpoints |
+| **Database** | PostgreSQL with TypeORM, UUID PKs, soft deletes, SnakeNamingStrategy, versioned migrations |
+| **Stored Procedures** | PL/pgSQL functions for GDPR data export + audit triggers with JSONB history |
+| **Transactions** | Multi-step atomic operations with automatic rollback and file cleanup |
+| **Value Objects** | Typed ID wrappers (UserId, PostId, etc.) with UUID validation -- compile-time + runtime safety |
+| **Validation** | Global ValidationPipe (whitelist, forbidNonWhitelisted, transform) + class-validator DTOs |
+| **Error Handling** | PostgreSQL error code parsing, structured HTTP responses, contextual error messages |
+| **Logging** | Custom file-based logger with 7 severity levels, daily rotation, HTTP interceptor, @LogMethod decorator |
+| **Caching** | Cache-aside pattern with TTL-based in-memory caching |
+| **File Uploads** | Fastify multipart, MIME filtering, 10MB limit, streaming responses, transactional cleanup |
+| **Testing** | Unit tests (mocked use cases), integration tests (module wiring), E2E tests (full HTTP lifecycle) |
+| **Seeding** | CLI-driven via nest-commander, Faker.js data generation, idempotent execution |
+| **API Docs** | Auto-generated Swagger/OpenAPI at /api |
+| **Env Safety** | Joi schema validation at boot -- app refuses to start on misconfiguration |
 
-- **Base de Données** : Une base de données relationnelle pour organiser et stocker les données des utilisateurs. Nous avons utilisé du SQL et PostgreSQL comme système de gestion de base de données.
-- **Système de connexion Auth0** : Notre application intègre un système d'authentification robuste conçu pour remédier à plusieurs vulnérabilités majeures listées par l’OWASP en matière de sécurité.
-- **Environnement de Production** : Déploiement sur un serveur Amazon EC2 utilisant la conteneurisation pour assurer évolutivité, sécurité et facilité de déploiement.
+> See [backend-api/README.md](backend-api/README.md) for detailed architecture documentation, code examples, and design rationale.
+
+### Frontends (Vue.js)
+
+- **Main app**: Responsive SPA for artists and art enthusiasts
+- **Admin panel**: Content moderation and community management interface
+
+### Infrastructure
+
+- **Database**: PostgreSQL with migrations, stored procedures, and triggers
+- **Deployment**: Docker containerization on AWS EC2
+- **Auth Provider**: Auth0 (delegated identity management)
+
+---
+
+## Project Structure
+
+```
+ArtFolio/
+├── backend-api/          # NestJS REST API (DDD + Clean Architecture)
+│   ├── src/
+│   │   ├── domain/       # Entities, value objects, repository interfaces
+│   │   ├── application/  # Use cases, validators, handlers
+│   │   ├── infrastructure/ # DB, auth, logging, file services, error handling
+│   │   └── presentation/ # Controllers, DTOs, guards, decorators, Swagger
+│   └── test/             # E2E tests
+├── frontend-main/        # Vue.js main application
+└── frontend-admin/       # Vue.js admin panel
+```
+
+---
+
+## Getting Started
+
+```bash
+# Backend
+cd backend-api
+npm install
+npm run start:dev            # Starts on port 3000
+
+# Database
+npm run typeorm:run-migrations
+npm run console seed seed    # Populate with test data
+
+# Tests
+npm run test                 # Unit tests
+npm run test:e2e             # End-to-end tests
+npm run test:cov             # Coverage report
+```
+
+---
+
+## Key Technical Highlights
+
+- **Zero-dependency domain layer** -- business logic is framework-agnostic and fully unit-testable
+- **Repository pattern with interface segregation** -- 8 repository interfaces in domain, concrete implementations in infrastructure
+- **Decorator-based RBAC** -- `@Permissions('create:artist')` + guard reads token scopes via Reflector
+- **Transactional consistency** -- artist creation spans 6 DB operations in a single atomic transaction with file rollback
+- **Audit trail** -- PostgreSQL trigger logs every user mutation as JSONB diffs in `users_history`
+- **GDPR compliance** -- stored procedure aggregates all user data for portable export/deletion
+- **Fail-fast configuration** -- Joi validates env vars at boot, not at first request
